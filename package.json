@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "pre-commit": "lint-staged && npm run lint && npm run test:unit",
+    "pre-commit": "npm run lint && npm run test:unit",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -28,17 +28,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "postinstall": "husky install"
   },
-  "lint-staged": {
-    "*.ts": [
-      "npm run lint",
-      "git add ."
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
+
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
