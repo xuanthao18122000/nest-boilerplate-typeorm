@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { SendResponse } from 'src/common/response/send-response';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth()
@@ -22,7 +22,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  async getAll(@Query() query: any) {
+  async getAll(@Query() query: ListUserDto) {
     const users = await this.userService.getAll(query);
     return SendResponse.success(users, 'Get all users successful');
   }
