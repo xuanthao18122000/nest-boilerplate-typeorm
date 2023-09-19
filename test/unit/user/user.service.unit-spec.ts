@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserService } from '../../../src/modules/user/user.service';
-import { Repository } from 'typeorm';
 import { User } from '../../../src/database/entities';
 import FilterBuilderService from 'src/common/filter-builder/filter-builder.service';
 
