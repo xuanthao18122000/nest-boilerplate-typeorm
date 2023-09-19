@@ -13,8 +13,8 @@ NestJS Boilerplate TypeORM
 # Install package
 $ npm install
 
-# Install husky
-$ npx husky install
+# Run husky and pre-commit
+$ npx husky add .husky/pre-commit "npm run pre-commit"
 ```
 
 ## Running the API
