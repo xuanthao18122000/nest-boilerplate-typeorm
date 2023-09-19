@@ -5,6 +5,7 @@ import statusCode from 'src/configs/status-code.config';
 import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import * as winston from 'winston';
 import FilterBuilderService from 'src/common/filter-builder/filter-builder.service';
 
 @Injectable()
