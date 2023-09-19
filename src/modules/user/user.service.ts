@@ -84,7 +84,7 @@ export class UserService {
       );
     }
 
-    return await this.userRepo.save({
+    const user = this.userRepo.create({
       email,
       password: this.hashPassword(password),
       phoneNumber,
@@ -92,6 +92,8 @@ export class UserService {
       fullName,
       gender,
     });
+
+    return await this.userRepo.save(user);
   }
 
   public hashPassword(password: string) {
