@@ -36,12 +36,12 @@ export class UserController {
   @Post()
   async createUser(@Body() body: CreateUserDto) {
     const user = await this.userService.create(body);
-    return SendResponse.success([], 'Create user successful');
+    return SendResponse.success(user, 'Create user successful');
   }
 
   @Put()
   async updateUser(@Param('id') id: number, @Body() body: UpdateUserDto) {
     const user = await this.userService.update(id, body);
-    return SendResponse.success([], 'Update user successful');
+    return SendResponse.success(user, 'Update user successful');
   }
 }
