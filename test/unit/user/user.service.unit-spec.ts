@@ -7,7 +7,6 @@ import FilterBuilderService from 'src/common/filter-builder/filter-builder.servi
 
 describe('User Service', () => {
   let userService: UserService;
-  let userRepository: Repository<User>;
   let filterBuilderService: FilterBuilderService;
 
   const mockUserRepository = {
@@ -32,8 +31,8 @@ describe('User Service', () => {
     }).compile();
 
     userService = module.get<UserService>(UserService);
-    userRepository = module.get<Repository<User>>(getRepositoryToken(User));
-    filterBuilderService = module.get<FilterBuilderService>(FilterBuilderService);
+    filterBuilderService =
+      module.get<FilterBuilderService>(FilterBuilderService);
   });
 
   describe('Create user', () => {
@@ -52,13 +51,12 @@ describe('User Service', () => {
 
       // Mock the user creation
       const createdUser = new User();
-      createdUser.email = 'johndoe@example.com',
-      createdUser.password = 'strongestP@ssword',
-      createdUser.fullName = 'John Doe',
-      createdUser.gender = User.GENDER_USER.MALE,
-      createdUser.phoneNumber = '0938381732',
-
-      mockUserRepository.create.mockReturnValue(createdUser);
+      (createdUser.email = 'johndoe@example.com'),
+        (createdUser.password = 'strongestP@ssword'),
+        (createdUser.fullName = 'John Doe'),
+        (createdUser.gender = User.GENDER_USER.MALE),
+        (createdUser.phoneNumber = '0938381732'),
+        mockUserRepository.create.mockReturnValue(createdUser);
       mockUserRepository.save.mockResolvedValue(createdUser);
 
       // Call the create method
@@ -69,7 +67,7 @@ describe('User Service', () => {
       expect(mockUserRepository.findOneBy).toHaveBeenCalledWith({
         email: userData.email,
       });
-      
+
       expect(mockUserRepository.create).toHaveBeenCalledWith({
         email: userData.email,
         password: expect.any(String),
@@ -99,5 +97,4 @@ describe('User Service', () => {
       await expect(userService.create(userData)).rejects.toThrowError();
     });
   });
-
 });
