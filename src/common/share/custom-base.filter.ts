@@ -1,8 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose, Type } from 'class-transformer';
-import { IsNumber, IsOptional, IsObject, IsString, Min, IsEnum, IsBoolean, ValidateIf } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsNumber,
+  IsOptional,
+  IsObject,
+  Min,
+  IsEnum,
+  ValidateIf,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
-import { SortOrder } from '../enums'
+import { SortOrder } from '../enums';
 import { IQueryBuilder } from '../interfaces';
 
 export class CustomBaseFilter {
@@ -13,7 +20,7 @@ export class CustomBaseFilter {
   })
   @Type(() => Number)
   @IsOptional()
-  @ValidateIf(o => typeof o.page === 'number')
+  @ValidateIf((o) => typeof o.page === 'number')
   @IsNumber()
   @Min(1, { message: 'Page must be greater than 0' })
   page: number | string;
@@ -52,5 +59,4 @@ export class CustomBaseFilter {
   @IsOptional()
   @IsEnum(SortOrder, { message: 'Sort must be either "ASC" or "DESC"' })
   sort: string;
-
 }

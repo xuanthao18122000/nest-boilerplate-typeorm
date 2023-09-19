@@ -5,12 +5,12 @@ interface IDateQuery {
 }
 
 interface IQueryBuilder {
-  selectFields: string[],
-  unaccentFields: string[],
-  numberFields: number[],
-  stringFields: string[],
-  dateFields: IDateQuery,
-  sortName: string,
+  selectFields: string[];
+  unaccentFields: string[];
+  numberFields: number[];
+  stringFields: string[];
+  dateFields: IDateQuery;
+  sortName: string;
 }
 
-export { IQueryBuilder, IDateQuery }
+export { IQueryBuilder, IDateQuery };

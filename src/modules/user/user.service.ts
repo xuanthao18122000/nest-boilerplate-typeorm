@@ -18,9 +18,20 @@ export class UserService {
 
   async getAll(query: any): Promise<any> {
     const { page = 1, perPage = 10 } = query;
-    
+
     query.filter = {
-      selectFields: ['id', 'fullName', 'email', 'avatar', 'phoneNumber', 'gender', 'address', 'status', 'createdAt', 'updatedAt'],
+      selectFields: [
+        'id',
+        'fullName',
+        'email',
+        'avatar',
+        'phoneNumber',
+        'gender',
+        'address',
+        'status',
+        'createdAt',
+        'updatedAt',
+      ],
       unaccentFields: ['fullName'],
       numberFields: [],
       stringFields: ['phoneNumber'],
@@ -46,11 +57,10 @@ export class UserService {
     return { list, total, page: Number(page) / 1, perPage: perPage / 1 };
   }
 
-
   async getOne(id: number): Promise<User | any> {
     const user = await this.findUserByPk(id);
-    
-    if(!user) {
+
+    if (!user) {
       throw new ErrorException(
         HttpStatus.CONFLICT,
         statusCode['USER_NOT_FOUND'].code,

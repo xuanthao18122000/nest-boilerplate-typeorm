@@ -16,9 +16,7 @@ export class ErrorPayloadDto {
 }
 
 export class ErrorException extends HttpException {
-  constructor(statusCode, code: number, msg: string, ) {
-    super({code, success: false, msg}, statusCode);
-      
+  constructor(statusCode, code: number, msg: string) {
+    super({ code, success: false, msg }, statusCode);
   }
-
 }

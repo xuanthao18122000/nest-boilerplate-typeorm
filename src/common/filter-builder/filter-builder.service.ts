@@ -8,7 +8,7 @@ export default class FilterBuilderService {
     Class: { new (...arg: any[]): T },
     entityName: string,
     queryBuilder: SelectQueryBuilder<T>,
-    query : CustomBaseFilter = {
+    query: CustomBaseFilter = {
       filter: {
         selectFields: [],
         numberFields: [],
@@ -19,16 +19,24 @@ export default class FilterBuilderService {
           startDateField: null,
           endDateField: null,
         },
-        sortName: null
+        sortName: null,
       },
       page: 0,
       perPage: 10000,
-      sort: 'DESC'
+      sort: 'DESC',
     },
   ): SelectQueryBuilder<T> {
     const instance = new Class({});
-    let { filter, page, perPage, sort } = query;
-    const { dateFields, numberFields, selectFields, stringFields, unaccentFields, sortName } = filter;
+    const { filter, perPage, sort } = query;
+    let { page } = query;
+    const {
+      dateFields,
+      numberFields,
+      selectFields,
+      stringFields,
+      unaccentFields,
+      sortName,
+    } = filter;
 
     // Loại bỏ các thuộc tính không có trong instance
     Object.entries(filter).map(([property, value]) => {
@@ -71,9 +79,10 @@ export default class FilterBuilderService {
         );
       }
     }
-    
+
     if (
-      dateFields && dateFields.dateName &&
+      dateFields &&
+      dateFields.dateName &&
       (query[dateFields.startDateField] || query[dateFields.endDateField])
     ) {
       queryBuilder.andWhere(`${dateFields.startDateField} >= :startDate`, {
@@ -83,8 +92,8 @@ export default class FilterBuilderService {
         endDate: query[dateFields.endDateField],
       });
     }
-    
-    if (typeof page === "number") {
+
+    if (typeof page === 'number') {
       if (page && perPage) page = (page - 1) * perPage;
       queryBuilder.skip(page);
 

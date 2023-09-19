@@ -10,7 +10,11 @@ NestJS Boilerplate TypeORM
 ## Installation
 
 ```bash
+# Install package
 $ npm install
+
+# Install husky
+$ npx husky install
 ```
 
 ## Running the API
@@ -29,6 +33,7 @@ $ npm run start:prod
 ## Test
 
 ```bash
+
 # unit tests
 $ npm run test:unit
 

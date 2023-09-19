@@ -1,7 +1,3 @@
-export class CreateUserDto {
-  
-}
+export class CreateUserDto {}
 
-export class UpdateUserDto {
-
-}
+export class UpdateUserDto {}
