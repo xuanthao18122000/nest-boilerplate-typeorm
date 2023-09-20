@@ -14,6 +14,7 @@ export const createUserStub = (): User => {
     token: null,
     createdAt: new Date(),
     updatedAt: new Date(),
+
     serialize: () => {
       return {
         id: defaultUser.id,

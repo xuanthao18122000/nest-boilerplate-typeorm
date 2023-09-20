@@ -36,7 +36,6 @@ describe('User Service', () => {
 
   describe('Create user', () => {
     it('should create a new user', async () => {
-      // Mock user data
       const userData = {
         email: 'johndoe@example.com',
         password: 'strongestP@ssword',
@@ -45,10 +44,8 @@ describe('User Service', () => {
         phoneNumber: '0938381732',
       };
 
-      // Mock that no user with the same email exists
       mockUserRepository.findOneBy.mockResolvedValue(null);
 
-      // Mock the user creation
       const createdUser = new User();
       (createdUser.email = 'johndoe@example.com'),
         (createdUser.password = 'strongestP@ssword'),
