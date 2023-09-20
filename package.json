@@ -19,7 +19,7 @@
     "migration:revert": "npm run typeorm -- -d src/typeorm.config.ts migration:revert",
     "migration:run": "npm run typeorm -- -d src/configs/typeorm.config.ts migration:run",
     "schema:sync": "npm run typeorm -- -d ./src/typeorm.config.ts schema:sync",
-    "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:unit": "jest --config ./test/unit/jest-unit.json --detectOpenHandles",
     "test:watch": "jest --watch",
