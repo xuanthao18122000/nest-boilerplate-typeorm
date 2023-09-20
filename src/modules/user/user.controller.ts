@@ -15,7 +15,7 @@ import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth()
-@ApiTags('Users')
+@ApiTags('3. Users')
 @Controller('users')
 @UsePipes(new ValidationPipe({ transform: true }))
 export class UserController {

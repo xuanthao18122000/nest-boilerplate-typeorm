@@ -16,7 +16,7 @@ async function bootstrap() {
     prefix: '/',
   });
 
-  if (cfg('NODE_ENV') !== 'production') {
+  if (cfg('APP_NODE_ENV') !== 'production') {
     const config = new DocumentBuilder()
       .setTitle('NESTJS BOILERPLATE API')
       .setDescription('NESTJS API description')

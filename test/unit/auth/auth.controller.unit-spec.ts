@@ -7,6 +7,7 @@ import { mock_token } from './mocks/tokens.mock';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
 
 // jest.mock('./__mocks__/auth.service.ts');
 describe('AuthController', () => {
@@ -17,6 +18,7 @@ describe('AuthController', () => {
       controllers: [AuthController],
       providers: [
         AuthService,
+        JwtService,
         {
           provide: getRepositoryToken(User),
           useClass: Repository,
