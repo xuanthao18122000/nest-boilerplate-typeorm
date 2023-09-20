@@ -19,7 +19,7 @@ export class UserService {
   ) {}
 
   async getAll(query: ListUserDto): Promise<FindAllResponse<User>> {
-    const { page = 1, perPage = 10 } = query; 
+    const { page = 1, perPage = 10 } = query;
 
     query.filter = {
       selectFields: [

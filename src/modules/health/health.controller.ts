@@ -8,8 +8,8 @@ import {
 } from '@nestjs/terminus';
 import { Public } from 'src/common/decorators/public.decorator';
 
-@ApiTags('1. Health')
-@Controller('health-check')
+@ApiTags('1. Health Check')
+@Controller('ping')
 export class HealthController {
   constructor(
     private healthCheckService: HealthCheckService,
