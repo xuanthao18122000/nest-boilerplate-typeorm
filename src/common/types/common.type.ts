@@ -3,9 +3,19 @@ export enum SORT_TYPE {
   'ASC' = 'acs',
 }
 
-export type ResponseType<T> = { code: number; data: T[], msg: string, success: boolean };
+export type ResponseType<T> = {
+  code: number;
+  data: T[];
+  msg: string;
+  success: boolean;
+};
 
-export type FindAllResponse<T> = { list: T[], total: number, page: number, perPage: number };
+export type FindAllResponse<T> = {
+  list: T[];
+  total: number;
+  page: number;
+  perPage: number;
+};
 
 export type SortParams = { sort_by: string; sort_type: SORT_TYPE };
 

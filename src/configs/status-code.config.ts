@@ -18,6 +18,5 @@ const statusCode = {
   USER_NOT_FOUND: { code: 1001, type: 'USER_NOT_FOUND' },
   WRONG_PASSWORD: { code: 1002, type: 'WRONG_PASSWORD' },
   USER_INACTIVE: { code: 1003, type: 'USER_INACTIVE' },
-
 };
 export default statusCode;

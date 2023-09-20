@@ -42,18 +42,18 @@ export class AuthGuard implements CanActivate {
         secret: process.env.JWT_SECRET,
       });
 
-      const user = await this.userRepo.createQueryBuilder('user')
-      .where('user.email = :email', { email: payload.email })
-      .getOne();
-      
-      if(user){
-        if(!user.token || token != user.token){
+      const user = await this.userRepo
+        .createQueryBuilder('user')
+        .where('user.email = :email', { email: payload.email })
+        .getOne();
+
+      if (user) {
+        if (!user.token || token != user.token) {
           throw new UnauthorizedException();
         }
       }
-      
+
       request.user = user;
-      
     } catch {
       throw new UnauthorizedException();
     }

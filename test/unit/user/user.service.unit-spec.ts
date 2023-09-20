@@ -6,7 +6,6 @@ import FilterBuilderService from 'src/common/filter-builder/filter-builder.servi
 
 describe('User Service', () => {
   let userService: UserService;
-  let filterBuilderService: FilterBuilderService;
 
   const mockUserRepository = {
     create: jest.fn(),
@@ -30,8 +29,6 @@ describe('User Service', () => {
     }).compile();
 
     userService = module.get<UserService>(UserService);
-    filterBuilderService =
-      module.get<FilterBuilderService>(FilterBuilderService);
   });
 
   describe('Create user', () => {

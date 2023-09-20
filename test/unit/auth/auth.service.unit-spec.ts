@@ -1,15 +1,14 @@
-import { HttpStatus } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { Test, TestingModule } from "@nestjs/testing";
-import { getRepositoryToken } from "@nestjs/typeorm";
-import { ErrorException } from "src/common/response/error-payload.dto";
-import { hashPassword } from "src/common/utils/auth.utils";
-import statusCode from "src/configs/status-code.config";
-import { User } from "src/database/entities";
-import { AuthService } from "src/modules/auth/auth.service"
-import { SignUpDto } from "src/modules/auth/dto/auth.dto";
-import { Repository } from "typeorm";
-import { createUserStub } from "../user/stubs/user.stub";
+import { HttpStatus } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { ErrorException } from 'src/common/response/error-payload.dto';
+import statusCode from 'src/configs/status-code.config';
+import { User } from 'src/database/entities';
+import { AuthService } from 'src/modules/auth/auth.service';
+import { SignUpDto } from 'src/modules/auth/dto/auth.dto';
+import { Repository } from 'typeorm';
+import { createUserStub } from '../user/stubs/user.stub';
 
 describe('Auth Service', () => {
   let authService: AuthService;
@@ -38,13 +37,13 @@ describe('Auth Service', () => {
           provide: getRepositoryToken(User),
           useValue: mockUserRepository,
         },
-      ]
+      ],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
     userRepository = module.get<Repository<User>>(getRepositoryToken(User));
     jwtService = module.get<JwtService>(JwtService);
-  })
+  });
 
   // describe('signIn', () => {
   //   it('should sign in a user and return user data and token', async () => {
@@ -168,7 +167,7 @@ describe('Auth Service', () => {
         password: 'strongPassword',
         fullName: 'John Doe',
         gender: User.GENDER_USER.MALE,
-        phoneNumber: '123456'
+        phoneNumber: '123456',
       };
 
       // Mock user retrieval (user does not exist)
@@ -199,7 +198,7 @@ describe('Auth Service', () => {
         password: 'strongPassword',
         fullName: 'John Doe',
         gender: User.GENDER_USER.MALE,
-        phoneNumber: '123456'
+        phoneNumber: '123456',
       };
 
       // Mock user retrieval (user already exists)
@@ -217,5 +216,4 @@ describe('Auth Service', () => {
       );
     });
   });
-  
-})
+});

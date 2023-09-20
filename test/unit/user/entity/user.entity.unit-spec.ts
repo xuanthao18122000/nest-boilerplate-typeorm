@@ -5,14 +5,14 @@ describe('User Entity', () => {
 
   beforeEach(() => {
     user = new User();
-    user.email = "email";
-    user.password = "password";
-    user.fullName = "fullName";
-    user.phoneNumber = "phoneNumber";
-    user.token = "token";
+    user.email = 'email';
+    user.password = 'password';
+    user.fullName = 'fullName';
+    user.phoneNumber = 'phoneNumber';
+    user.token = 'token';
     user.gender = User.GENDER_USER.MALE;
-    user.address = "address";
-    user.avatar = "avatar";
+    user.address = 'address';
+    user.avatar = 'avatar';
     user.status = User.STATUS_USER.ACTIVE;
   });
 

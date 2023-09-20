@@ -1,4 +1,4 @@
-import { BaseFilter } from "src/common/share/custom-base.filter";
+import { BaseFilter } from 'src/common/share/custom-base.filter';
 
 export class ListUserDto extends BaseFilter {}
 
