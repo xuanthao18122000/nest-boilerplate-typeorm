@@ -6,6 +6,8 @@ import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import FilterBuilderService from 'src/common/filter-builder/filter-builder.service';
+import { ListUserDto } from './dto/user.dto';
+import { FindAllResponse } from 'src/common/types/common.type';
 
 @Injectable()
 export class UserService {
@@ -16,7 +18,7 @@ export class UserService {
     private _filterBuilder: FilterBuilderService,
   ) {}
 
-  async getAll(query: any): Promise<any> {
+  async getAll(query: ListUserDto): Promise<FindAllResponse<User>> {
     const { page = 1, perPage = 10 } = query;
 
     query.filter = {

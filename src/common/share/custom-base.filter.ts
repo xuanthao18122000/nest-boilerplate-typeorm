@@ -12,7 +12,7 @@ import { Transform } from 'class-transformer';
 import { SortOrder } from '../enums';
 import { IQueryBuilder } from '../interfaces';
 
-export class CustomBaseFilter {
+export class BaseFilter {
   @ApiProperty({
     description: '( Page > 0 )',
     example: 1,

@@ -1,6 +1,6 @@
 import { createUserStub } from '../../user/stubs/user.stub';
 
-export const AuthServiceMocks = jest.fn().mockReturnValue({
+export const AuthService = jest.fn().mockReturnValue({
   signIn: jest.fn().mockResolvedValue({
     access_token: null,
     refresh_token: null,

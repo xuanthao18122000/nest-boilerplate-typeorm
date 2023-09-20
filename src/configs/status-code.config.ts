@@ -12,5 +12,12 @@ const statusCode = {
     msg: 'Your data is not enough!',
   },
   VALIDATION_ERROR: { code: 422, type: 'VALIDATION_ERROR' },
+
+  // USER
+  USER_EXISTED: { code: 1000, type: 'USER_EXISTED' },
+  USER_NOT_FOUND: { code: 1001, type: 'USER_NOT_FOUND' },
+  WRONG_PASSWORD: { code: 1002, type: 'WRONG_PASSWORD' },
+  USER_INACTIVE: { code: 1003, type: 'USER_INACTIVE' },
+
 };
 export default statusCode;

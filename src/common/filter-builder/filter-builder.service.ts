@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ILike, IsNull, Not, SelectQueryBuilder } from 'typeorm';
-import { CustomBaseFilter } from '../share/custom-base.filter';
+import { BaseFilter } from '../share/custom-base.filter';
 
 @Injectable()
 export default class FilterBuilderService {
@@ -8,7 +8,7 @@ export default class FilterBuilderService {
     Class: { new (...arg: any[]): T },
     entityName: string,
     queryBuilder: SelectQueryBuilder<T>,
-    query: CustomBaseFilter = {
+    query: BaseFilter = {
       filter: {
         selectFields: [],
         numberFields: [],

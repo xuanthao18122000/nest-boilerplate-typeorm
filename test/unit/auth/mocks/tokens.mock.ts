@@ -1,3 +1,3 @@
-const mock_token = 'mock_token';
+const mockToken = 'mockToken';
 
-export { mock_token };
+export { mockToken };
