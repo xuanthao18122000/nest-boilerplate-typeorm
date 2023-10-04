@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ILike, IsNull, Not, SelectQueryBuilder } from 'typeorm';
 import { BaseFilter } from '../share/custom-base.filter';
+import { SORT_ENUM } from '../enums';
 
 @Injectable()
 export default class FilterBuilderService {
@@ -23,10 +24,10 @@ export default class FilterBuilderService {
       },
       page: 0,
       perPage: 10000,
-      sort: 'DESC',
+      sort: SORT_ENUM.DESC,
     },
   ): SelectQueryBuilder<T> {
-    const instance = new Class({});
+    // const instance = new Class({});
     const { filter, perPage, sort } = query;
     let { page } = query;
     const {
@@ -38,14 +39,14 @@ export default class FilterBuilderService {
       sortName,
     } = filter;
 
-    // Loại bỏ các thuộc tính không có trong instance
-    Object.entries(filter).map(([property, value]) => {
-      if (instance.hasOwnProperty(property)) {
-        queryBuilder.andWhere({
-          [property]: value,
-        });
-      }
-    });
+    // // Loại bỏ các thuộc tính không có trong instance
+    // Object.entries(filter).map(([property, value]) => {
+    //   if (instance.hasOwnProperty(property)) {
+    //     queryBuilder.andWhere({
+    //       [property]: value,
+    //     });
+    //   }
+    // });
 
     if (selectFields.length > 0) {
       queryBuilder = queryBuilder.select(

@@ -9,7 +9,7 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { SortOrder } from '../enums';
+import { SORT_ENUM } from '../enums';
 import { IQueryBuilder } from '../interfaces';
 
 export class BaseFilter {
@@ -54,9 +54,9 @@ export class BaseFilter {
   @IsOptional()
   filter: IQueryBuilder;
 
-  @ApiProperty({ required: false })
-  @IsNumber()
+  @ApiProperty({ enum: SORT_ENUM, required: false })
+  @IsEnum(SORT_ENUM)
   @IsOptional()
-  @IsEnum(SortOrder, { message: 'Sort must be either "ASC" or "DESC"' })
-  sort: string;
+  sort: SORT_ENUM;
+
 }
