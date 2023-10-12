@@ -58,5 +58,4 @@ export class BaseFilter {
   @IsEnum(SORT_ENUM)
   @IsOptional()
   sort: SORT_ENUM;
-
 }
