@@ -107,4 +107,8 @@ export default class FilterBuilderService {
 
     return queryBuilder;
   }
+
+  abc(queryBuilder) {
+    return queryBuilder;
+  }
 }

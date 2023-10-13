@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import FilterBuilderService from 'src/common/filter-builder/filter-builder.service';
 import { ListUserDto } from './dto/user.dto';
 import { FindAllResponse } from 'src/common/types/common.type';
+import FilterBuilder from 'src/common/share/filter.service';
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepo: Repository<User>,
 
-    private _filterBuilder: FilterBuilderService,
+    private _filterBuilderService: FilterBuilderService,
   ) {}
 
   async getAll(query: ListUserDto): Promise<FindAllResponse<User>> {
@@ -47,14 +48,16 @@ export class UserService {
 
     const entityName = 'users';
     const queryBuilder = this.userRepo.createQueryBuilder(entityName);
-    const users = this._filterBuilder.buildQuery(
-      User,
-      entityName,
-      queryBuilder,
-      query,
-    );
+    // const users = this._filterBuilderService.buildQuery(
+    //   User,
+    //   entityName,
+    //   queryBuilder,
+    //   query,
+    // )
 
-    const [list, total] = await users.getManyAndCount();
+    const filterBuilder = new FilterBuilder<User>(queryBuilder, query);
+    filterBuilder.addUnAccentString('fullName', 'a');
+    const [list, total] = await filterBuilder.queryBuilder.getManyAndCount();
 
     return { list, total, page: Number(page) / 1, perPage: perPage / 1 };
   }
