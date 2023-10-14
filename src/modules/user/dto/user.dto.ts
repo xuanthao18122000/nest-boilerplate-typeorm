@@ -22,7 +22,7 @@ export class ListUserDto extends BaseFilter {
   @IsOptional()
   phoneNumber: string;
 
-  @ApiProperty({ example: User.GENDER_USER.MALE, required: false })
+  @ApiProperty({ enum: User.GENDER_USER, required: false })
   @Type(() => Number)
   @IsEnum(User.GENDER_USER)
   @IsOptional()

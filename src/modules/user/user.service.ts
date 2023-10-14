@@ -19,47 +19,40 @@ export class UserService {
     private _filterBuilderService: FilterBuilderService,
   ) {}
 
-  async getAll(query: ListUserDto): Promise<FindAllResponse<User>> {
+  // query.filter = {
+  //   selectFields: [
+  //     'id',
+  //     'fullName',
+  //     'email',
+  //     'avatar',
+  //     'phoneNumber',
+  //     'gender',
+  //     'address',
+  //     'status',
+  //     'createdAt',
+  //     'updatedAt',
+  //   ],
+  //   unaccentFields: ['fullName'],
+  //   numberFields: [],
+  //   stringFields: ['phoneNumber'],
+  //   dateFields: {
+  //     dateName: 'createdAt',
+  //     startDateField: 'startDate',
+  //     endDateField: 'endDate',
+  //   },
+  //   sortName: 'Id',
+  // };
+  async getAll(query: ListUserDto) {
     const { page = 1, perPage = 10 } = query;
 
-    query.filter = {
-      selectFields: [
-        'id',
-        'fullName',
-        'email',
-        'avatar',
-        'phoneNumber',
-        'gender',
-        'address',
-        'status',
-        'createdAt',
-        'updatedAt',
-      ],
-      unaccentFields: ['fullName'],
-      numberFields: [],
-      stringFields: ['phoneNumber'],
-      dateFields: {
-        dateName: 'createdAt',
-        startDateField: 'startDate',
-        endDateField: 'endDate',
-      },
-      sortName: 'Id',
-    };
+    const filterBuilder = new FilterBuilder<User>(query, this.userRepo)
+      .createQueryBuilder('users')
+      .addUnAccentString('fullName')
+      .addNumber('gender');
 
-    const entityName = 'users';
-    const queryBuilder = this.userRepo.createQueryBuilder(entityName);
-    // const users = this._filterBuilderService.buildQuery(
-    //   User,
-    //   entityName,
-    //   queryBuilder,
-    //   query,
-    // )
-
-    const filterBuilder = new FilterBuilder<User>(queryBuilder, query);
-    filterBuilder.addUnAccentString('fullName', 'a');
     const [list, total] = await filterBuilder.queryBuilder.getManyAndCount();
 
-    return { list, total, page: Number(page) / 1, perPage: perPage / 1 };
+    return { list, total, page: Number(page), perPage: Number(perPage) };
   }
 
   async getOne(id: number): Promise<User | any> {

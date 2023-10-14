@@ -14,7 +14,6 @@ import { IQueryBuilder } from '../interfaces';
 
 export class BaseFilter {
   @ApiProperty({
-    description: '( Page > 0 )',
     example: 1,
     required: false,
   })
@@ -23,10 +22,9 @@ export class BaseFilter {
   @ValidateIf((o) => typeof o.page === 'number')
   @IsNumber()
   @Min(1, { message: 'Page must be greater than 0' })
-  page: number | string;
+  page: number;
 
   @ApiProperty({
-    description: '( perPage > 0 )',
     example: 10,
     required: false,
   })

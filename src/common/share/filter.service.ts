@@ -1,14 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { ILike, IsNull, Not, SelectQueryBuilder } from 'typeorm';
+import { ILike, IsNull, Not, Repository, SelectQueryBuilder } from 'typeorm';
 
 export default class FilterBuilder<T> {
   private entityName: string;
   public queryBuilder: SelectQueryBuilder<T>;
   private query: any;
+  private entityRepo: Repository<T>;
 
-  constructor(queryBuilder: SelectQueryBuilder<T>, query: any) {
-    this.queryBuilder = queryBuilder;
+  constructor(query: any, entityRepo: Repository<T>) {
     this.query = query;
+    this.entityRepo = entityRepo;
+  }
+
+  createQueryBuilder(entityName: string) {
+    this.entityName = entityName;
+    this.queryBuilder = this.entityRepo.createQueryBuilder(entityName);
+    return this
   }
 
   select(selectFields: string[]) {
@@ -34,12 +41,12 @@ export default class FilterBuilder<T> {
     return this.queryBuilder;
   }
 
-  addNumber(name: string, value: number) {
+  addNumber(name: string, value: number = undefined) {
     if (!value) value = this.query[name];
     this.queryBuilder.andWhere({
       [name]: value ? value : Not(IsNull()),
     });
-    return this;
+    return this
   }
 
   addString(name: string, value: number) {
@@ -53,11 +60,12 @@ export default class FilterBuilder<T> {
   public addUnAccentString(name: string, value: string = undefined) {
     if (!value) value = this.query[name];
     this.queryBuilder.andWhere(
-      `(unaccent(LOWER(${this.entityName}.${name})) ILIKE unaccent(LOWER(:${name})) OR unaccent(LOWER(${this.entityName}.${name})) IS NULL)`,
+      `unaccent(LOWER(${this.entityName}.${name})) ILIKE unaccent(LOWER(:${name}))`,
       {
         [name]: `%${value}%`,
       },
-    );
+    )
+    return this
   }
 
   addDate(
