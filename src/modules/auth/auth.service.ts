@@ -3,10 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
 import { SignInDto, SignUpDto, UpdateProfileDto } from './dto/auth.dto';
-import { ErrorException } from 'src/common/response/error-payload.dto';
-import statusCode from 'src/configs/status-code.config';
 import { JwtService } from '@nestjs/jwt';
 import { comparePasswords, hashPassword } from 'src/common/utils/auth.utils';
+import { throwHttpException } from 'src/common/exceptions/throw.exception';
 
 @Injectable()
 export class AuthService {
@@ -23,28 +22,16 @@ export class AuthService {
     const user = await this.userRepo.findOneBy({ email });
 
     if (!user) {
-      throw new ErrorException(
-        HttpStatus.NOT_FOUND,
-        statusCode['USER_NOT_FOUND'].code,
-        statusCode['USER_NOT_FOUND'].type,
-      );
+      throwHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND');
     }
 
     if (user.status !== User.STATUS_USER.ACTIVE) {
-      throw new ErrorException(
-        HttpStatus.FORBIDDEN,
-        statusCode['USER_INACTIVE'].code,
-        statusCode['USER_INACTIVE'].type,
-      );
+      throwHttpException(HttpStatus.UNAUTHORIZED, 'USER_INACTIVE');
     }
 
     const isAuth = comparePasswords(password, user.password);
     if (!isAuth) {
-      throw new ErrorException(
-        HttpStatus.NOT_FOUND,
-        statusCode['WRONG_PASSWORD'].code,
-        statusCode['WRONG_PASSWORD'].type,
-      );
+      throwHttpException(HttpStatus.NOT_FOUND, 'WRONG_PASSWORD');
     }
     const jwt = await this.signToken(user.id, user.email);
 
@@ -64,11 +51,7 @@ export class AuthService {
     const userExisted = await this.userRepo.findOneBy({ email });
 
     if (userExisted) {
-      throw new ErrorException(
-        HttpStatus.CONFLICT,
-        statusCode['USER_EXISTED'].code,
-        statusCode['USER_EXISTED'].type,
-      );
+      throwHttpException(HttpStatus.CONFLICT, 'USER_EXISTED');
     }
 
     const user = this.userRepo.create({
