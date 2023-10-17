@@ -1,9 +1,4 @@
-import {
-  ILike,
-  In,
-  Repository,
-  SelectQueryBuilder,
-} from 'typeorm';
+import { ILike, In, Repository, SelectQueryBuilder } from 'typeorm';
 import { SORT_ENUM } from '../enums';
 import { BaseFilter } from './custom-base.filter';
 
