@@ -112,8 +112,7 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
     endDateValue: Date = undefined,
   ) {
     // const propertyName = String(name);
-    const startDate =
-      startDateValue || this.query[startDateName];
+    const startDate = startDateValue || this.query[startDateName];
     const endDate = endDateValue || this.query[endDateName];
 
     if (startDate) {
