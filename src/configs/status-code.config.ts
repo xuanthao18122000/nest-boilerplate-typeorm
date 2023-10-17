@@ -15,7 +15,11 @@ const statusCode: StatusCodeConfig = {
     type: 'NOT_ENOUGH_DATA',
     msg: 'Your data is not enough!',
   },
-  VALIDATION_ERROR: { code: 422, type: 'VALIDATION_ERROR', msg: 'Validation Error!' },
+  VALIDATION_ERROR: {
+    code: 422,
+    type: 'VALIDATION_ERROR',
+    msg: 'Validation Error!',
+  },
 
   // USER STATUS
   USER_EXISTED: {

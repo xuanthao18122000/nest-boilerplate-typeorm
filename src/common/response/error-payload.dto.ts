@@ -6,7 +6,7 @@ export class ErrorPayloadDto {
   @ApiProperty() msg: string;
   @ApiProperty({ example: false }) success: boolean;
 
-  constructor({ code = 0 , success = false, msg = '' }) {
+  constructor({ code = 0, success = false, msg = '' }) {
     this.code = code;
     this.success = success;
     this.msg = msg;

@@ -5,8 +5,6 @@ import { User } from 'src/database/entities';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { SignUpDto } from 'src/modules/auth/dto/auth.dto';
 import { createUserStub } from '../user/stubs/user.stub';
-import { throwHttpException } from 'src/common/exceptions/throw.exception';
-import { HttpStatus } from '@nestjs/common';
 
 describe('Auth Service', () => {
   let authService: AuthService;

@@ -1,8 +1,6 @@
 import {
   ILike,
   In,
-  IsNull,
-  Not,
   Repository,
   SelectQueryBuilder,
 } from 'typeorm';
@@ -117,7 +115,8 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
     startDateValue: Date = undefined,
     endDateValue: Date = undefined,
   ) {
-    const startDate = startDateValue || this.query[startDateName as keyof TQuery];
+    const startDate =
+      startDateValue || this.query[startDateName as keyof TQuery];
     const endDate = endDateValue || this.query[endDateName as keyof TQuery];
 
     if (startDate) {
@@ -129,12 +128,9 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
       );
     }
     if (endDate) {
-      this.queryBuilder.andWhere(
-        `${this.entityName}.${dateName} <= :endDate`,
-        {
-          endDate,
-        },
-      );
+      this.queryBuilder.andWhere(`${this.entityName}.${dateName} <= :endDate`, {
+        endDate,
+      });
     }
 
     return this;
