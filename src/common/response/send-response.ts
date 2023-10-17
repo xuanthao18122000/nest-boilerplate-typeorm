@@ -1,7 +1,7 @@
 import { Response } from 'express';
 
 export class SendResponse {
-  static success(data: any, msg = '', res: Response = null) {
+  static success<T>(data: T, msg = '', res: Response = null) {
     if (res) {
       return res.send({
         code: 200,

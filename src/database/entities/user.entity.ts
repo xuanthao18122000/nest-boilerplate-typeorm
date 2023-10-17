@@ -27,7 +27,7 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', nullable: true })
   avatar: string;
 
-  @Column({ type: 'int', default: -1 })
+  @Column({ type: 'int', default: User.STATUS_USER.INACTIVE })
   status: number;
 
   static STATUS_USER = {

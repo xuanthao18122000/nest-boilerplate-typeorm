@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsEmail,
   IsEnum,
   IsInt,
   IsNotEmpty,
@@ -28,18 +29,38 @@ export class ListUserDto extends BaseFilter {
   @IsOptional()
   gender: number;
 
-  @ApiProperty({ required: false, type: 'string', format: 'date' })
+  @ApiProperty({
+    type: 'string',
+    format: 'date',
+    description: 'Type: YYYY/mm/dd',
+    required: false,
+  })
   @Type(() => Date)
   @IsOptional()
   startDate: Date;
 
-  @ApiProperty({ required: false, type: 'string', format: 'date' })
+  @ApiProperty({
+    type: 'string',
+    format: 'date',
+    description: 'Type: YYYY/mm/dd',
+    required: false,
+  })
   @Type(() => Date)
   @IsOptional()
   endDate: Date;
 }
 
 export class CreateUserDto {
+  @ApiProperty()
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -68,4 +89,26 @@ export class CreateUserDto {
   endDate: Date;
 }
 
-export class UpdateUserDto {}
+export class UpdateUserDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  fullName: string;
+
+  @ApiProperty()
+  @Type(() => Number)
+  @IsInt()
+  @IsNotEmpty()
+  phoneNumber: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  address: string;
+
+  @ApiProperty({ example: User.GENDER_USER.MALE })
+  @Type(() => Number)
+  @IsEnum(User.GENDER_USER)
+  @IsNotEmpty()
+  gender: number;
+}

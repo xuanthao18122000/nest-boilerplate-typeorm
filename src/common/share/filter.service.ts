@@ -7,14 +7,15 @@ import {
   SelectQueryBuilder,
 } from 'typeorm';
 import { SORT_ENUM } from '../enums';
+import { BaseFilter } from './custom-base.filter';
 
-export default class FilterBuilder<T> {
+export default class FilterBuilder<T, TQuery extends BaseFilter> {
   private entityName: string;
   public queryBuilder: SelectQueryBuilder<T>;
-  private query: any;
+  private query: TQuery;
   private entityRepo: Repository<T>;
 
-  constructor(entityRepo: Repository<T>, query: any) {
+  constructor(entityRepo: Repository<T>, query: TQuery) {
     this.query = query;
     this.entityRepo = entityRepo;
   }

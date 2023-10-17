@@ -2,10 +2,11 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
-import { ListUserDto } from './dto/user.dto';
+import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';
 import FilterBuilder from 'src/common/share/filter.service';
 import { throwHttpException } from 'src/common/exceptions/throw.exception';
 import { hashPassword } from 'src/common/utils/auth.utils';
+import { listResponse } from 'src/common/response/response-list.response';
 
 @Injectable()
 export class UserService {
@@ -17,7 +18,10 @@ export class UserService {
   async getAll(query: ListUserDto) {
     const { page = 1, perPage = 10 } = query;
 
-    const filterBuilder = new FilterBuilder<User>(this.userRepo, query)
+    const filterBuilder = new FilterBuilder<User, ListUserDto>(
+      this.userRepo,
+      query,
+    )
       .createQueryBuilder('users')
       .select([
         'id',
@@ -37,10 +41,10 @@ export class UserService {
 
     const [list, total] = await filterBuilder.queryBuilder.getManyAndCount();
 
-    return { list, total, page: Number(page), perPage: Number(perPage) };
+    return listResponse(list, total, page, perPage);
   }
 
-  async getOne(id: number): Promise<User | any> {
+  async getOne(id: number): Promise<Partial<User>> {
     const user = await this.findUserByPk(id);
 
     if (!user) {
@@ -49,7 +53,7 @@ export class UserService {
     return user.serialize();
   }
 
-  async create(body: any) {
+  async create(body: CreateUserDto) {
     const { email, password, fullName, gender, phoneNumber } = body;
     const isExistUser = await this.userRepo.findOneBy({
       email,
@@ -71,9 +75,12 @@ export class UserService {
     return await this.userRepo.save(user);
   }
 
-  async update(id: number, body: any): Promise<User> {
-    const { fullName, phoneNumber, gender, address } = body;
+  async update(
+    id: number,
+    { fullName, phoneNumber, gender, address }: UpdateUserDto,
+  ): Promise<User> {
     const user = await this.findUserByPk(id);
+
     if (fullName) user.fullName = fullName;
     if (phoneNumber) user.phoneNumber = phoneNumber;
     if (gender) user.gender = gender;

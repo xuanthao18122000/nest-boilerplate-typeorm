@@ -7,6 +7,7 @@ import {
   Min,
   IsEnum,
   ValidateIf,
+  IsBoolean,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { SORT_ENUM } from '../enums';
@@ -56,4 +57,9 @@ export class BaseFilter {
   @IsEnum(SORT_ENUM)
   @IsOptional()
   sort: SORT_ENUM;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  getFull: boolean;
 }
