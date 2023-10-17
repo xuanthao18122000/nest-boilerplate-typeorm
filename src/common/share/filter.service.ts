@@ -61,8 +61,8 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
     }
   }
 
-  addNumber(name: string, valueNumber: number = undefined) {
-    const value = valueNumber || this.query[name as keyof TQuery];
+  addNumber(name: keyof TQuery, valueNumber: number = undefined) {
+    const value = valueNumber || this.query[name];
     if (value) {
       this.queryBuilder.andWhere({
         [name]: value,
@@ -71,15 +71,15 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
     return this;
   }
 
-  addEnum(name: string, array: Array<number> = []) {
+  addEnum(name: keyof TQuery, array: Array<number> = []) {
     if (name) {
       this.queryBuilder.andWhere({ [name]: In(array) });
     }
     return this;
   }
 
-  addString(name: string, valueString: string = undefined) {
-    const value = valueString || this.query[name as keyof TQuery];
+  addString(name: keyof TQuery, valueString: string = undefined) {
+    const value = valueString || this.query[name];
 
     if (value) {
       this.queryBuilder.andWhere({
@@ -89,12 +89,13 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
     return this;
   }
 
-  addUnAccentString(name: string, valueString: string = undefined) {
-    const value = valueString || this.query[name as keyof TQuery];
+  addUnAccentString(name: keyof TQuery, valueString: string = undefined) {
+    const propertyName = String(name);
+    const value = valueString || this.query[name];
 
     if (value) {
       this.queryBuilder.andWhere(
-        `unaccent(LOWER(${this.entityName}.${name})) ILIKE unaccent(LOWER(:${name}))`,
+        `unaccent(LOWER(${this.entityName}.${propertyName})) ILIKE unaccent(LOWER(:${propertyName}))`,
         {
           [name]: `%${value}%`,
         },
@@ -105,14 +106,15 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
 
   addDate(
     dateName: string,
-    startDateName: string,
-    endDateName: string,
+    startDateName: keyof TQuery,
+    endDateName: keyof TQuery,
     startDateValue: Date = undefined,
     endDateValue: Date = undefined,
   ) {
+    // const propertyName = String(name);
     const startDate =
-      startDateValue || this.query[startDateName as keyof TQuery];
-    const endDate = endDateValue || this.query[endDateName as keyof TQuery];
+      startDateValue || this.query[startDateName];
+    const endDate = endDateValue || this.query[endDateName];
 
     if (startDate) {
       this.queryBuilder.andWhere(
