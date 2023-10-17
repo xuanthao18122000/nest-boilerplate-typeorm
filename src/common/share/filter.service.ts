@@ -134,7 +134,7 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
 
   sortBy(column: string, sort: SORT_ENUM = SORT_ENUM.DESC) {
     if (this.query.sort) sort = this.query.sort;
-    this.queryBuilder.orderBy(`${this.entityName}.${column}`, sort);
+    this.queryBuilder.addOrderBy(`${this.entityName}.${column}`, sort);
     return this;
   }
 }

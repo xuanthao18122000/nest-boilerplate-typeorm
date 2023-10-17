@@ -3,15 +3,12 @@ import { Type } from 'class-transformer';
 import {
   IsNumber,
   IsOptional,
-  IsObject,
   Min,
   IsEnum,
   ValidateIf,
   IsBoolean,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
 import { SORT_ENUM } from '../enums';
-import { IQueryBuilder } from '../interfaces';
 
 export class BaseFilter {
   @ApiProperty({
@@ -34,24 +31,6 @@ export class BaseFilter {
   @IsOptional()
   @Min(1, { message: 'perPage must be greater than 0' })
   perPage: number;
-
-  @ApiProperty({
-    description: 'Filter Fields',
-    example: { name: '' },
-    required: false,
-  })
-  @Transform(({ value }) => {
-    try {
-      return JSON.parse(value);
-    } catch (err) {
-      return false;
-    }
-  })
-  @IsObject({
-    message: 'Invalid filter',
-  })
-  @IsOptional()
-  filter: IQueryBuilder;
 
   @ApiProperty({ enum: SORT_ENUM, required: false })
   @IsEnum(SORT_ENUM)
