@@ -1,20 +1,15 @@
-import { HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ErrorException } from 'src/common/response/error-payload.dto';
-import statusCode from 'src/configs/status-code.config';
 import { User } from 'src/database/entities';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { SignUpDto } from 'src/modules/auth/dto/auth.dto';
-import { Repository } from 'typeorm';
 import { createUserStub } from '../user/stubs/user.stub';
 import { throwHttpException } from 'src/common/exceptions/throw.exception';
+import { HttpStatus } from '@nestjs/common';
 
 describe('Auth Service', () => {
   let authService: AuthService;
-  let jwtService: JwtService;
-  let userRepository: Repository<User>;
 
   const mockUserRepository = {
     create: jest.fn(),
@@ -23,10 +18,6 @@ describe('Auth Service', () => {
     findOneBy: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
-  };
-
-  const mockJwtService = {
-    signAsync: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -42,8 +33,6 @@ describe('Auth Service', () => {
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
-    userRepository = module.get<Repository<User>>(getRepositoryToken(User));
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   // describe('signIn', () => {
@@ -194,13 +183,13 @@ describe('Auth Service', () => {
     });
 
     it('should throw an error if user already exists', async () => {
-      const signUpDto: SignUpDto = {
-        email: 'johndoe@example.com',
-        password: 'strongPassword',
-        fullName: 'John Doe',
-        gender: User.GENDER_USER.MALE,
-        phoneNumber: '123456',
-      };
+      // const signUpDto: SignUpDto = {
+      //   email: 'johndoe@example.com',
+      //   password: 'strongPassword',
+      //   fullName: 'John Doe',
+      //   gender: User.GENDER_USER.MALE,
+      //   phoneNumber: '123456',
+      // };
 
       // Mock user retrieval (user already exists)
       const existingUser: User = createUserStub();
@@ -209,7 +198,7 @@ describe('Auth Service', () => {
 
       // Call the signUp method and expect it to throw an error
       // await expect(authService.signUp(signUpDto)).rejects.toThrowError(
-      //   throwHttpException(HttpStatus.CONFLICT, 'USER_EXISTED'),
+      //   throwHttpException(HttpStatus.CONFLICT, 'USER_EXISTED')
       // );
     });
   });

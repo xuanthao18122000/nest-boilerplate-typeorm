@@ -77,16 +77,6 @@ export class CreateUserDto {
   @IsEnum(User.GENDER_USER)
   @IsNotEmpty()
   gender: number;
-
-  @ApiProperty({ required: false, type: 'string', format: 'date' })
-  @Type(() => Date)
-  @IsOptional()
-  startDate: Date;
-
-  @ApiProperty({ required: false, type: 'string', format: 'date' })
-  @Type(() => Date)
-  @IsOptional()
-  endDate: Date;
 }
 
 export class UpdateUserDto {

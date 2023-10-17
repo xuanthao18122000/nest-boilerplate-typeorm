@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserService } from '../../../src/modules/user/user.service';
 import { User } from '../../../src/database/entities';
+import { CreateUserDto } from 'src/modules/user/dto/user.dto';
 
 describe('User Service', () => {
   let userService: UserService;
@@ -41,38 +42,39 @@ describe('User Service', () => {
 
       mockUserRepository.findOneBy.mockResolvedValue(null);
 
-      const createdUser = new User();
-      (createdUser.email = 'johndoe@example.com'),
-        (createdUser.password = 'strongestP@ssword'),
-        (createdUser.fullName = 'John Doe'),
-        (createdUser.gender = User.GENDER_USER.MALE),
-        (createdUser.phoneNumber = '0938381732'),
-        mockUserRepository.create.mockReturnValue(createdUser);
+      const createdUser: CreateUserDto = {
+        email: 'johndoe@example.com',
+        password: 'strongPassword',
+        fullName: 'John Doe',
+        gender: User.GENDER_USER.MALE,
+        phoneNumber: '123456',
+      };
+      mockUserRepository.create.mockReturnValue(createdUser);
       mockUserRepository.save.mockResolvedValue(createdUser);
 
       // Call the create method
-      // const result = await userService.create(userData);
+      const result = await userService.create(userData);
 
-      // // Assertions
-      // expect(result).toEqual(createdUser);
-      // expect(mockUserRepository.findOneBy).toHaveBeenCalledWith({
-      //   email: userData.email,
-      // });
+      // Assertions
+      expect(result).toEqual(createdUser);
+      expect(mockUserRepository.findOneBy).toHaveBeenCalledWith({
+        email: userData.email,
+      });
 
-      // expect(mockUserRepository.create).toHaveBeenCalledWith({
-      //   email: userData.email,
-      //   password: expect.any(String),
-      //   fullName: userData.fullName,
-      //   gender: userData.gender,
-      //   phoneNumber: userData.phoneNumber,
-      //   status: User.STATUS_USER.ACTIVE,
-      // });
-      // expect(mockUserRepository.save).toHaveBeenCalledWith(createdUser);
+      expect(mockUserRepository.create).toHaveBeenCalledWith({
+        email: userData.email,
+        password: expect.any(String),
+        fullName: userData.fullName,
+        gender: userData.gender,
+        phoneNumber: userData.phoneNumber,
+        status: User.STATUS_USER.ACTIVE,
+      });
+      expect(mockUserRepository.save).toHaveBeenCalledWith(createdUser);
     });
 
     it('should throw an error if the user with the same email exists', async () => {
       // Mock user data
-      const userData = {
+      const userData: CreateUserDto = {
         email: 'johndoe@example.com',
         password: 'strongestP@ssword',
         fullName: 'John Doe',
@@ -85,7 +87,7 @@ describe('User Service', () => {
       mockUserRepository.findOneBy.mockResolvedValue(existingUser);
 
       // Call the create method and expect it to throw an error
-      // await expect(userService.create(userData)).rejects.toThrowError();
+      await expect(userService.create(userData)).rejects.toThrowError();
     });
   });
 });
