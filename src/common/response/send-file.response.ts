@@ -1,6 +1,6 @@
 import { Response } from 'express';
 
-export function downloadExcel(name: string, file, res: Response) {
+export function downloadExcel(name: string, file: Buffer, res: Response) {
   res.setHeader(
     'Content-Type',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

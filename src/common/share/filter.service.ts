@@ -68,16 +68,8 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
     }
   }
 
-  addLikeString(name: string, value: string) {
-    if (!value) value = this.query[name];
-    this.queryBuilder.andWhere({
-      [name]: name ? ILike(`%${value}%`) : Not(IsNull()),
-    });
-    return this.queryBuilder;
-  }
-
-  addNumber(name: string, value: number = undefined) {
-    if (!value) value = this.query[name];
+  addNumber(name: string, valueNumber: number = undefined) {
+    const value = valueNumber || this.query[name as keyof TQuery];
     if (value) {
       this.queryBuilder.andWhere({
         [name]: value,
@@ -93,8 +85,9 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
     return this;
   }
 
-  addString(name: string, value: string = undefined) {
-    if (!value) value = this.query[name];
+  addString(name: string, valueString: string = undefined) {
+    const value = valueString || this.query[name as keyof TQuery];
+
     if (value) {
       this.queryBuilder.andWhere({
         [name]: ILike(`%${value}%`),
@@ -103,8 +96,9 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
     return this;
   }
 
-  addUnAccentString(name: string, value: string = undefined) {
-    if (!value) value = this.query[name];
+  addUnAccentString(name: string, valueString: string = undefined) {
+    const value = valueString || this.query[name as keyof TQuery];
+
     if (value) {
       this.queryBuilder.andWhere(
         `unaccent(LOWER(${this.entityName}.${name})) ILIKE unaccent(LOWER(:${name}))`,
@@ -123,22 +117,22 @@ export default class FilterBuilder<T, TQuery extends BaseFilter> {
     startDateValue: Date = undefined,
     endDateValue: Date = undefined,
   ) {
-    if (!startDateValue) startDateValue = this.query[startDateName];
-    if (!endDateValue) endDateValue = this.query[endDateName];
+    const startDate = startDateValue || this.query[startDateName as keyof TQuery];
+    const endDate = endDateValue || this.query[endDateName as keyof TQuery];
 
-    if (startDateValue) {
+    if (startDate) {
       this.queryBuilder.andWhere(
-        `${this.entityName}.${dateName} >= :startDateValue`,
+        `${this.entityName}.${dateName} >= :startDate`,
         {
-          startDateValue,
+          startDate,
         },
       );
     }
-    if (endDateValue) {
+    if (endDate) {
       this.queryBuilder.andWhere(
-        `${this.entityName}.${dateName} <= :endDateValue`,
+        `${this.entityName}.${dateName} <= :endDate`,
         {
-          endDateValue,
+          endDate,
         },
       );
     }

@@ -6,10 +6,14 @@ export const throwHttpException = (
   httpStatus: HttpStatus,
   code: string,
 ): ErrorException => {
-  throw new ErrorException(
-    httpStatus,
-    statusCode[code].code,
-    statusCode[code].type,
-    statusCode[code].msg,
-  );
+  if (statusCode.hasOwnProperty(code)) {
+    throw new ErrorException(
+      httpStatus,
+      statusCode[code].code,
+      statusCode[code].type,
+      statusCode[code].msg,
+    );
+  } else {
+    throw new Error(`Unknown status code: ${code}`);
+  }
 };
