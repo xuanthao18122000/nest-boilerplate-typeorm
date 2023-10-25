@@ -30,9 +30,9 @@ export class Logger implements LoggerService {
         if (info.message.clientIp)
           return `\n[${level}] - [${info.message.clientIp}] - ${
             info.message.message
-          } - ${moment(timestamp).format('DD/MM/YYYY')}`;
+          } - ${moment(timestamp).format('DD/MM/YYYY hh:mm:ss')}`;
         return `[${level}] - ${info.message} - ${moment(timestamp).format(
-          'DD/MM/YYYY',
+          'DD/MM/YYYY hh:mm:ss',
         )}`;
       },
     );

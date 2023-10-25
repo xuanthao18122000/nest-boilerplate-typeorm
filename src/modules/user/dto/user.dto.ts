@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsEmail,
   IsEnum,
   IsInt,
@@ -23,10 +24,13 @@ export class ListUserDto extends BaseFilter {
   @IsOptional()
   phoneNumber: string;
 
-  @ApiProperty({ enum: User.GENDER_USER, required: false })
+  @ApiProperty({
+    required: false,
+    enum: User.GENDER_USER,
+  })
+  @IsOptional()
   @Type(() => Number)
   @IsEnum(User.GENDER_USER)
-  @IsOptional()
   gender: number;
 
   @ApiProperty({
@@ -48,25 +52,31 @@ export class ListUserDto extends BaseFilter {
   @Type(() => Date)
   @IsOptional()
   endDate: Date;
+
+  @ApiProperty({ required: false, type: Boolean })
+  @Transform(({ value }) => value === 'true')
+  @IsBoolean()
+  @IsOptional()
+  download?: boolean;
 }
 
 export class CreateUserDto {
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
   fullName: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @Type(() => Number)
   @IsInt()
   @IsNotEmpty()
@@ -80,25 +90,25 @@ export class CreateUserDto {
 }
 
 export class UpdateUserDto {
-  @ApiProperty()
+  @ApiProperty({ example: '', required: false })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   fullName: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '', required: false })
   @Type(() => Number)
   @IsInt()
-  @IsNotEmpty()
+  @IsOptional()
   phoneNumber: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '', required: false })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   address: string;
 
-  @ApiProperty({ example: User.GENDER_USER.MALE })
+  @ApiProperty({ required: false, example: User.GENDER_USER.MALE })
   @Type(() => Number)
   @IsEnum(User.GENDER_USER)
-  @IsNotEmpty()
+  @IsOptional()
   gender: number;
 }

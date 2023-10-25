@@ -4,34 +4,34 @@ import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsString } from 'class-validator';
 import { User } from 'src/database/entities';
 
 export class SignInDto {
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
   password: string;
 }
 
 export class SignUpDto {
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
   fullName: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
   phoneNumber: string;
@@ -44,12 +44,12 @@ export class SignUpDto {
 }
 
 export class UpdateProfileDto {
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
   fullName: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '' })
   @Type(() => Number)
   @IsInt()
   @IsNotEmpty()

@@ -2,6 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
+import * as ExcelJS from 'exceljs';
 import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';
 import FilterBuilder from 'src/common/share/filter.service';
 import { throwHttpException } from 'src/common/exceptions/throw.exception';
@@ -17,13 +18,13 @@ export class UserService {
 
   async getAll(query: ListUserDto) {
     const { page = 1, perPage = 10 } = query;
+    const entity = {
+      entityRepo: this.userRepo,
+      alias: 'user',
+    };
 
-    const filterBuilder = new FilterBuilder<User, ListUserDto>(
-      this.userRepo,
-      query,
-    )
-      .createQueryBuilder('users')
-      .select([
+    const filterBuilder = new FilterBuilder<User, ListUserDto>(entity, query)
+      .addSelect([
         'id',
         'email',
         'fullName',
@@ -37,11 +38,17 @@ export class UserService {
       .addString('phoneNumber')
       .addNumber('gender')
       .addDate('createdAt', 'startDate', 'endDate')
+      .addPagination()
       .sortBy('id');
 
     const [list, total] = await filterBuilder.queryBuilder.getManyAndCount();
 
     return listResponse(list, total, page, perPage);
+  }
+
+  async exportUsers(users: User[]) {
+    const workbook = new ExcelJS.Workbook();
+    return workbook.xlsx.writeBuffer();
   }
 
   async getOne(id: number): Promise<Partial<User>> {

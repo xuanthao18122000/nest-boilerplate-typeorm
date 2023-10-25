@@ -44,7 +44,14 @@ export class User extends BaseEntity {
     MALE: 1,
     /** Nữ */
     FEMALE: 2,
+    /** Khác */
+    OTHER: 3,
   };
+
+  constructor(data: Partial<User>) {
+    super();
+    Object.assign(this, data);
+  }
 
   serialize() {
     return {

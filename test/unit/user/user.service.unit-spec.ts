@@ -83,7 +83,7 @@ describe('User Service', () => {
       };
 
       // Mock that a user with the same email already exists
-      const existingUser = new User();
+      const existingUser = new User({});
       mockUserRepository.findOneBy.mockResolvedValue(existingUser);
 
       // Call the create method and expect it to throw an error

@@ -4,16 +4,17 @@ describe('User Entity', () => {
   let user: User;
 
   beforeEach(() => {
-    user = new User();
-    user.email = 'email';
-    user.password = 'password';
-    user.fullName = 'fullName';
-    user.phoneNumber = 'phoneNumber';
-    user.token = 'token';
-    user.gender = User.GENDER_USER.MALE;
-    user.address = 'address';
-    user.avatar = 'avatar';
-    user.status = User.STATUS_USER.ACTIVE;
+    user = new User({
+      email: 'email',
+      password: 'password',
+      fullName: 'fullName',
+      phoneNumber: 'phoneNumber',
+      token: 'token',
+      gender: User.GENDER_USER.MALE,
+      address: 'address',
+      avatar: 'avatar',
+      status: User.STATUS_USER.ACTIVE,
+    });
   });
 
   it('should be defined', () => {

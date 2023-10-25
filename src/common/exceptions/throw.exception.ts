@@ -14,6 +14,11 @@ export const throwHttpException = (
       statusCode[code].msg,
     );
   } else {
-    throw new Error(`Unknown status code: ${code}`);
+    throw new ErrorException(
+      httpStatus,
+      statusCode['BACKEND'].code,
+      statusCode['BACKEND'].type,
+      statusCode['BACKEND'].msg,
+    );
   }
 };
