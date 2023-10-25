@@ -1,4 +1,4 @@
 import 'dotenv/config';
 
-export const cfg = (key: string, parser: any = String) =>
+export const getEnv = (key: string, parser: any = String) =>
   parser(process.env[key]);

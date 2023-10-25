@@ -6,6 +6,7 @@ import { SignInDto, SignUpDto, UpdateProfileDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { comparePasswords, hashPassword } from 'src/common/utils/auth.utils';
 import { throwHttpException } from 'src/common/exceptions/throw.exception';
+import { getEnv } from 'src/configs/env.config';
 
 @Injectable()
 export class AuthService {
@@ -88,12 +89,12 @@ export class AuthService {
     };
 
     const token = await this.jwtService.signAsync(payload, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-      secret: process.env.JWT_SECRET,
+      expiresIn: getEnv('JWT_EXPIRES_IN'),
+      secret: getEnv('JWT_SECRET'),
     });
     return {
       token,
-      expiresIn: process.env.JWT_EXPIRES_IN,
+      expiresIn: getEnv('JWT_EXPIRES_IN'),
     };
   }
 }

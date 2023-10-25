@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { SignInDto, SignUpDto } from 'src/modules/auth/dto/auth.dto';
 import { createUserStub } from '../user/stubs/user.stub';
 import { SendResponse } from 'src/common/response/send-response';
+import { getEnv } from 'src/configs/env.config';
 
 jest.mock('./mocks/auth.service.ts');
 describe('AuthController', () => {
@@ -72,7 +73,7 @@ describe('AuthController', () => {
       const mockResponse = {
         user: mockUser.serialize(),
         token: mockToken,
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        expiresIn: getEnv('ATK_DB_HOST'),
       };
       jest.spyOn(authService, 'signIn').mockResolvedValue(mockResponse);
 

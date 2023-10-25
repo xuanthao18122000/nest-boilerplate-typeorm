@@ -3,7 +3,7 @@ import { LoggerService } from '@nestjs/common';
 import * as winston from 'winston';
 import * as moment from 'moment';
 import 'winston-daily-rotate-file';
-import { cfg } from 'src/configs/env.config';
+import { getEnv } from 'src/configs/env.config';
 @Injectable()
 export class Logger implements LoggerService {
   private readonly logger: winston.Logger;
@@ -48,8 +48,8 @@ export class Logger implements LoggerService {
         splat(),
         messageFormat,
       ),
-      filename: cfg('LOG_FATAL_PATH'),
-      datePattern: cfg('LOG_NAME_DATE_PATTERN'),
+      filename: getEnv('LOG_FATAL_PATH'),
+      datePattern: getEnv('LOG_NAME_DATE_PATTERN'),
     });
     const errorTransporter = new winston.transports.DailyRotateFile({
       level: 'error',
@@ -59,11 +59,11 @@ export class Logger implements LoggerService {
         splat(),
         messageFormat,
       ),
-      maxSize: cfg('LOG_MAX_SIZE'),
-      maxFiles: cfg('LOG_MAX_FILES'),
-      filename: cfg('LOG_ERROR_PATH'),
-      zippedArchive: cfg('LOG_ZIP_OLD_FILE'),
-      datePattern: cfg('LOG_NAME_DATE_PATTERN'),
+      maxSize: getEnv('LOG_MAX_SIZE'),
+      maxFiles: getEnv('LOG_MAX_FILES'),
+      filename: getEnv('LOG_ERROR_PATH'),
+      zippedArchive: getEnv('LOG_ZIP_OLD_FILE'),
+      datePattern: getEnv('LOG_NAME_DATE_PATTERN'),
     });
     const infoTransporter = new winston.transports.DailyRotateFile({
       level: 'info',
@@ -73,11 +73,11 @@ export class Logger implements LoggerService {
         splat(),
         messageFormat,
       ),
-      maxSize: cfg('LOG_MAX_SIZE'),
-      maxFiles: cfg('LOG_MAX_FILES'),
-      filename: cfg('LOG_COMBINED_PATH'),
-      zippedArchive: cfg('LOG_ZIP_OLD_FILE'),
-      datePattern: cfg('LOG_NAME_DATE_PATTERN'),
+      maxSize: getEnv('LOG_MAX_SIZE'),
+      maxFiles: getEnv('LOG_MAX_FILES'),
+      filename: getEnv('LOG_COMBINED_PATH'),
+      zippedArchive: getEnv('LOG_ZIP_OLD_FILE'),
+      datePattern: getEnv('LOG_NAME_DATE_PATTERN'),
     });
 
     const consoleTransporter = new winston.transports.Console({
@@ -95,7 +95,7 @@ export class Logger implements LoggerService {
       levels: this.logLevels.levels,
       transports: [],
     });
-    if (cfg('NODE_ENV') !== 'production') {
+    if (getEnv('NODE_ENV') !== 'production') {
       this.logger.add(consoleTransporter);
     }
     this.logger.add(fatalTransporter);

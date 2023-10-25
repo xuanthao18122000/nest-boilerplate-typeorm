@@ -1,14 +1,14 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { join } from 'path';
-import { cfg } from './env.config';
+import { getEnv } from './env.config';
 
 export const dataSourceOptions: DataSourceOptions = {
-  type: cfg('DB_DRIVER'),
-  host: cfg('DB_HOST'),
-  port: cfg('DB_PORT', Number),
-  username: cfg('DB_USERNAME'),
-  password: cfg('DB_PASSWORD'),
-  database: cfg('DB_NAME'),
+  type: getEnv('DB_DRIVER'),
+  host: getEnv('DB_HOST'),
+  port: getEnv('DB_PORT', Number),
+  username: getEnv('DB_USERNAME'),
+  password: getEnv('DB_PASSWORD'),
+  database: getEnv('DB_NAME'),
   logging: true,
   synchronize: true,
   migrationsRun: false,

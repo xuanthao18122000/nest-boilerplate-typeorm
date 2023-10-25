@@ -4,10 +4,10 @@ import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
 import * as ExcelJS from 'exceljs';
 import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';
-import FilterBuilder from 'src/common/share/filter.service';
 import { throwHttpException } from 'src/common/exceptions/throw.exception';
 import { hashPassword } from 'src/common/utils/auth.utils';
 import { listResponse } from 'src/common/response/response-list.response';
+import FilterBuilder from 'src/common/filter-builder/filter-builder.service';
 
 @Injectable()
 export class UserService {

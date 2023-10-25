@@ -9,7 +9,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { BaseFilter } from 'src/common/share/custom-base.filter';
+import { BaseFilter } from 'src/common/filter-builder/custom-base.filter';
 import { User } from 'src/database/entities';
 
 export class ListUserDto extends BaseFilter {
