@@ -47,6 +47,7 @@ export class UserService {
   }
 
   async exportUsers(users: User[]) {
+    console.log(users);
     const workbook = new ExcelJS.Workbook();
     return workbook.xlsx.writeBuffer();
   }
