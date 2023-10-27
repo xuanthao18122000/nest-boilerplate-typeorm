@@ -27,7 +27,7 @@ export class AuthService {
     }
 
     if (user.status !== User.STATUS_USER.ACTIVE) {
-      throwHttpException(HttpStatus.UNAUTHORIZED, 'USER_INACTIVE');
+      throwHttpException(HttpStatus.NOT_FOUND, 'USER_INACTIVE');
     }
 
     const isAuth = comparePasswords(password, user.password);

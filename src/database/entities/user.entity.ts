@@ -50,7 +50,18 @@ export class User extends BaseEntity {
 
   constructor(data: Partial<User>) {
     super();
-    Object.assign(this, data);
+    if (data) {
+      this.id = data.id || null;
+      this.email = data.email;
+      this.fullName = data.fullName;
+      this.phoneNumber = data.phoneNumber;
+      this.gender = data.gender;
+      this.status = data.status;
+      this.password = data.password;
+      this.token = data.token;
+      this.address = data.address;
+      this.avatar = data.avatar;
+    }
   }
 
   serialize() {
