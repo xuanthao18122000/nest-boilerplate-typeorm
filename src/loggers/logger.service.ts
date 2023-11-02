@@ -1,20 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { LoggerService } from '@nestjs/common';
-import * as winston from 'winston';
+import { Injectable, LoggerService } from '@nestjs/common';
 import * as moment from 'moment';
-import 'winston-daily-rotate-file';
 import { getEnv } from 'src/configs/env.config';
+import * as winston from 'winston';
+import 'winston-daily-rotate-file';
 @Injectable()
 export class Logger implements LoggerService {
   private readonly logger: winston.Logger;
   public logLevels = {
-    levels: {
-      fatal: 0,
-      error: 1,
-      info: 2,
-      debug: 3,
-      data: 4,
-    },
+    levels: { fatal: 0, error: 1, info: 2, debug: 3, data: 4 },
     colors: {
       fatal: 'magenta',
       error: 'red',
@@ -26,22 +19,16 @@ export class Logger implements LoggerService {
   constructor() {
     const messageFormat = winston.format.printf(
       ({ level, message, timestamp }) => {
+        const purpleTimestamp = `[\x1b[35m${moment(timestamp).format("YYYY-MM-DD HH:mm:ss")}\x1b[0m]`; // 35 là mã màu tím
         const info = JSON.parse(message);
+        const messageRender = info.message.message || info.message;
         if (info.message.clientIp)
-          return `\n[${level}] - [${info.message.clientIp}] - ${
-            info.message.message
-          } - \x1b[35m[${moment(timestamp).format(
-            'DD/MM/YYYY hh:mm:ss',
-          )}]\x1b[0m`;
-        return `[${level}] - ${info.message} - \x1b[35m[${moment(
-          timestamp,
-        ).format('DD/MM/YYYY hh:mm:ss')}]\x1b[0m`;
+          return `${purpleTimestamp} - [${level}] - [\x1b[33m${info.message.clientIp}\x1b[0m] - ${messageRender}`;
+        return `${purpleTimestamp} - [${level}] - ${messageRender}`;
       },
     );
     const timezoned = () => moment().format();
-
     const { combine, colorize, timestamp, splat, align } = winston.format;
-
     const fatalTransporter = new winston.transports.DailyRotateFile({
       level: 'fatal',
       format: combine(
@@ -81,7 +68,6 @@ export class Logger implements LoggerService {
       zippedArchive: getEnv('LOG_ZIP_OLD_FILE'),
       datePattern: getEnv('LOG_NAME_DATE_PATTERN'),
     });
-
     const consoleTransporter = new winston.transports.Console({
       level: 'debug',
       format: combine(
@@ -92,7 +78,6 @@ export class Logger implements LoggerService {
         messageFormat,
       ),
     });
-
     this.logger = winston.createLogger({
       levels: this.logLevels.levels,
       transports: [],
@@ -104,7 +89,6 @@ export class Logger implements LoggerService {
     this.logger.add(errorTransporter);
     this.logger.add(infoTransporter);
   }
-
   log(level: 'log' | 'info' | 'warn', message: any): void {
     switch (level) {
       case 'log':
@@ -118,63 +102,34 @@ export class Logger implements LoggerService {
         break;
     }
   }
-
   error(message: any) {
-    this.logger.log({
-      level: 'error',
-      message: JSON.stringify({
-        message,
-      }),
-    });
+    this.logger.log({ level: 'error', message: JSON.stringify({ message }) });
   }
-
   warn(message: any) {
-    this.logger.log({
-      level: 'warn',
-      message: JSON.stringify({
-        message,
-      }),
-    });
+    this.logger.log({ level: 'warn', message: JSON.stringify({ message }) });
   }
-
   debug(message: any) {
-    this.logger.log({
-      level: 'debug',
-      message: JSON.stringify({
-        message,
-      }),
-    });
+    this.logger.log({ level: 'debug', message: JSON.stringify({ message }) });
   }
-
   verbose(message: any) {
-    this.logger.log({
-      level: 'verbose',
-      message: JSON.stringify({
-        message,
-      }),
-    });
+    this.logger.log({ level: 'verbose', message: JSON.stringify({ message }) });
   }
   info(message: any) {
-    this.logger.log({
-      level: 'info',
-      message: JSON.stringify({
-        message,
-      }),
-    });
+    this.logger.log({ level: 'info', message: JSON.stringify({ message }) });
   }
-
   logMigration(message: string): void {
     this.info(`[message] - ${message}`);
   }
-
   logQuery(query: string, parameters?: any[]): void {
-    this.info(`[query] - ${query}`);
-
+    this.info(`[\x1b[34mquery\x1b[0m] - ${query}`);
     if (parameters && parameters.length) {
-      this.info(`[parameters] ${JSON.stringify(parameters)}`);
+      this.info(
+        `[\x1b[36mparameters\x1b[0m] \x1b[38;5;206m${JSON.stringify(
+          parameters,
+        )}\x1b[0m`,
+      );
     }
   }
-
   logQueryError(error: string, query: string, parameters?: any[]): void {
     this.error(`[Error query] - ${query}`);
     if (parameters && parameters.length) {
@@ -182,7 +137,6 @@ export class Logger implements LoggerService {
     }
     this.error(`Error: ${error}`);
   }
-
   logQuerySlow(time: number, query: string, parameters?: any[]): void {
     this.warn(`[Slow query detected] - ${query}`);
     if (parameters && parameters.length) {
@@ -190,7 +144,6 @@ export class Logger implements LoggerService {
     }
     this.warn(`[Execution time] - ${time}ms`);
   }
-
   logSchemaBuild(message: string): void {
     this.info(`[Schema build] - ${message}`);
   }

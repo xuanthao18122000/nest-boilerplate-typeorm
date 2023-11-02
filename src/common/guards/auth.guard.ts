@@ -8,10 +8,10 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
+import { getEnv } from 'src/configs/env.config';
+import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
-import { User } from 'src/database/entities';
-import { getEnv } from 'src/configs/env.config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -31,7 +31,7 @@ export class AuthGuard implements CanActivate {
     if (isPublic) {
       return true;
     }
-
+    
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
 

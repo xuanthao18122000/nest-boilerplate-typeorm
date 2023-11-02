@@ -1,5 +1,6 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
 import { join } from 'path';
+import { Logger } from 'src/loggers/logger.service';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { getEnv } from './env.config';
 
 export const dataSourceOptions: DataSourceOptions = {
@@ -14,6 +15,7 @@ export const dataSourceOptions: DataSourceOptions = {
   migrationsRun: false,
   entities: [join(__dirname, '..', '/database/entities/*.entity{.ts,.js}')],
   migrations: [join(__dirname, '..', '/database/migrations/*.{js,ts}')],
+  logger: new Logger()
 };
 
 const dataSource = new DataSource(dataSourceOptions);

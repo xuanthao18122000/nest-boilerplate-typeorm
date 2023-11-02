@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { Logger } from './logger.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpLoggingInterceptor } from './http-logging.interceptor';
+import { Logger } from './logger.service';
 
 @Module({
   imports: [],
