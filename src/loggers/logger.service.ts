@@ -19,7 +19,9 @@ export class Logger implements LoggerService {
   constructor() {
     const messageFormat = winston.format.printf(
       ({ level, message, timestamp }) => {
-        const purpleTimestamp = `[\x1b[35m${moment(timestamp).format("YYYY-MM-DD HH:mm:ss")}\x1b[0m]`; // 35 là mã màu tím
+        const purpleTimestamp = `[\x1b[35m${moment(timestamp).format(
+          'YYYY-MM-DD HH:mm:ss',
+        )}\x1b[0m]`; // 35 là mã màu tím
         const info = JSON.parse(message);
         const messageRender = info.message.message || info.message;
         if (info.message.clientIp)
