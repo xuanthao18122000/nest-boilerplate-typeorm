@@ -6,9 +6,9 @@ import {
   SelectQueryBuilder,
 } from 'typeorm';
 import { SORT_ENUM } from '../enums';
-import { BaseFilter } from './custom-base.filter';
+import { PaginationOptions } from './custom-base.filter';
 
-export default class FilterBuilder<T, TQuery extends BaseFilter> {
+export default class FilterBuilder<T, TQuery extends PaginationOptions> {
   private entityName: string;
   public queryBuilder: SelectQueryBuilder<T>;
   private query: TQuery;

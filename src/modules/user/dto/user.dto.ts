@@ -9,16 +9,16 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { BaseFilter } from 'src/common/filter-builder/custom-base.filter';
+import { PaginationOptions } from 'src/common/builder/custom-base.filter';
 import { User } from 'src/database/entities';
 
-export class ListUserDto extends BaseFilter {
-  @ApiProperty({ required: false })
+export class ListUserDto extends PaginationOptions {
+  @ApiProperty({ required: false, description: 'Họ tên' })
   @IsString()
   @IsOptional()
   fullName: string;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, description: 'Số điện thoại' })
   @Type(() => Number)
   @IsInt()
   @IsOptional()
@@ -26,6 +26,7 @@ export class ListUserDto extends BaseFilter {
 
   @ApiProperty({
     required: false,
+    description: 'Giới tính',
     enum: User.GENDER_USER,
   })
   @IsOptional()
@@ -36,24 +37,28 @@ export class ListUserDto extends BaseFilter {
   @ApiProperty({
     type: 'string',
     format: 'date',
-    description: 'Type: YYYY/mm/dd',
+    description: 'Ngày tạo từ. Type: YYYY/mm/dd',
     required: false,
   })
   @Type(() => Date)
   @IsOptional()
-  startDate: Date;
+  createdDateFrom: Date;
 
   @ApiProperty({
     type: 'string',
     format: 'date',
-    description: 'Type: YYYY/mm/dd',
+    description: 'Ngày tạo đến.Type: YYYY/mm/dd',
     required: false,
   })
   @Type(() => Date)
   @IsOptional()
-  endDate: Date;
+  createdDateTo: Date;
 
-  @ApiProperty({ required: false, type: Boolean })
+  @ApiProperty({
+    required: false,
+    type: Boolean,
+    description: 'Tải file excel',
+  })
   @Transform(({ value }) => value === 'true')
   @IsBoolean()
   @IsOptional()

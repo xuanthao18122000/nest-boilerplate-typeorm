@@ -1,13 +1,13 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as ExcelJS from 'exceljs';
+import FilterBuilder from 'src/common/builder/filter.builder';
+import { throwHttpException } from 'src/common/exceptions/throw.exception';
+import { listResponse } from 'src/common/response/response-list.response';
+import { hashPassword } from 'src/common/utils/auth.utils';
 import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
-import * as ExcelJS from 'exceljs';
 import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';
-import { throwHttpException } from 'src/common/exceptions/throw.exception';
-import { hashPassword } from 'src/common/utils/auth.utils';
-import { listResponse } from 'src/common/response/response-list.response';
-import FilterBuilder from 'src/common/filter-builder/filter-builder.service';
 
 @Injectable()
 export class UserService {
@@ -37,7 +37,7 @@ export class UserService {
       .addUnAccentString('fullName')
       .addString('phoneNumber')
       .addNumber('gender')
-      .addDate('createdAt', 'startDate', 'endDate')
+      .addDate('createdAt', 'createdDateFrom', 'createdDateTo')
       .addPagination()
       .sortBy('id');
 
@@ -103,5 +103,23 @@ export class UserService {
       throwHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND');
     }
     return user;
+  }
+
+  async transaction() {
+    // const queryRunner = await this.transactionBuilder.startTransaction();
+
+    // try {
+    //   const user = new User({});
+    //   await queryRunner.manager.save(user);
+    //   await queryRunner.commitTransaction();
+    // } catch (error) {
+    //   await queryRunner.rollbackTransaction();
+    //   throw throwHttpException(
+    //     HttpStatus.INTERNAL_SERVER_ERROR,
+    //     'ERROR_IMPORT_DATA',
+    //   );
+    // } finally {
+    //   await queryRunner.release();
+    // }
   }
 }

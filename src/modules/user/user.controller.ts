@@ -10,11 +10,11 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { SendResponse } from 'src/common/response/send-response';
 import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { UserService } from './user.service';
 
 @ApiBearerAuth()
 @ApiTags('3. Users')
@@ -23,7 +23,15 @@ import { Response } from 'express';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Post()
+  @ApiOperation({ summary: 'Create User' })
+  async createUser(@Body() body: CreateUserDto) {
+    const user = await this.userService.create(body);
+    return SendResponse.success(user.serialize(), 'Create user successful');
+  }
+
   @Get()
+  @ApiOperation({ summary: 'List Users' })
   async getAll(@Query() query: ListUserDto, @Res() response: Response) {
     const users = await this.userService.getAll(query);
     if (query.download) {
@@ -34,18 +42,14 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Details User' })
   async getOneUser(@Param('id') id: number) {
     const user = await this.userService.getOne(id);
     return SendResponse.success(user, 'Get detail user successful');
   }
 
-  @Post()
-  async createUser(@Body() body: CreateUserDto) {
-    const user = await this.userService.create(body);
-    return SendResponse.success(user.serialize(), 'Create user successful');
-  }
-
   @Put()
+  @ApiOperation({ summary: 'Update User' })
   async updateUser(@Param('id') id: number, @Body() body: UpdateUserDto) {
     const user = await this.userService.update(id, body);
     return SendResponse.success(user.serialize(), 'Update user successful');

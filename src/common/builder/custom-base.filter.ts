@@ -1,19 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
+  IsEnum,
   IsNumber,
   IsOptional,
   Min,
-  IsEnum,
   ValidateIf,
-  IsBoolean,
 } from 'class-validator';
 import { SORT_ENUM } from '../enums';
 
-export class BaseFilter {
+export class PaginationOptions {
   @ApiProperty({
     example: 1,
     required: false,
+    description: 'Trang muốn hiển thị',
   })
   @Type(() => Number)
   @IsOptional()
@@ -25,6 +26,7 @@ export class BaseFilter {
   @ApiProperty({
     example: 10,
     required: false,
+    description: 'Số lượng record 1 trang',
   })
   @IsNumber()
   @Type(() => Number)
@@ -32,12 +34,12 @@ export class BaseFilter {
   @Min(1, { message: 'perPage must be greater than 0' })
   perPage: number;
 
-  @ApiProperty({ enum: SORT_ENUM, required: false })
+  @ApiProperty({ enum: SORT_ENUM, required: false, description: 'Sắp xếp' })
   @IsEnum(SORT_ENUM)
   @IsOptional()
   sort: SORT_ENUM;
 
-  @ApiProperty({ required: false })
+  @ApiProperty({ required: false, description: 'Lấy tất cả record' })
   @IsBoolean()
   @IsOptional()
   getFull: boolean;

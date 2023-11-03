@@ -1,5 +1,5 @@
-import { Column, Entity } from 'typeorm';
-import { BaseEntity } from './';
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { BaseEntity, Role } from './';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -29,6 +29,9 @@ export class User extends BaseEntity {
 
   @Column({ type: 'int', default: User.STATUS_USER.INACTIVE })
   status: number;
+
+  @ManyToOne(() => Role, (role) => role.users)
+  role: Role;
 
   static STATUS_USER = {
     /** Đang hoạt động */

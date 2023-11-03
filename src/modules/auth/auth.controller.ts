@@ -7,13 +7,13 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { SendResponse } from 'src/common/response/send-response';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/common/decorators/user.decorator';
-import { User } from 'src/database/entities';
-import { SignInDto, SignUpDto, UpdateProfileDto } from './dto/auth.dto';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
+import { GetUser } from 'src/common/decorators/user.decorator';
+import { SendResponse } from 'src/common/response/send-response';
+import { User } from 'src/database/entities';
+import { AuthService } from './auth.service';
+import { SignInDto, SignUpDto, UpdateProfileDto } from './dto/auth.dto';
 
 @ApiTags('2. Auth')
 @Controller('auth')
@@ -23,6 +23,7 @@ export class AuthController {
 
   @Public()
   @Post('sign-in')
+  @ApiOperation({ summary: 'Sign In User' })
   async signIn(@Body() body: SignInDto) {
     const data = await this.authService.signIn(body);
     return SendResponse.success(data, 'Sign in user successful!');
@@ -30,12 +31,14 @@ export class AuthController {
 
   @Public()
   @Post('sign-up')
+  @ApiOperation({ summary: 'Sign Up User' })
   async signUp(@Body() body: SignUpDto) {
     const user = await this.authService.signUp(body);
     return SendResponse.success(user.serialize(), 'Sign up user successful!');
   }
 
   @Post('sign-out')
+  @ApiOperation({ summary: 'Sign Out User' })
   @ApiBearerAuth()
   async signOut(@GetUser() user: User) {
     this.authService.signOut(user);
@@ -44,6 +47,7 @@ export class AuthController {
 
   @Get('profile')
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get Profile User' })
   async getProfile(@GetUser() user: User) {
     return SendResponse.success(
       user.serialize(),
@@ -53,6 +57,7 @@ export class AuthController {
 
   @Put('profile')
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update Profile User' })
   async updateProfile(@Body() body: UpdateProfileDto, @GetUser() user: User) {
     const updatedUser = await this.authService.updateProfile(body, user);
     return SendResponse.success(
