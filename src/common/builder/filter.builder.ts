@@ -1,8 +1,4 @@
-import {
-  ObjectLiteral,
-  Repository,
-  SelectQueryBuilder
-} from 'typeorm';
+import { ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm';
 import { SORT_ENUM } from '../enums';
 import { PaginationOptions } from './custom-base.filter';
 
@@ -40,7 +36,10 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     this.queryBuilder.innerJoin(property, alias, condition, parameters);
   }
 
-  addSelect(selectFields: string[], entityName: string = this.entityName): this {
+  addSelect(
+    selectFields: string[],
+    entityName: string = this.entityName,
+  ): this {
     if (selectFields.length !== 0) {
       this.queryBuilder = this.queryBuilder.select(
         selectFields.map((field) => `${entityName}.${field}`),
@@ -53,22 +52,21 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
   addLeftJoinAndSelect(
     selectFields: string[] = [],
     entityNameRelation: string,
-    entityNameMain: string = this.entityName
+    entityNameMain: string = this.entityName,
   ) {
     this.queryBuilder.leftJoin(
       `${entityNameMain}.${entityNameRelation}`,
-      entityNameRelation
+      entityNameRelation,
     );
-  
+
     if (selectFields.length > 0) {
       this.queryBuilder.addSelect(
-        selectFields.map((field) => `${entityNameRelation}.${field}`)
+        selectFields.map((field) => `${entityNameRelation}.${field}`),
       );
     }
-  
+
     return this;
   }
-  
 
   select(selectFields: string[]): this {
     if (selectFields.length !== 0) {
@@ -80,7 +78,11 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
-  addNumber(name: keyof TQuery, valueNumber?: number, entityNameRelation: string = this.entityName): this {
+  addNumber(
+    name: keyof TQuery,
+    valueNumber?: number,
+    entityNameRelation: string = this.entityName,
+  ): this {
     const value = valueNumber || this.query[name];
     const columnToQuery = `${entityNameRelation}.${name.toString()}`;
     if (value) {
@@ -89,7 +91,11 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
-  addWhereIn(name: keyof TQuery, array: Array<number> = [], entityNameRelation: string = this.entityName): this {
+  addWhereIn(
+    name: keyof TQuery,
+    array: Array<number> = [],
+    entityNameRelation: string = this.entityName,
+  ): this {
     const columnToQuery = `${entityNameRelation}.${name.toString()}`;
     if (name) {
       this.queryBuilder.andWhere(`${columnToQuery} IN (:...values)`, {
@@ -99,7 +105,11 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
-  addString(name: keyof TQuery, valueString?: string, entityNameRelation: string = this.entityName): this {
+  addString(
+    name: keyof TQuery,
+    valueString?: string,
+    entityNameRelation: string = this.entityName,
+  ): this {
     const propertyName = String(name);
     const value = valueString || this.query[name];
 
@@ -109,7 +119,7 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
         `unaccent(LOWER(${columnToQuery})) ILIKE (LOWER(:${propertyName}))`,
         {
           [name]: `%${value}%`,
-        }
+        },
       );
     }
     return this;
@@ -129,7 +139,7 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
         `unaccent(LOWER(${columnToQuery})) ILIKE unaccent(LOWER(:${propertyName}))`,
         {
           [name]: `%${value}%`,
-        }
+        },
       );
     }
     return this;
@@ -148,12 +158,9 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     const endDate = endDateValue || this.query[endDateName];
 
     if (startDate) {
-      this.queryBuilder.andWhere(
-        `${columnToQuery} >= :startDate`,
-        {
-          startDate,
-        },
-      );
+      this.queryBuilder.andWhere(`${columnToQuery} >= :startDate`, {
+        startDate,
+      });
     }
     if (endDate) {
       this.queryBuilder.andWhere(`${columnToQuery} <= :endDate`, {

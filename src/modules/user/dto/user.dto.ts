@@ -6,7 +6,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsOptional,
-  IsString
+  IsString,
 } from 'class-validator';
 import { PaginationOptions } from 'src/common/builder/custom-base.filter';
 import { User } from 'src/database/entities';
