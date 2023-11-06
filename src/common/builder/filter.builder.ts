@@ -1,9 +1,7 @@
 import {
-  ILike,
-  In,
   ObjectLiteral,
   Repository,
-  SelectQueryBuilder,
+  SelectQueryBuilder
 } from 'typeorm';
 import { SORT_ENUM } from '../enums';
 import { PaginationOptions } from './custom-base.filter';
@@ -20,9 +18,7 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     if (entity) {
       this.query = query;
       this.entityName = entity.alias;
-      this.queryBuilder = entity.entityRepo
-        .createQueryBuilder(entity.alias)
-        .orderBy({ id: 'DESC' });
+      this.queryBuilder = entity.entityRepo.createQueryBuilder(entity.alias);
     }
   }
 
@@ -44,15 +40,37 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     this.queryBuilder.innerJoin(property, alias, condition, parameters);
   }
 
-  addLeftJoinAndSelect(entityNameRelation: string) {
-    this.queryBuilder.leftJoinAndSelect(
-      `${this.entityName}.${entityNameRelation}`,
-      `${entityNameRelation}`,
-    );
+  addSelect(selectFields: string[], entityName: string = this.entityName): this {
+    if (selectFields.length !== 0) {
+      this.queryBuilder = this.queryBuilder.select(
+        selectFields.map((field) => `${entityName}.${field}`),
+      );
+    }
+
     return this;
   }
 
-  addSelect(selectFields: string[]): this {
+  addLeftJoinAndSelect(
+    selectFields: string[] = [],
+    entityNameRelation: string,
+    entityNameMain: string = this.entityName
+  ) {
+    this.queryBuilder.leftJoin(
+      `${entityNameMain}.${entityNameRelation}`,
+      entityNameRelation
+    );
+  
+    if (selectFields.length > 0) {
+      this.queryBuilder.addSelect(
+        selectFields.map((field) => `${entityNameRelation}.${field}`)
+      );
+    }
+  
+    return this;
+  }
+  
+
+  select(selectFields: string[]): this {
     if (selectFields.length !== 0) {
       this.queryBuilder = this.queryBuilder.select(
         selectFields.map((field) => `${this.entityName}.${field}`),
@@ -62,60 +80,56 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
-  addSelectArray(selectFields: string[]): this {
-    const { perPage = 10, getFull = false } = this.query;
-    let { page = 1 } = this.query;
-    this.queryBuilder = this.queryBuilder.select(
-      selectFields.map((field) => `${field}`),
-    );
-
-    if (!getFull) {
-      if (page && perPage) page = (page - 1) * perPage;
-      this.queryBuilder.skip(page);
-
-      if (perPage) this.queryBuilder.take(perPage);
-    }
-    return this;
-  }
-
-  addNumber(name: keyof TQuery, valueNumber?: number): this {
+  addNumber(name: keyof TQuery, valueNumber?: number, entityNameRelation: string = this.entityName): this {
     const value = valueNumber || this.query[name];
+    const columnToQuery = `${entityNameRelation}.${name.toString()}`;
     if (value) {
-      this.queryBuilder.andWhere({
-        [name]: value,
-      });
+      this.queryBuilder.andWhere(`${columnToQuery} = :name`, { name: value });
     }
     return this;
   }
 
-  addWhereIn(name: keyof TQuery, array: Array<number> = []): this {
+  addWhereIn(name: keyof TQuery, array: Array<number> = [], entityNameRelation: string = this.entityName): this {
+    const columnToQuery = `${entityNameRelation}.${name.toString()}`;
     if (name) {
-      this.queryBuilder.andWhere({ [name]: In(array) });
-    }
-    return this;
-  }
-
-  addString(name: keyof TQuery, valueString?: string): this {
-    const value = valueString || this.query[name];
-
-    if (value) {
-      this.queryBuilder.andWhere({
-        [name]: ILike(`%${value}%`),
+      this.queryBuilder.andWhere(`${columnToQuery} IN (:...values)`, {
+        values: array,
       });
     }
     return this;
   }
 
-  addUnAccentString(name: keyof TQuery, valueString?: string): this {
+  addString(name: keyof TQuery, valueString?: string, entityNameRelation: string = this.entityName): this {
     const propertyName = String(name);
     const value = valueString || this.query[name];
 
     if (value) {
+      const columnToQuery = `${entityNameRelation}.${propertyName}`;
       this.queryBuilder.andWhere(
-        `unaccent(LOWER(${this.entityName}.${propertyName})) ILIKE unaccent(LOWER(:${propertyName}))`,
+        `unaccent(LOWER(${columnToQuery})) ILIKE (LOWER(:${propertyName}))`,
         {
           [name]: `%${value}%`,
-        },
+        }
+      );
+    }
+    return this;
+  }
+
+  addUnAccentString(
+    name: keyof TQuery,
+    valueString?: string,
+    entityNameRelation: string = this.entityName,
+  ): this {
+    const propertyName = String(name);
+    const value = valueString || this.query[name];
+
+    if (value) {
+      const columnToQuery = `${entityNameRelation}.${propertyName}`;
+      this.queryBuilder.andWhere(
+        `unaccent(LOWER(${columnToQuery})) ILIKE unaccent(LOWER(:${propertyName}))`,
+        {
+          [name]: `%${value}%`,
+        }
       );
     }
     return this;
@@ -127,21 +141,22 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     endDateName: keyof TQuery,
     startDateValue?: Date,
     endDateValue?: Date,
+    entityNameRelation: string = this.entityName,
   ): this {
-    // const propertyName = String(name);
+    const columnToQuery = `${entityNameRelation}.${dateName}`;
     const startDate = startDateValue || this.query[startDateName];
     const endDate = endDateValue || this.query[endDateName];
 
     if (startDate) {
       this.queryBuilder.andWhere(
-        `${this.entityName}.${dateName} >= :startDate`,
+        `${columnToQuery} >= :startDate`,
         {
           startDate,
         },
       );
     }
     if (endDate) {
-      this.queryBuilder.andWhere(`${this.entityName}.${dateName} <= :endDate`, {
+      this.queryBuilder.andWhere(`${columnToQuery} <= :endDate`, {
         endDate,
       });
     }

@@ -1,13 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
-  IsBoolean,
   IsEmail,
   IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
-  IsString,
+  IsString
 } from 'class-validator';
 import { PaginationOptions } from 'src/common/builder/custom-base.filter';
 import { User } from 'src/database/entities';
@@ -54,15 +53,15 @@ export class ListUserDto extends PaginationOptions {
   @IsOptional()
   createdDateTo: Date;
 
-  @ApiProperty({
-    required: false,
-    type: Boolean,
-    description: 'Tải file excel',
-  })
-  @Transform(({ value }) => value === 'true')
-  @IsBoolean()
-  @IsOptional()
-  download?: boolean;
+  // @ApiProperty({
+  //   required: false,
+  //   type: Boolean,
+  //   description: 'Tải file excel',
+  // })
+  // @Transform(({ value }) => value === 'true')
+  // @IsBoolean()
+  // @IsOptional()
+  // download?: boolean;
 }
 
 export class CreateUserDto {

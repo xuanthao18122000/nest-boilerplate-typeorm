@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as ExcelJS from 'exceljs';
 import FilterBuilder from 'src/common/builder/filter.builder';
 import { throwHttpException } from 'src/common/exceptions/throw.exception';
 import { listResponse } from 'src/common/response/response-list.response';
@@ -24,7 +23,7 @@ export class UserService {
     };
 
     const filterBuilder = new FilterBuilder<User, ListUserDto>(entity, query)
-      .addSelect([
+      .select([
         'id',
         'email',
         'fullName',
@@ -34,6 +33,7 @@ export class UserService {
         'createdAt',
         'updatedAt',
       ])
+      .addLeftJoinAndSelect(['id', 'name'], 'role')
       .addUnAccentString('fullName')
       .addString('phoneNumber')
       .addNumber('gender')
@@ -44,12 +44,6 @@ export class UserService {
     const [list, total] = await filterBuilder.queryBuilder.getManyAndCount();
 
     return listResponse(list, total, page, perPage);
-  }
-
-  async exportUsers(users: User[]) {
-    console.log(users);
-    const workbook = new ExcelJS.Workbook();
-    return workbook.xlsx.writeBuffer();
   }
 
   async getOne(id: number): Promise<Partial<User>> {
@@ -107,7 +101,6 @@ export class UserService {
 
   async transaction() {
     // const queryRunner = await this.transactionBuilder.startTransaction();
-
     // try {
     //   const user = new User({});
     //   await queryRunner.manager.save(user);

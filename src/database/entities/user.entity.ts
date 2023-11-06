@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity, Role } from './';
 
 @Entity({ name: 'users' })
@@ -14,6 +14,9 @@ export class User extends BaseEntity {
 
   @Column({ type: 'varchar', name: 'phone_number', nullable: true })
   phoneNumber: string;
+
+  @Column({ name: 'role_id', nullable: true })
+  roleId: number;
 
   @Column({ nullable: true })
   token: string;
@@ -31,6 +34,7 @@ export class User extends BaseEntity {
   status: number;
 
   @ManyToOne(() => Role, (role) => role.users)
+  @JoinColumn({ name: 'role_id' })
   role: Role;
 
   static STATUS_USER = {
@@ -75,6 +79,7 @@ export class User extends BaseEntity {
       phoneNumber: this.phoneNumber,
       gender: this.gender,
       status: this.status,
+      roleId: this.roleId,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
