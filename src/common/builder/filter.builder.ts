@@ -49,25 +49,34 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
+  /**
+   * Thêm một LEFT JOIN và chọn các trường cụ thể từ bảng được kết nối.
+   * @param {string[]} selectFields: Các trường muốn select trong table leftJoin - required
+   * @param {string} leftJoinTable: Tên bảng trong mối quan hệ left join - required
+   * @param {string} mainTable: Tên của bảng chính - optional , optional, mặc định là tên bảng chính (this.entityName)
+   * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức
+   */
   addLeftJoinAndSelect(
     selectFields: string[] = [],
-    entityNameRelation: string,
-    entityNameMain: string = this.entityName,
-  ) {
-    this.queryBuilder.leftJoin(
-      `${entityNameMain}.${entityNameRelation}`,
-      entityNameRelation,
-    );
+    leftJoinTable: string,
+    mainTable: string = this.entityName,
+  ): this {
+    this.queryBuilder.leftJoin(`${mainTable}.${leftJoinTable}`, leftJoinTable);
 
     if (selectFields.length > 0) {
       this.queryBuilder.addSelect(
-        selectFields.map((field) => `${entityNameRelation}.${field}`),
+        selectFields.map((field) => `${leftJoinTable}.${field}`),
       );
     }
 
     return this;
   }
 
+  /**
+   * Select các trường từ bảng chính của truy vấn
+   * @param {string[]} selectFields: Một mảng tên trường muốn select từ bảng chính - required
+   * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức
+   */
   select(selectFields: string[]): this {
     if (selectFields.length !== 0) {
       this.queryBuilder = this.queryBuilder.select(
@@ -78,25 +87,39 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
+  /**
+   * Thêm điều kiện tìm kiếm số.
+   * @param {keyof TQuery} name: Tên trường cần tìm kiếm - Required.
+   * @param {number} valueNumber: Giá trị số cần tìm kiếm. Nếu không được cung cấp, hàm sẽ sử dụng giá trị từ Query - Optional.
+   * @param {string} leftJoinTable: Tên bảng tìm kiếm số- Optional, mặc định là tên bảng chính (this.entityName).
+   * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức.
+   */
   addNumber(
     name: keyof TQuery,
     valueNumber?: number,
-    entityNameRelation: string = this.entityName,
+    leftJoinTable: string = this.entityName,
   ): this {
     const value = valueNumber || this.query[name];
-    const columnToQuery = `${entityNameRelation}.${name.toString()}`;
+    const columnToQuery = `${leftJoinTable}.${name.toString()}`;
     if (value) {
       this.queryBuilder.andWhere(`${columnToQuery} = :name`, { name: value });
     }
     return this;
   }
 
+  /**
+   * Thêm điều kiện tìm kiếm trong danh sách giá trị IN(array) vào truy vấn SQL.
+   * @param {keyof TQuery} name: Tên trường cần tìm kiếm - bắt buộc.
+   * @param {Array<number>} array: Mảng các giá trị để tìm kiếm. (Tùy chọn)
+   * @param {string} leftJoinTable: Tên bảng tìm kiếm - tùy chọn, mặc định là tên bảng chính (this.entityName).
+   * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức.
+   */
   addWhereIn(
     name: keyof TQuery,
     array: Array<number> = [],
-    entityNameRelation: string = this.entityName,
+    leftJoinTable: string = this.entityName,
   ): this {
-    const columnToQuery = `${entityNameRelation}.${name.toString()}`;
+    const columnToQuery = `${leftJoinTable}.${name.toString()}`;
     if (name) {
       this.queryBuilder.andWhere(`${columnToQuery} IN (:...values)`, {
         values: array,
@@ -105,16 +128,23 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
+  /**
+   * Thêm điều kiện tìm kiếm dựa trên một chuỗi văn bản (string) với chức năng ILIKE vào truy vấn.
+   * @param {keyof TQuery} name: Tên trường (cột) cần tìm kiếm - required.
+   * @param {string} valueString: Giá trị chuỗi văn bản cần tìm kiếm. Nếu không được cung cấp, hàm sẽ sử dụng giá trị từ Query - optional.
+   * @param {string} leftJoinTable: Tên bảng kiếm dựa trên một chuỗi - optional, mặc định là tên bảng chính (this.entityName) - optional.
+   * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức.
+   */
   addString(
     name: keyof TQuery,
     valueString?: string,
-    entityNameRelation: string = this.entityName,
+    leftJoinTable: string = this.entityName,
   ): this {
     const propertyName = String(name);
     const value = valueString || this.query[name];
 
     if (value) {
-      const columnToQuery = `${entityNameRelation}.${propertyName}`;
+      const columnToQuery = `${leftJoinTable}.${propertyName}`;
       this.queryBuilder.andWhere(
         `unaccent(LOWER(${columnToQuery})) ILIKE (LOWER(:${propertyName}))`,
         {
@@ -125,16 +155,23 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
+  /**
+   * Thêm điều kiện tìm kiếm dựa trên một chuỗi văn bản (string) với chức năng unaccent và ILIKE vào truy vấn.
+   * @param {keyof TQuery} name: Tên trường (cột) cần tìm kiếm - required.
+   * @param {string} valueString: Giá trị chuỗi văn bản cần tìm kiếm. Nếu không được cung cấp, hàm sẽ sử dụng giá trị từ Query - optional.
+   * @param {string} leftJoinTable: Tên bảng tìm kiếm dựa trên một chuỗi - optional, mặc định là tên bảng chính (this.entityName) - optional.
+   * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức.
+   */
   addUnAccentString(
     name: keyof TQuery,
     valueString?: string,
-    entityNameRelation: string = this.entityName,
+    leftJoinTable: string = this.entityName,
   ): this {
     const propertyName = String(name);
     const value = valueString || this.query[name];
 
     if (value) {
-      const columnToQuery = `${entityNameRelation}.${propertyName}`;
+      const columnToQuery = `${leftJoinTable}.${propertyName}`;
       this.queryBuilder.andWhere(
         `unaccent(LOWER(${columnToQuery})) ILIKE unaccent(LOWER(:${propertyName}))`,
         {
@@ -145,15 +182,25 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
+  /**
+   * Thêm điều kiện tìm kiếm dựa trên một khoảng ngày từ một trường cụ thể trong cơ sở dữ liệu.
+   * @param {string} dateName: Tên trường ngày cần tìm kiếm - Required.
+   * @param {keyof TQuery} startDateName: Tên trường thời gian bắt đầu - Required.
+   * @param {keyof TQuery} endDateName: Tên trường thời gian kết thúc - Required.
+   * @param {Date} startDateValue: Giá trị thời gian bắt đầu. Nếu không được cung cấp, hàm sẽ sử dụng giá trị từ truy vấn - Optional.
+   * @param {Date} endDateValue: Giá trị thời gian kết thúc. Nếu không được cung cấp, hàm sẽ sử dụng giá trị từ truy vấn - Optional.
+   * @param {string} leftJoinTable: Tên bảng tìm kiếm dựa trên một khoảng ngày - Mặc định là tên bảng chính (this.entityName) - Optional.
+   * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức.
+   */
   addDate(
     dateName: string,
     startDateName: keyof TQuery,
     endDateName: keyof TQuery,
     startDateValue?: Date,
     endDateValue?: Date,
-    entityNameRelation: string = this.entityName,
+    leftJoinTable: string = this.entityName,
   ): this {
-    const columnToQuery = `${entityNameRelation}.${dateName}`;
+    const columnToQuery = `${leftJoinTable}.${dateName}`;
     const startDate = startDateValue || this.query[startDateName];
     const endDate = endDateValue || this.query[endDateName];
 
@@ -171,6 +218,13 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
+  /**
+   * Thêm điều kiện phân trang vào truy vấn SQL.
+   * @param {number} page: Số trang cần truy vấn - Mặc định là 1 - Optional
+   * @param {number} perPage: Số mục trên mỗi trang - Mặc định là 10 - Optional
+   * @param {boolean} getFull: Có lấy toàn bộ dữ liệu không - Mặc định là false - Optional
+   * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức.
+   */
   addPagination(page?: number, perPage?: number, getFull?: boolean): this {
     const limit = perPage || this.query.perPage || 10;
     const offset = (page - 1 || this.query.page - 1 || 0) * limit;
@@ -182,6 +236,12 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
     return this;
   }
 
+  /**
+   * Thêm điều kiện sắp xếp vào truy vấn SQL.
+   * @param {string} column: Tên cột cần sắp xếp theo - Required
+   * @param {SORT_ENUM} sort: Hướng sắp xếp, giá trị mặc định là SORT_ENUM.DESC (giảm dần) - Optional
+   * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức.
+   */
   sortBy(column: string, sort: SORT_ENUM = SORT_ENUM.DESC): this {
     if (this.query.sort) sort = this.query.sort;
     this.queryBuilder.addOrderBy(`${this.entityName}.${column}`, sort);
