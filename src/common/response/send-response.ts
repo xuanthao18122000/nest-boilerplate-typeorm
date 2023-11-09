@@ -1,8 +1,8 @@
-import { Response } from 'express';
 import { Buffer } from 'exceljs';
+import { Response } from 'express';
 
 export class SendResponse {
-  static success<T>(data: T, msg = '', res: Response = null) {
+  static success<T>(data: T, msg = 'Success!', res: Response = null) {
     if (res) {
       return res.send({
         code: 200,

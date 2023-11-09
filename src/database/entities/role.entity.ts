@@ -1,5 +1,5 @@
+import { actionDefaultType } from 'src/common/interfaces';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { actionDefaultType } from '../../common/types';
 import { BaseEntity, User } from './';
 
 @Entity('roles')

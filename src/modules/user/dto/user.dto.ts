@@ -8,7 +8,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaginationOptions } from 'src/common/builder/custom-base.filter';
+import { PaginationOptions } from 'src/common/builder/pagination-options.builder';
 import { User } from 'src/database/entities';
 
 export class ListUserDto extends PaginationOptions {

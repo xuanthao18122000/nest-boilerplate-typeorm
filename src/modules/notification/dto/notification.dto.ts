@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaginationOptions } from 'src/common/builder/custom-base.filter';
+import { PaginationOptions } from 'src/common/builder/pagination-options.builder';
 
 export class ListNotificationDto extends PaginationOptions {
   @ApiProperty({ required: false })

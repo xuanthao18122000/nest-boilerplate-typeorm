@@ -1,6 +1,6 @@
 import { ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm';
 import { SORT_ENUM } from '../enums';
-import { PaginationOptions } from './custom-base.filter';
+import { PaginationOptions } from './pagination-options.builder';
 
 export default class FilterBuilder<T, TQuery extends PaginationOptions> {
   private entityName: string;

@@ -1,3 +1,3 @@
-import { PaginationOptions } from 'src/common/builder/custom-base.filter';
+import { PaginationOptions } from 'src/common/builder/pagination-options.builder';
 
 export class ListRolesDto extends PaginationOptions {}

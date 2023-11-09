@@ -49,8 +49,8 @@ export class NotificationController {
 
   @Post()
   async createNotification(@Body() body: CreateNotificationDto) {
-    await this.notificationService.create(body);
-    return SendResponse.success([], 'Create notification successful');
+    const notification = await this.notificationService.create(body);
+    return SendResponse.success(notification, 'Create notification successful');
   }
 
   @Put()
@@ -58,7 +58,7 @@ export class NotificationController {
     @Param('id') id: number,
     @Body() body: UpdateNotificationDto,
   ) {
-    await this.notificationService.update(id, body);
-    return SendResponse.success([], 'Update notification successful');
+    const notification = await this.notificationService.update(id, body);
+    return SendResponse.success(notification, 'Update notification successful');
   }
 }
