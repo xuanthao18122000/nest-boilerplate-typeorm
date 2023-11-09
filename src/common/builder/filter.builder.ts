@@ -51,9 +51,9 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
 
   /**
    * Thêm một LEFT JOIN và chọn các trường cụ thể từ bảng được kết nối.
-   * @param {string[]} selectFields: Các trường muốn select trong table leftJoin - required
-   * @param {string} leftJoinTable: Tên bảng trong mối quan hệ left join - required
-   * @param {string} mainTable: Tên của bảng chính - optional , optional, mặc định là tên bảng chính (this.entityName)
+   * @param {string[]} selectFields: Các trường muốn select trong table leftJoin - Required
+   * @param {string} leftJoinTable: Tên bảng trong mối quan hệ left join - Required
+   * @param {string} mainTable: Tên của bảng chính - Optional , Optional, mặc định là tên bảng chính (this.entityName)
    * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức
    */
   addLeftJoinAndSelect(
@@ -74,7 +74,7 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
 
   /**
    * Select các trường từ bảng chính của truy vấn
-   * @param {string[]} selectFields: Một mảng tên trường muốn select từ bảng chính - required
+   * @param {string[]} selectFields: Một mảng tên trường muốn select từ bảng chính - Required
    * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức
    */
   select(selectFields: string[]): this {
@@ -130,9 +130,9 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
 
   /**
    * Thêm điều kiện tìm kiếm dựa trên một chuỗi văn bản (string) với chức năng ILIKE vào truy vấn.
-   * @param {keyof TQuery} name: Tên trường (cột) cần tìm kiếm - required.
-   * @param {string} valueString: Giá trị chuỗi văn bản cần tìm kiếm. Nếu không được cung cấp, hàm sẽ sử dụng giá trị từ Query - optional.
-   * @param {string} leftJoinTable: Tên bảng kiếm dựa trên một chuỗi - optional, mặc định là tên bảng chính (this.entityName) - optional.
+   * @param {keyof TQuery} name: Tên trường (cột) cần tìm kiếm - Required.
+   * @param {string} valueString: Giá trị chuỗi văn bản cần tìm kiếm. Nếu không được cung cấp, hàm sẽ sử dụng giá trị từ Query - Optional.
+   * @param {string} leftJoinTable: Tên bảng kiếm dựa trên một chuỗi - Optional, mặc định là tên bảng chính (this.entityName) - Optional.
    * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức.
    */
   addString(
@@ -157,9 +157,9 @@ export default class FilterBuilder<T, TQuery extends PaginationOptions> {
 
   /**
    * Thêm điều kiện tìm kiếm dựa trên một chuỗi văn bản (string) với chức năng unaccent và ILIKE vào truy vấn.
-   * @param {keyof TQuery} name: Tên trường (cột) cần tìm kiếm - required.
-   * @param {string} valueString: Giá trị chuỗi văn bản cần tìm kiếm. Nếu không được cung cấp, hàm sẽ sử dụng giá trị từ Query - optional.
-   * @param {string} leftJoinTable: Tên bảng tìm kiếm dựa trên một chuỗi - optional, mặc định là tên bảng chính (this.entityName) - optional.
+   * @param {keyof TQuery} name: Tên trường (cột) cần tìm kiếm - Required.
+   * @param {string} valueString: Giá trị chuỗi văn bản cần tìm kiếm. Nếu không được cung cấp, hàm sẽ sử dụng giá trị từ Query - Optional.
+   * @param {string} leftJoinTable: Tên bảng tìm kiếm dựa trên một chuỗi - Optional, mặc định là tên bảng chính (this.entityName) - Optional.
    * @returns {this} Một tham chiếu đến đối tượng gọi hàm để hỗ trợ chuỗi gọi phương thức.
    */
   addUnAccentString(

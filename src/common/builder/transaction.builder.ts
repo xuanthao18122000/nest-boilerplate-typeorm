@@ -12,11 +12,11 @@ export class TransactionBuilder {
     return queryRunner;
   }
 
-  async commitTransaction(queryRunner: any): Promise<void> {
+  async commitTransaction(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.commitTransaction();
   }
 
-  async rollbackTransaction(queryRunner: any): Promise<void> {
+  async rollbackTransaction(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.rollbackTransaction();
     await queryRunner.release();
   }

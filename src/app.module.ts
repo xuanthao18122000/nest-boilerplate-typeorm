@@ -6,6 +6,7 @@ import { dataSourceOptions } from './configs/typeorm.config';
 import { LoggerModule } from './loggers/logger.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { HealthModule } from './modules/health/health.module';
+import { NotificationModule } from './modules/notification/notification.module';
 import { RoleModule } from './modules/role/role.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -19,6 +20,7 @@ import { UserModule } from './modules/user/user.module';
     AuthModule,
     UserModule,
     RoleModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
