@@ -4,7 +4,7 @@ import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
 import { SignInDto, SignUpDto, UpdateProfileDto } from './dto/auth.dto';
 import { JwtService } from '@nestjs/jwt';
-import { comparePasswords, hashPassword } from 'src/common/utils/auth.utils';
+import { comparePasswords, hashPassword } from 'src/common/utils';
 import { throwHttpException } from 'src/common/exceptions/throw.exception';
 import { getEnv } from 'src/configs/env.config';
 

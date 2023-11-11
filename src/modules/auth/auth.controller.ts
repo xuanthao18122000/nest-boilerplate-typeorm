@@ -7,13 +7,25 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { GetUser } from 'src/common/decorators/user.decorator';
 import { SendResponse } from 'src/common/response/send-response';
 import { User } from 'src/database/entities';
 import { AuthService } from './auth.service';
-import { SignInDto, SignUpDto, UpdateProfileDto } from './dto/auth.dto';
+import {
+  NotFoundAuthResponse,
+  SignInDto,
+  SignUpDto,
+  SuccessAuthResponse,
+  UpdateProfileDto,
+} from './dto/auth.dto';
 
 @ApiTags('2. Auth')
 @Controller('auth')
@@ -23,6 +35,8 @@ export class AuthController {
 
   @Public()
   @Post('sign-in')
+  @ApiOkResponse(SuccessAuthResponse)
+  @ApiNotFoundResponse(NotFoundAuthResponse)
   @ApiOperation({ summary: 'Sign In User' })
   async signIn(@Body() body: SignInDto) {
     const data = await this.authService.signIn(body);

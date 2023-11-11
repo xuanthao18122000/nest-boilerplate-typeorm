@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import FilterBuilder from 'src/common/builder/filter.builder';
 import { throwHttpException } from 'src/common/exceptions/throw.exception';
 import { listResponse } from 'src/common/response/response-list.response';
-import { hashPassword } from 'src/common/utils/auth.utils';
+import { hashPassword } from 'src/common/utils';
 import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
 import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';

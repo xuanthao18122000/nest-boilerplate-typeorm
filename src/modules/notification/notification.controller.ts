@@ -33,7 +33,7 @@ export class NotificationController {
 
     return SendResponse.success(
       notificationCards,
-      'Get all notifications successful',
+      'Get all notifications successful!',
       response,
     );
   }
@@ -43,14 +43,17 @@ export class NotificationController {
     const notification = await this.notificationService.getOne(id);
     return SendResponse.success(
       notification,
-      'Get detail notification successful',
+      'Get detail notification successful!',
     );
   }
 
   @Post()
   async createNotification(@Body() body: CreateNotificationDto) {
     const notification = await this.notificationService.create(body);
-    return SendResponse.success(notification, 'Create notification successful');
+    return SendResponse.success(
+      notification,
+      'Create notification successful!',
+    );
   }
 
   @Put()
@@ -59,6 +62,9 @@ export class NotificationController {
     @Body() body: UpdateNotificationDto,
   ) {
     const notification = await this.notificationService.update(id, body);
-    return SendResponse.success(notification, 'Update notification successful');
+    return SendResponse.success(
+      notification,
+      'Update notification successful!',
+    );
   }
 }
