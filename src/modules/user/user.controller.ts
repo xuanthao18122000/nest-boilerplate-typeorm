@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
+  ApiConflictResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -22,11 +23,17 @@ import { SendResponse } from 'src/common/response/send-response';
 import {
   CreateUserDto,
   ListUserDto,
-  NotFoundUserResponse,
-  SuccessUserResponse,
   UpdateUserDto,
 } from './dto/user.dto';
 import { UserService } from './user.service';
+import {
+  SuccessCreateUserResponse,
+  ExistedCreateUserResponse,
+  SuccessListUserResponse,
+  SuccessDetailUserResponse,
+  NotFoundDetailUserResponse,
+  SuccessUpdateUserResponse,
+} from './response';
 
 @ApiBearerAuth()
 @ApiTags('3. Users')
@@ -37,6 +44,8 @@ export class UserController {
 
   @Post()
   @ApiOperation({ summary: 'Create User' })
+  @ApiOkResponse(SuccessCreateUserResponse)
+  @ApiConflictResponse(ExistedCreateUserResponse)
   async createUser(@Body() body: CreateUserDto) {
     const user = await this.userService.create(body);
     return SendResponse.success(user.serialize(), 'Create user successful!');
@@ -44,7 +53,7 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: 'List Users' })
-  @ApiOkResponse(SuccessUserResponse)
+  @ApiOkResponse(SuccessListUserResponse)
   async getAll(@Query() query: ListUserDto, @Res() response: Response) {
     const users = await this.userService.getAll(query);
     return SendResponse.success(users, 'Get all users successful!', response);
@@ -52,15 +61,17 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Details User' })
-  @ApiOkResponse(SuccessUserResponse)
-  @ApiNotFoundResponse(NotFoundUserResponse)
+  @ApiOkResponse(SuccessDetailUserResponse)
+  @ApiNotFoundResponse(NotFoundDetailUserResponse)
   async getOneUser(@Param('id') id: number) {
     const user = await this.userService.getOne(id);
     return SendResponse.success(user, 'Get detail user successful!');
   }
 
-  @Put()
+  @Put(':id')
   @ApiOperation({ summary: 'Update User' })
+  @ApiOkResponse(SuccessUpdateUserResponse)
+  @ApiNotFoundResponse(NotFoundDetailUserResponse)
   async updateUser(@Param('id') id: number, @Body() body: UpdateUserDto) {
     const user = await this.userService.update(id, body);
     return SendResponse.success(user.serialize(), 'Update user successful!');

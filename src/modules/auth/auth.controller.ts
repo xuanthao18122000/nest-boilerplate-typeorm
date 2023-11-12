@@ -8,7 +8,9 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiConflictResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -19,13 +21,17 @@ import { GetUser } from 'src/common/decorators/user.decorator';
 import { SendResponse } from 'src/common/response/send-response';
 import { User } from 'src/database/entities';
 import { AuthService } from './auth.service';
+import { SignInDto, SignUpDto, UpdateProfileDto } from './dto/auth.dto';
 import {
-  NotFoundAuthResponse,
-  SignInDto,
-  SignUpDto,
-  SuccessAuthResponse,
-  UpdateProfileDto,
-} from './dto/auth.dto';
+  SuccessLoginResponse,
+  NotFoundLoginResponse,
+  WrongPasswordLoginResponse,
+  SuccessRegisterResponse,
+  ExistedRegisterResponse,
+  SuccessLogoutResponse,
+  SuccessUpdateProfileResponse,
+  SuccessGetProfileResponse,
+} from './response';
 
 @ApiTags('2. Auth')
 @Controller('auth')
@@ -35,8 +41,9 @@ export class AuthController {
 
   @Public()
   @Post('sign-in')
-  @ApiOkResponse(SuccessAuthResponse)
-  @ApiNotFoundResponse(NotFoundAuthResponse)
+  @ApiOkResponse(SuccessLoginResponse)
+  @ApiNotFoundResponse(NotFoundLoginResponse)
+  @ApiBadRequestResponse(WrongPasswordLoginResponse)
   @ApiOperation({ summary: 'Sign In User' })
   async signIn(@Body() body: SignInDto) {
     const data = await this.authService.signIn(body);
@@ -45,6 +52,8 @@ export class AuthController {
 
   @Public()
   @Post('sign-up')
+  @ApiOkResponse(SuccessRegisterResponse)
+  @ApiConflictResponse(ExistedRegisterResponse)
   @ApiOperation({ summary: 'Sign Up User' })
   async signUp(@Body() body: SignUpDto) {
     const user = await this.authService.signUp(body);
@@ -52,8 +61,9 @@ export class AuthController {
   }
 
   @Post('sign-out')
-  @ApiOperation({ summary: 'Sign Out User' })
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'Sign Out User' })
+  @ApiOkResponse(SuccessLogoutResponse)
   async signOut(@GetUser() user: User) {
     this.authService.signOut(user);
     return SendResponse.success([], 'Sign out user successful!');
@@ -61,6 +71,7 @@ export class AuthController {
 
   @Get('profile')
   @ApiBearerAuth()
+  @ApiOkResponse(SuccessGetProfileResponse)
   @ApiOperation({ summary: 'Get Profile User' })
   async getProfile(@GetUser() user: User) {
     return SendResponse.success(
@@ -71,6 +82,7 @@ export class AuthController {
 
   @Put('profile')
   @ApiBearerAuth()
+  @ApiOkResponse(SuccessUpdateProfileResponse)
   @ApiOperation({ summary: 'Update Profile User' })
   async updateProfile(@Body() body: UpdateProfileDto, @GetUser() user: User) {
     const updatedUser = await this.authService.updateProfile(body, user);

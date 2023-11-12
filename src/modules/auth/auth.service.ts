@@ -32,7 +32,7 @@ export class AuthService {
 
     const isAuth = comparePasswords(password, user.password);
     if (!isAuth) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'WRONG_PASSWORD');
+      throwHttpException(HttpStatus.BAD_REQUEST, 'WRONG_PASSWORD');
     }
     const jwt = await this.signToken(user.id, user.email);
 

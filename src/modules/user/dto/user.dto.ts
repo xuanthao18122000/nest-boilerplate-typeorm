@@ -118,35 +118,6 @@ export class UpdateUserDto {
   gender: number;
 }
 
-export const SuccessUsersResponse = {
-  status: 200,
-  description: 'Success!',
-  content: {},
-  schema: {
-    example: SuccessSwaggerResponse(
-      {
-        list: [
-          {
-            id: 1,
-            createdAt: '2023-10-08T04:04:04.434Z',
-            updatedAt: '2023-11-11T12:09:35.075Z',
-            email: 'admin@gmail.com',
-            fullName: 'Admin',
-            phoneNumber: '097392738',
-            gender: 1,
-            avatar: 'avatar.png',
-            role: 1,
-          },
-        ],
-        total: 1,
-        page: 1,
-        perPage: 10,
-      },
-      'Get all users successful!',
-    ),
-  },
-};
-
 export const SuccessUserResponse = {
   status: 200,
   description: 'Success!',

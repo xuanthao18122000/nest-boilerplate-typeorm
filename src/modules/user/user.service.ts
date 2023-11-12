@@ -92,6 +92,8 @@ export class UserService {
   }
 
   async findUserByPk(id: number): Promise<User> {
+    console.log(id);
+    
     const user = await this.userRepo.findOneBy({ id });
     if (!user) {
       throwHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND');
