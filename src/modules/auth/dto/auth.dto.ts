@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { User } from 'src/database/entities';
 
 export class SignInDto {
@@ -14,7 +21,6 @@ export class SignInDto {
   @IsNotEmpty()
   password: string;
 }
-
 
 export class SignUpDto {
   @ApiProperty({ example: '' })
@@ -43,8 +49,6 @@ export class SignUpDto {
   @IsNotEmpty()
   gender: number;
 }
-
-
 
 export class UpdateProfileDto {
   @ApiProperty({ example: '' })

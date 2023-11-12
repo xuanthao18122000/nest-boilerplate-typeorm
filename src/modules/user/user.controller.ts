@@ -20,11 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { SendResponse } from 'src/common/response/send-response';
-import {
-  CreateUserDto,
-  ListUserDto,
-  UpdateUserDto,
-} from './dto/user.dto';
+import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 import {
   SuccessCreateUserResponse,
