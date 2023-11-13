@@ -43,9 +43,9 @@ export class SignUpDto {
   @IsNotEmpty()
   phoneNumber: string;
 
-  @ApiProperty({ example: User.GENDER_USER.MALE })
+  @ApiProperty({ example: User.GENDER.MALE })
   @Type(() => Number)
-  @IsEnum(User.GENDER_USER)
+  @IsEnum(User.GENDER)
   @IsNotEmpty()
   gender: number;
 }
@@ -62,9 +62,9 @@ export class UpdateProfileDto {
   @IsOptional()
   phoneNumber: string;
 
-  @ApiProperty({ example: User.GENDER_USER.MALE })
+  @ApiProperty({ example: User.GENDER.MALE })
   @Type(() => Number)
-  @IsEnum(User.GENDER_USER)
+  @IsEnum(User.GENDER)
   @IsOptional()
   gender: number;
 }

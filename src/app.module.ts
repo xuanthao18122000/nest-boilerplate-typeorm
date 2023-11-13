@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { dataSourceOptions } from './configs/typeorm.config';
 import { LoggerModule } from './loggers/logger.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { EmployeeModule } from './modules/employee/employee.module';
 import { HealthModule } from './modules/health/health.module';
 import { NotificationModule } from './modules/notification/notification.module';
 import { RoleModule } from './modules/role/role.module';
@@ -20,6 +21,7 @@ import { UserModule } from './modules/user/user.module';
     AuthModule,
     UserModule,
     RoleModule,
+    EmployeeModule,
     NotificationModule,
   ],
   controllers: [AppController],

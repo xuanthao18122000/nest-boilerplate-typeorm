@@ -10,10 +10,10 @@ describe('User Entity', () => {
       fullName: 'fullName',
       phoneNumber: 'phoneNumber',
       token: 'token',
-      gender: User.GENDER_USER.MALE,
+      gender: User.GENDER.MALE,
       address: 'address',
       avatar: 'avatar',
-      status: User.STATUS_USER.ACTIVE,
+      status: User.STATUS.ACTIVE,
     });
   });
 
@@ -33,9 +33,9 @@ describe('User Entity', () => {
     expect(user).toHaveProperty('status');
   });
 
-  it('should have STATUS_USER and GENDER_USER properties', () => {
-    expect(User.STATUS_USER).toBeDefined();
-    expect(User.GENDER_USER).toBeDefined();
+  it('should have STATUS and GENDER properties', () => {
+    expect(User.STATUS).toBeDefined();
+    expect(User.GENDER).toBeDefined();
   });
 
   it('should have a serialize method', () => {

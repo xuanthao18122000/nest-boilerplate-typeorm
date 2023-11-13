@@ -1,8 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { BaseEntity, Role } from './';
+import { Column, Entity } from 'typeorm';
+import { BaseEntity } from '.';
 
-@Entity({ name: 'users' })
-export class User extends BaseEntity {
+@Entity({ name: 'employees' })
+export class Employee extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
@@ -15,8 +15,8 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', name: 'phone_number', nullable: true })
   phoneNumber: string;
 
-  @Column({ name: 'role_id', nullable: true })
-  roleId: number;
+  @Column({ name: 'position_id', nullable: true })
+  positionId: number;
 
   @Column({ nullable: true })
   token: string;
@@ -30,12 +30,8 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', nullable: true })
   avatar: string;
 
-  @Column({ type: 'int', default: User.STATUS.INACTIVE })
+  @Column({ type: 'int', default: Employee.STATUS.INACTIVE })
   status: number;
-
-  @ManyToOne(() => Role, (role) => role.users)
-  @JoinColumn({ name: 'role_id' })
-  role: Role;
 
   static STATUS = {
     /** Đang hoạt động */
@@ -55,7 +51,7 @@ export class User extends BaseEntity {
     OTHER: 3,
   };
 
-  constructor(data: Partial<User>) {
+  constructor(data: Partial<Employee>) {
     super();
     if (data) {
       this.id = data.id || null;
@@ -66,6 +62,7 @@ export class User extends BaseEntity {
       this.status = data.status;
       this.password = data.password;
       this.token = data.token;
+      this.positionId = data.positionId;
       this.address = data.address;
       this.avatar = data.avatar;
     }
@@ -79,7 +76,7 @@ export class User extends BaseEntity {
       phoneNumber: this.phoneNumber,
       gender: this.gender,
       status: this.status,
-      roleId: this.roleId,
+      positionId: this.positionId,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

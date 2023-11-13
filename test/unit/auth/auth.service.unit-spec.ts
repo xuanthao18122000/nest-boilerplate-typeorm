@@ -44,7 +44,7 @@ describe('Auth Service', () => {
   //       id: 1,
   //       email: 'johndoe@example.com',
   //       password: hashPassword('strongPassword'), // Hashed password
-  //       status: User.STATUS_USER.ACTIVE,
+  //       status: User.STATUS.ACTIVE,
   //     };
 
   //     // Mock user retrieval
@@ -102,7 +102,7 @@ describe('Auth Service', () => {
   //       id: 1,
   //       email: 'johndoe@example.com',
   //       password: hashPassword('strongPassword'), // Hashed password
-  //       status: User.STATUS_USER.INACTIVE, // Inactive status
+  //       status: User.STATUS.INACTIVE, // Inactive status
   //     };
 
   //     // Mock user retrieval
@@ -128,7 +128,7 @@ describe('Auth Service', () => {
   //       id: 1,
   //       email: 'johndoe@example.com',
   //       password: hashPassword('strongPassword'), // Hashed password
-  //       status: User.STATUS_USER.ACTIVE,
+  //       status: User.STATUS.ACTIVE,
   //     };
 
   //     // Mock user retrieval
@@ -154,7 +154,7 @@ describe('Auth Service', () => {
         email: 'johndoe@example.com',
         password: 'strongPassword',
         fullName: 'John Doe',
-        gender: User.GENDER_USER.MALE,
+        gender: User.GENDER.MALE,
         phoneNumber: '123456',
       };
 
@@ -166,7 +166,7 @@ describe('Auth Service', () => {
         id: 1,
         email: 'johndoe@example.com',
         password: 'hashedPassword',
-        status: User.STATUS_USER.ACTIVE,
+        status: User.STATUS.ACTIVE,
         fullName: 'John Doe',
       };
 
@@ -185,7 +185,7 @@ describe('Auth Service', () => {
       //   email: 'johndoe@example.com',
       //   password: 'strongPassword',
       //   fullName: 'John Doe',
-      //   gender: User.GENDER_USER.MALE,
+      //   gender: User.GENDER.MALE,
       //   phoneNumber: '123456',
       // };
 

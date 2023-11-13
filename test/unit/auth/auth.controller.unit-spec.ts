@@ -1,15 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from '../../../src/modules/auth/auth.controller';
-import { AuthService } from '../../../src/modules/auth/auth.service';
-import { mockToken } from './mocks/tokens.mock';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from 'src/database/entities';
-import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { SignInDto, SignUpDto } from 'src/modules/auth/dto/auth.dto';
-import { createUserStub } from '../user/stubs/user.stub';
+import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { SendResponse } from 'src/common/response/send-response';
 import { getEnv } from 'src/configs/env.config';
+import { User } from 'src/database/entities';
+import { SignInDto, SignUpDto } from 'src/modules/auth/dto/auth.dto';
+import { Repository } from 'typeorm';
+import { AuthController } from '../../../src/modules/auth/auth.controller';
+import { AuthService } from '../../../src/modules/auth/auth.service';
+import { createUserStub } from '../user/stubs/user.stub';
+import { mockToken } from './mocks/tokens.mock';
 
 jest.mock('./mocks/auth.service.ts');
 describe('AuthController', () => {
@@ -45,7 +45,7 @@ describe('AuthController', () => {
         email: 'johndoe@example.com',
         password: '1232@asdS',
         phoneNumber: '123456',
-        gender: User.GENDER_USER.FEMALE,
+        gender: User.GENDER.FEMALE,
       };
       const mockUser: User = createUserStub();
 

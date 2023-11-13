@@ -16,7 +16,7 @@ export class RoleController {
 
   @Post()
   @Public()
-  @ApiOperation({ summary: 'Create Role' })
+  @ApiOperation({ summary: 'Tạo Role' })
   async createRole(@Body() body: CreateRolesDto) {
     const role = await this.roleService.create(body);
     return SendResponse.success(role, 'Create roles successful!');
@@ -24,21 +24,21 @@ export class RoleController {
 
   @Put(':id')
   @Public()
-  @ApiOperation({ summary: 'Update Role' })
+  @ApiOperation({ summary: 'Cập nhật Role' })
   async updateRole(@Body() body: UpdateRolesDto, @Param('id') id: number) {
     const role = await this.roleService.updateRole(id, body);
     return SendResponse.success(role, 'Update role successful!');
   }
 
   @Get('')
-  @ApiOperation({ summary: 'List Roles' })
+  @ApiOperation({ summary: 'Danh sách Roles' })
   async listRoles(@Query() query: ListRolesDto) {
     const roles = await this.roleService.getAll(query);
     return SendResponse.success(roles, 'Get list roles successful!');
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Detail Role' })
+  @ApiOperation({ summary: 'Chi tiết Role' })
   async detailRole(@Param('id') id: number) {
     const roles = await this.roleService.getOne(id);
     return SendResponse.success(roles, 'Get details role successful!');

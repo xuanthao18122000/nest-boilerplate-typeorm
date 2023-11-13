@@ -10,7 +10,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { SendResponse } from 'src/common/response/send-response';
 import {
@@ -21,13 +21,14 @@ import {
 import { NotificationService } from './notification.service';
 
 @ApiBearerAuth()
-@ApiTags('5. Notifications')
+@ApiTags('6. Notifications')
 @Controller('notifications')
 @UsePipes(new ValidationPipe({ transform: true }))
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Danh sách thông báo' })
   async getAll(@Query() query: ListNotificationDto, @Res() response: Response) {
     const notificationCards = await this.notificationService.getAll(query);
 
@@ -39,6 +40,7 @@ export class NotificationController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Chi tiết thông báo' })
   async getOneNotification(@Param('id') id: number) {
     const notification = await this.notificationService.getOne(id);
     return SendResponse.success(
@@ -48,6 +50,7 @@ export class NotificationController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Tạo thông báo' })
   async createNotification(@Body() body: CreateNotificationDto) {
     const notification = await this.notificationService.create(body);
     return SendResponse.success(
@@ -57,6 +60,7 @@ export class NotificationController {
   }
 
   @Put()
+  @ApiOperation({ summary: 'Cập nhật thông báo' })
   async updateNotification(
     @Param('id') id: number,
     @Body() body: UpdateNotificationDto,

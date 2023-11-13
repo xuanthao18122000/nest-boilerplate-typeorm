@@ -21,15 +21,15 @@ import {
 import { Response } from 'express';
 import { SendResponse } from 'src/common/response/send-response';
 import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';
-import { UserService } from './user.service';
 import {
-  SuccessCreateUserResponse,
   ExistedCreateUserResponse,
-  SuccessListUserResponse,
-  SuccessDetailUserResponse,
   NotFoundDetailUserResponse,
+  SuccessCreateUserResponse,
+  SuccessDetailUserResponse,
+  SuccessListUserResponse,
   SuccessUpdateUserResponse,
 } from './response';
+import { UserService } from './user.service';
 
 @ApiBearerAuth()
 @ApiTags('3. Users')
@@ -39,7 +39,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create User' })
+  @ApiOperation({ summary: 'Tạo người dùng' })
   @ApiOkResponse(SuccessCreateUserResponse)
   @ApiConflictResponse(ExistedCreateUserResponse)
   async createUser(@Body() body: CreateUserDto) {
@@ -48,7 +48,7 @@ export class UserController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'List Users' })
+  @ApiOperation({ summary: 'Danh sách người dùng' })
   @ApiOkResponse(SuccessListUserResponse)
   async getAll(@Query() query: ListUserDto, @Res() response: Response) {
     const users = await this.userService.getAll(query);
@@ -56,7 +56,7 @@ export class UserController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Details User' })
+  @ApiOperation({ summary: 'Chi tiết người dùng' })
   @ApiOkResponse(SuccessDetailUserResponse)
   @ApiNotFoundResponse(NotFoundDetailUserResponse)
   async getOneUser(@Param('id') id: number) {
@@ -65,7 +65,7 @@ export class UserController {
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Update User' })
+  @ApiOperation({ summary: 'Cập nhật người dùng' })
   @ApiOkResponse(SuccessUpdateUserResponse)
   @ApiNotFoundResponse(NotFoundDetailUserResponse)
   async updateUser(@Param('id') id: number, @Body() body: UpdateUserDto) {

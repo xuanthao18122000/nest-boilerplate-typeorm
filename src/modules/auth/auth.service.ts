@@ -1,12 +1,12 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { throwHttpException } from 'src/common/exceptions/throw.exception';
+import { comparePasswords, hashPassword } from 'src/common/utils';
+import { getEnv } from 'src/configs/env.config';
 import { User } from 'src/database/entities';
 import { Repository } from 'typeorm';
 import { SignInDto, SignUpDto, UpdateProfileDto } from './dto/auth.dto';
-import { JwtService } from '@nestjs/jwt';
-import { comparePasswords, hashPassword } from 'src/common/utils';
-import { throwHttpException } from 'src/common/exceptions/throw.exception';
-import { getEnv } from 'src/configs/env.config';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +26,7 @@ export class AuthService {
       throwHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND');
     }
 
-    if (user.status !== User.STATUS_USER.ACTIVE) {
+    if (user.status !== User.STATUS.ACTIVE) {
       throwHttpException(HttpStatus.NOT_FOUND, 'USER_INACTIVE');
     }
 
@@ -58,7 +58,7 @@ export class AuthService {
     const user = this.userRepo.create({
       email,
       password: hashPassword(password),
-      status: User.STATUS_USER.ACTIVE,
+      status: User.STATUS.ACTIVE,
       fullName,
       phoneNumber,
       gender,

@@ -14,7 +14,7 @@ export class PaginationOptions {
   @ApiProperty({
     example: 1,
     required: false,
-    description: 'Trang muốn hiển thị',
+    description: 'Page you want to display',
   })
   @Type(() => Number)
   @IsOptional()
@@ -26,7 +26,7 @@ export class PaginationOptions {
   @ApiProperty({
     example: 10,
     required: false,
-    description: 'Số lượng record 1 trang',
+    description: 'Number of records per page',
   })
   @IsNumber()
   @Type(() => Number)
@@ -34,12 +34,12 @@ export class PaginationOptions {
   @Min(1, { message: 'perPage must be greater than 0' })
   perPage: number;
 
-  @ApiProperty({ enum: SORT_ENUM, required: false, description: 'Sắp xếp' })
+  @ApiProperty({ enum: SORT_ENUM, required: false, description: 'Sort By ID' })
   @IsEnum(SORT_ENUM)
   @IsOptional()
   sort: SORT_ENUM;
 
-  @ApiProperty({ required: false, description: 'Lấy tất cả record' })
+  @ApiProperty({ required: false, description: 'Get all records' })
   @IsBoolean()
   @IsOptional()
   getFull: boolean;

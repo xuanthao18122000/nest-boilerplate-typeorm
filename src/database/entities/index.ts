@@ -1,4 +1,5 @@
 export * from './base.entity';
+export * from './employee.entity';
 export * from './notification-card.entity';
 export * from './notification-detail.entity';
 export * from './rbac-action.entity';

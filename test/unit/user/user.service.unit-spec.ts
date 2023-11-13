@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserService } from '../../../src/modules/user/user.service';
-import { User } from '../../../src/database/entities';
 import { CreateUserDto } from 'src/modules/user/dto/user.dto';
+import { User } from '../../../src/database/entities';
+import { UserService } from '../../../src/modules/user/user.service';
 
 describe('User Service', () => {
   let userService: UserService;
@@ -36,7 +36,7 @@ describe('User Service', () => {
         email: 'johndoe@example.com',
         password: 'strongestP@ssword',
         fullName: 'John Doe',
-        gender: User.GENDER_USER.MALE,
+        gender: User.GENDER.MALE,
         phoneNumber: '0938381732',
       };
 
@@ -46,7 +46,7 @@ describe('User Service', () => {
         email: 'johndoe@example.com',
         password: 'strongPassword',
         fullName: 'John Doe',
-        gender: User.GENDER_USER.MALE,
+        gender: User.GENDER.MALE,
         phoneNumber: '123456',
       };
       mockUserRepository.create.mockReturnValue(createdUser);
@@ -67,7 +67,7 @@ describe('User Service', () => {
         fullName: userData.fullName,
         gender: userData.gender,
         phoneNumber: userData.phoneNumber,
-        status: User.STATUS_USER.ACTIVE,
+        status: User.STATUS.ACTIVE,
       });
       expect(mockUserRepository.save).toHaveBeenCalledWith(createdUser);
     });
@@ -78,7 +78,7 @@ describe('User Service', () => {
         email: 'johndoe@example.com',
         password: 'strongestP@ssword',
         fullName: 'John Doe',
-        gender: User.GENDER_USER.MALE,
+        gender: User.GENDER.MALE,
         phoneNumber: '0938381732',
       };
 

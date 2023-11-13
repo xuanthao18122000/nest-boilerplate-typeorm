@@ -9,10 +9,9 @@ import {
   IsString,
 } from 'class-validator';
 import { PaginationOptions } from 'src/common/builder/pagination-options.builder';
-import { SuccessSwaggerResponse } from 'src/common/utils';
-import { User } from 'src/database/entities';
+import { Employee } from 'src/database/entities';
 
-export class ListUserDto extends PaginationOptions {
+export class ListEmployeeDto extends PaginationOptions {
   @ApiProperty({ required: false, description: 'Full name' })
   @IsString()
   @IsOptional()
@@ -27,11 +26,11 @@ export class ListUserDto extends PaginationOptions {
   @ApiProperty({
     required: false,
     description: 'Gender',
-    enum: User.GENDER,
+    enum: Employee.GENDER,
   })
   @IsOptional()
   @Type(() => Number)
-  @IsEnum(User.GENDER)
+  @IsEnum(Employee.GENDER)
   gender: number;
 
   @ApiProperty({
@@ -65,7 +64,7 @@ export class ListUserDto extends PaginationOptions {
   // download?: boolean;
 }
 
-export class CreateUserDto {
+export class CreateEmployeeDto {
   @ApiProperty({ example: '' })
   @IsEmail()
   @IsNotEmpty()
@@ -87,14 +86,14 @@ export class CreateUserDto {
   @IsNotEmpty()
   phoneNumber: string;
 
-  @ApiProperty({ example: User.GENDER.MALE })
+  @ApiProperty({ example: Employee.GENDER.MALE })
   @Type(() => Number)
-  @IsEnum(User.GENDER)
+  @IsEnum(Employee.GENDER)
   @IsNotEmpty()
   gender: number;
 }
 
-export class UpdateUserDto {
+export class UpdateEmployeeDto {
   @ApiProperty({ example: '', required: false })
   @IsString()
   @IsOptional()
@@ -111,45 +110,9 @@ export class UpdateUserDto {
   @IsOptional()
   address: string;
 
-  @ApiProperty({ required: false, example: User.GENDER.MALE })
+  @ApiProperty({ required: false, example: Employee.GENDER.MALE })
   @Type(() => Number)
-  @IsEnum(User.GENDER)
+  @IsEnum(Employee.GENDER)
   @IsOptional()
   gender: number;
 }
-
-export const SuccessUserResponse = {
-  status: 200,
-  description: 'Success!',
-  content: {},
-  schema: {
-    example: SuccessSwaggerResponse(
-      {
-        id: 1,
-        email: 'admin@gmail.com',
-        fullName: 'Admin',
-        phoneNumber: '097392738',
-        gender: 1,
-        status: 1,
-        roleId: null,
-        createdAt: '2023-10-08T04:04:04.434Z',
-        updatedAt: '2023-11-11T12:09:35.075Z',
-      },
-      'Get detail user successful!',
-    ),
-  },
-};
-
-export const NotFoundUserResponse = {
-  status: 404,
-  description: 'Not Found User!',
-  content: {},
-  schema: {
-    example: {
-      code: 1001,
-      success: false,
-      type: 'USER_NOT_FOUND',
-      msg: 'User not found!',
-    },
-  },
-};

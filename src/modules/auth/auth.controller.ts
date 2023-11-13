@@ -23,14 +23,14 @@ import { User } from 'src/database/entities';
 import { AuthService } from './auth.service';
 import { SignInDto, SignUpDto, UpdateProfileDto } from './dto/auth.dto';
 import {
-  SuccessLoginResponse,
-  NotFoundLoginResponse,
-  WrongPasswordLoginResponse,
-  SuccessRegisterResponse,
   ExistedRegisterResponse,
-  SuccessLogoutResponse,
-  SuccessUpdateProfileResponse,
+  NotFoundLoginResponse,
   SuccessGetProfileResponse,
+  SuccessLoginResponse,
+  SuccessLogoutResponse,
+  SuccessRegisterResponse,
+  SuccessUpdateProfileResponse,
+  WrongPasswordLoginResponse,
 } from './response';
 
 @ApiTags('2. Auth')
@@ -44,7 +44,7 @@ export class AuthController {
   @ApiOkResponse(SuccessLoginResponse)
   @ApiNotFoundResponse(NotFoundLoginResponse)
   @ApiBadRequestResponse(WrongPasswordLoginResponse)
-  @ApiOperation({ summary: 'Sign In User' })
+  @ApiOperation({ summary: 'Đăng nhập người dùng' })
   async signIn(@Body() body: SignInDto) {
     const data = await this.authService.signIn(body);
     return SendResponse.success(data, 'Sign in user successful!');
@@ -54,7 +54,7 @@ export class AuthController {
   @Post('sign-up')
   @ApiOkResponse(SuccessRegisterResponse)
   @ApiConflictResponse(ExistedRegisterResponse)
-  @ApiOperation({ summary: 'Sign Up User' })
+  @ApiOperation({ summary: 'Đăng ký người dùng' })
   async signUp(@Body() body: SignUpDto) {
     const user = await this.authService.signUp(body);
     return SendResponse.success(user.serialize(), 'Sign up user successful!');
@@ -62,7 +62,7 @@ export class AuthController {
 
   @Post('sign-out')
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Sign Out User' })
+  @ApiOperation({ summary: 'Đăng xuất người dùng' })
   @ApiOkResponse(SuccessLogoutResponse)
   async signOut(@GetUser() user: User) {
     this.authService.signOut(user);
@@ -72,7 +72,7 @@ export class AuthController {
   @Get('profile')
   @ApiBearerAuth()
   @ApiOkResponse(SuccessGetProfileResponse)
-  @ApiOperation({ summary: 'Get Profile User' })
+  @ApiOperation({ summary: 'Lấy thông tin cá nhân' })
   async getProfile(@GetUser() user: User) {
     return SendResponse.success(
       user.serialize(),
@@ -83,7 +83,7 @@ export class AuthController {
   @Put('profile')
   @ApiBearerAuth()
   @ApiOkResponse(SuccessUpdateProfileResponse)
-  @ApiOperation({ summary: 'Update Profile User' })
+  @ApiOperation({ summary: 'Cập nhật thông tin cá nhân' })
   async updateProfile(@Body() body: UpdateProfileDto, @GetUser() user: User) {
     const updatedUser = await this.authService.updateProfile(body, user);
     return SendResponse.success(

@@ -21,7 +21,7 @@ export class HealthController {
   @Get()
   @Public()
   @HealthCheck()
-  @ApiOperation({ summary: 'Health Check' })
+  @ApiOperation({ summary: 'Kiểm tra Server và Database' })
   checkHealth() {
     return this.healthCheckService.check([
       () => this.http.pingCheck('ping_server', getEnv('APP_URL')),
