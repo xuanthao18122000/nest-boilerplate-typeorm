@@ -26,7 +26,10 @@ export const SuccessCreateUserResponse = {
 export const ExistedCreateUserResponse = {
   description: 'User Already Exists!',
   schema: {
-    example: ErrorHttpException(HttpStatus.CONFLICT, 'USER_EXISTED').getResponse()
+    example: ErrorHttpException(
+      HttpStatus.CONFLICT,
+      'USER_EXISTED',
+    ).getResponse(),
   },
 };
 
@@ -82,7 +85,10 @@ export const SuccessDetailUserResponse = {
 export const NotFoundDetailUserResponse = {
   description: 'User Not Found!',
   schema: {
-    example: ErrorHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND').getResponse()
+    example: ErrorHttpException(
+      HttpStatus.NOT_FOUND,
+      'USER_NOT_FOUND',
+    ).getResponse(),
   },
 };
 
