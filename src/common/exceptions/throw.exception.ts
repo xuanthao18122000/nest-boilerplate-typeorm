@@ -1,24 +1,23 @@
 import { HttpStatus } from '@nestjs/common';
-import { ErrorException } from '../response/error-payload.dto';
 import statusCode from 'src/configs/status-code.config';
+import { ErrorException } from '../response/error-payload.dto';
 
-export const throwHttpException = (
+export const ErrorHttpException = (
   httpStatus: HttpStatus,
   code: string,
 ): ErrorException => {
   if (statusCode.hasOwnProperty(code)) {
-    throw new ErrorException(
+    return new ErrorException(
       httpStatus,
       statusCode[code].code,
       statusCode[code].type,
       statusCode[code].msg,
     );
-  } else {
-    throw new ErrorException(
-      httpStatus,
-      statusCode['BACKEND'].code,
-      statusCode['BACKEND'].type,
-      statusCode['BACKEND'].msg,
-    );
   }
+  return new ErrorException(
+    httpStatus,
+    statusCode['BACKEND'].code,
+    statusCode['BACKEND'].type,
+    statusCode['BACKEND'].msg,
+  );
 };

@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import FilterBuilder from 'src/common/builder/filter.builder';
-import { throwHttpException } from 'src/common/exceptions/throw.exception';
+import { ErrorHttpException } from 'src/common/exceptions/throw.exception';
 import { listResponse } from 'src/common/response/response-list.response';
 import { hashPassword } from 'src/common/utils';
 import { Employee } from 'src/database/entities';
@@ -57,7 +57,7 @@ export class EmployeeService {
     const employee = await this.findEmployeeByPk(id);
 
     if (!employee) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'EMPLOYEE_NOT_FOUND');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'EMPLOYEE_NOT_FOUND');
     }
     return employee.serialize();
   }
@@ -69,7 +69,7 @@ export class EmployeeService {
     });
 
     if (isExistEmployee) {
-      throwHttpException(HttpStatus.CONFLICT, 'EMPLOYEE_EXISTED');
+      throw ErrorHttpException(HttpStatus.CONFLICT, 'EMPLOYEE_EXISTED');
     }
 
     const employee = this.employeeRepo.create({
@@ -101,7 +101,7 @@ export class EmployeeService {
   async findEmployeeByPk(id: number): Promise<Employee> {
     const employee = await this.employeeRepo.findOneBy({ id });
     if (!employee) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'EMPLOYEE_NOT_FOUND');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'EMPLOYEE_NOT_FOUND');
     }
     return employee;
   }

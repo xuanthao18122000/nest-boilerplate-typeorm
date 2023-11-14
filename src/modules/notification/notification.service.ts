@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import FilterBuilder from 'src/common/builder/filter.builder';
-import { throwHttpException } from 'src/common/exceptions/throw.exception';
+import { ErrorHttpException } from 'src/common/exceptions/throw.exception';
 import { listResponse } from 'src/common/response/response-list.response';
 import { NotificationCard } from 'src/database/entities';
 import { Repository } from 'typeorm';
@@ -67,7 +67,7 @@ export class NotificationService {
     const notificationCard = await this.findNotificationCardByPk(id);
 
     if (!notificationCard) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'NOTIFY_NOT_FOUND');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'NOTIFY_NOT_FOUND');
     }
     return notificationCard.serialize();
   }
@@ -87,7 +87,7 @@ export class NotificationService {
 
     const notificationCard = await this.notificationCardRepo.findOneBy({ id });
     if (!notificationCard) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'NOTIFY_NOT_FOUND');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'NOTIFY_NOT_FOUND');
     }
     if (status) notificationCard.status = status;
 
@@ -97,7 +97,7 @@ export class NotificationService {
   async findNotificationCardByPk(id: number): Promise<NotificationCard> {
     const notification = await this.notificationCardRepo.findOneBy({ id });
     if (!notification) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'NOTIFY_NOT_FOUND');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'NOTIFY_NOT_FOUND');
     }
     return notification;
   }

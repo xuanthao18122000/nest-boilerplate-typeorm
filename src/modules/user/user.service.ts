@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import FilterBuilder from 'src/common/builder/filter.builder';
-import { throwHttpException } from 'src/common/exceptions/throw.exception';
+import { ErrorHttpException } from 'src/common/exceptions/throw.exception';
 import { listResponse } from 'src/common/response/response-list.response';
 import { hashPassword } from 'src/common/utils';
 import { User } from 'src/database/entities';
@@ -50,7 +50,7 @@ export class UserService {
     const user = await this.findUserByPk(id);
 
     if (!user) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND');
     }
     return user.serialize();
   }
@@ -62,7 +62,7 @@ export class UserService {
     });
 
     if (isExistUser) {
-      throwHttpException(HttpStatus.CONFLICT, 'USER_EXISTED');
+      throw ErrorHttpException(HttpStatus.CONFLICT, 'USER_EXISTED');
     }
 
     const user = this.userRepo.create({
@@ -92,11 +92,9 @@ export class UserService {
   }
 
   async findUserByPk(id: number): Promise<User> {
-    console.log(id);
-
     const user = await this.userRepo.findOneBy({ id });
     if (!user) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND');
     }
     return user;
   }
@@ -109,7 +107,7 @@ export class UserService {
     //   await queryRunner.commitTransaction();
     // } catch (error) {
     //   await queryRunner.rollbackTransaction();
-    //   throw throwHttpException(
+    //   throw throw ErrorHttpException(
     //     HttpStatus.INTERNAL_SERVER_ERROR,
     //     'ERROR_IMPORT_DATA',
     //   );

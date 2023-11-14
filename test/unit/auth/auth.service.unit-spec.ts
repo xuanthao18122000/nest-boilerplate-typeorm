@@ -196,7 +196,7 @@ describe('Auth Service', () => {
 
       // Call the signUp method and expect it to throw an error
       // await expect(authService.signUp(signUpDto)).rejects.toThrowError(
-      //   throwHttpException(HttpStatus.CONFLICT, 'USER_EXISTED')
+      //   throw ErrorHttpException(HttpStatus.CONFLICT, 'USER_EXISTED')
       // );
     });
   });

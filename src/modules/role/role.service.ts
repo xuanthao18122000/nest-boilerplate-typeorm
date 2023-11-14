@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { throwHttpException } from 'src/common/exceptions/throw.exception';
+import { ErrorHttpException } from 'src/common/exceptions/throw.exception';
 import { RbacAction, RbacModule, Role, User } from 'src/database/entities';
 import { Repository } from 'typeorm';
 import { CreateRolesDto } from './dto/create-roles.dto';
@@ -27,20 +27,20 @@ export class RoleService {
 
     const role = await this.roleRepo.findOne({ where: { key: key } });
     if (role) {
-      throwHttpException(HttpStatus.CONFLICT, 'ROLE_EXISTED');
+      throw ErrorHttpException(HttpStatus.CONFLICT, 'ROLE_EXISTED');
     }
     return await this.roleRepo.save(role);
   }
   async updateRole(id: number, body: UpdateRolesDto) {
     const { listActions } = body;
     if (listActions?.length === 0) {
-      throwHttpException(HttpStatus.BAD_REQUEST, 'ROLE_NOT_NULL');
+      throw ErrorHttpException(HttpStatus.BAD_REQUEST, 'ROLE_NOT_NULL');
     }
     const role = await this.roleRepo.findOne({
       where: { id },
     });
     if (!role) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'ROLE_NOT_FOUND');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'ROLE_NOT_FOUND');
     }
 
     return await this.roleRepo.save(role);
@@ -58,7 +58,7 @@ export class RoleService {
   async getOne(id: number) {
     const role = await this.roleRepo.findOne({ where: { id } });
     if (!role) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'ROLE_NOT_FOUND');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'ROLE_NOT_FOUND');
     }
     return role;
   }

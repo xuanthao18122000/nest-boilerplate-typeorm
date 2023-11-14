@@ -1,3 +1,5 @@
+import { HttpStatus } from '@nestjs/common';
+import { ErrorHttpException } from 'src/common/exceptions/throw.exception';
 import { SuccessSwaggerResponse } from 'src/common/utils';
 
 /* =============== CREATE USER ================== */
@@ -24,12 +26,7 @@ export const SuccessCreateUserResponse = {
 export const ExistedCreateUserResponse = {
   description: 'User Already Exists!',
   schema: {
-    example: {
-      code: 1000,
-      success: false,
-      type: 'USER_EXISTED',
-      msg: 'User already exists!',
-    },
+    example: ErrorHttpException(HttpStatus.CONFLICT, 'USER_EXISTED').getResponse()
   },
 };
 
@@ -85,12 +82,7 @@ export const SuccessDetailUserResponse = {
 export const NotFoundDetailUserResponse = {
   description: 'User Not Found!',
   schema: {
-    example: {
-      code: 1001,
-      success: false,
-      type: 'USER_NOT_FOUND',
-      msg: 'User not found!',
-    },
+    example: ErrorHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND').getResponse()
   },
 };
 

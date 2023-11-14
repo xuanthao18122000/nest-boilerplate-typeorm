@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { throwHttpException } from 'src/common/exceptions/throw.exception';
+import { ErrorHttpException } from 'src/common/exceptions/throw.exception';
 import { comparePasswords, hashPassword } from 'src/common/utils';
 import { getEnv } from 'src/configs/env.config';
 import { User } from 'src/database/entities';
@@ -23,16 +23,16 @@ export class AuthService {
     const user = await this.userRepo.findOneBy({ email });
 
     if (!user) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'USER_NOT_FOUND');
     }
 
     if (user.status !== User.STATUS.ACTIVE) {
-      throwHttpException(HttpStatus.NOT_FOUND, 'USER_INACTIVE');
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'USER_INACTIVE');
     }
 
     const isAuth = comparePasswords(password, user.password);
     if (!isAuth) {
-      throwHttpException(HttpStatus.BAD_REQUEST, 'WRONG_PASSWORD');
+      throw ErrorHttpException(HttpStatus.BAD_REQUEST, 'WRONG_PASSWORD');
     }
     const jwt = await this.signToken(user.id, user.email);
 
@@ -52,7 +52,7 @@ export class AuthService {
     const userExisted = await this.userRepo.findOneBy({ email });
 
     if (userExisted) {
-      throwHttpException(HttpStatus.CONFLICT, 'USER_EXISTED');
+      throw ErrorHttpException(HttpStatus.CONFLICT, 'USER_EXISTED');
     }
 
     const user = this.userRepo.create({
