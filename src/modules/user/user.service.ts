@@ -1,5 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as ExcelJS from 'exceljs';
 import FilterBuilder from 'src/common/builder/filter.builder';
 import { ErrorHttpException } from 'src/common/exceptions/throw.exception';
 import { listResponse } from 'src/common/response/response-list.response';
@@ -44,6 +45,12 @@ export class UserService {
     const [list, total] = await filterBuilder.queryBuilder.getManyAndCount();
 
     return listResponse(list, total, page, perPage);
+  }
+
+  async exportUsers(users: User[]) {
+    console.log(users);
+    const workbook = new ExcelJS.Workbook();
+    return workbook.xlsx.writeBuffer();
   }
 
   async getOne(id: number): Promise<Partial<User>> {

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsEmail,
   IsEnum,
   IsInt,
@@ -54,15 +55,15 @@ export class ListUserDto extends PaginationOptions {
   @IsOptional()
   createdDateTo: Date;
 
-  // @ApiProperty({
-  //   required: false,
-  //   type: Boolean,
-  //   description: 'Tải file excel',
-  // })
-  // @Transform(({ value }) => value === 'true')
-  // @IsBoolean()
-  // @IsOptional()
-  // download?: boolean;
+  @ApiProperty({
+    required: false,
+    type: Boolean,
+    description: 'Tải file excel',
+  })
+  @Transform(({ value }) => value === 'true')
+  @IsBoolean()
+  @IsOptional()
+  download?: boolean;
 }
 
 export class CreateUserDto {

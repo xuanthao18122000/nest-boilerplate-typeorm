@@ -52,6 +52,10 @@ export class UserController {
   @ApiOkResponse(SuccessListUserResponse)
   async getAll(@Query() query: ListUserDto, @Res() response: Response) {
     const users = await this.userService.getAll(query);
+    if (query.download) {
+      const fileBuffer = await this.userService.exportUsers(users.list);
+      return SendResponse.downloadExcel('users', fileBuffer, response);
+    }
     return SendResponse.success(users, 'Get all users successful!', response);
   }
 
