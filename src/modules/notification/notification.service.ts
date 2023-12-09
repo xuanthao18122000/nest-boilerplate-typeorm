@@ -58,7 +58,7 @@ export class NotificationService {
       .addPagination()
       .sortBy('id');
 
-    const [list, total] = await filterBuilder.queryBuilder.getManyAndCount();
+    const [list, total] = await filterBuilder.getManyAndCount();
 
     return listResponse(list, total, page, perPage);
   }
