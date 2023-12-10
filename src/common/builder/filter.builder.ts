@@ -294,7 +294,7 @@ export default class FilterBuilder<
     this.queryBuilder.addOrderBy(`${tableName}.${column}`, sort);
     return this;
   }
-   
+
   getManyAndCount() {
     return this.queryBuilder.getManyAndCount();
   }

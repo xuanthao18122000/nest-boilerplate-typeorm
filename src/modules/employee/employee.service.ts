@@ -1,7 +1,8 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import FilterBuilder from 'src/common/builder/filter.builder';
 import { ErrorHttpException } from 'src/common/exceptions/throw.exception';
+import { LoggerServiceProvider } from 'src/common/providers/logger.provider';
 import { listResponse } from 'src/common/response/response-list.response';
 import { hashPassword } from 'src/common/utils';
 import { Employee } from 'src/database/entities';
@@ -16,7 +17,10 @@ import {
 export class EmployeeService {
   constructor(
     @InjectRepository(Employee)
-    private employeeRepo: Repository<Employee>,
+    private readonly employeeRepo: Repository<Employee>,
+
+    @Inject('LoggerService')
+    private readonly logger: LoggerServiceProvider,
   ) {}
 
   async getAll(query: ListEmployeeDto) {
@@ -88,14 +92,18 @@ export class EmployeeService {
     id: number,
     { fullName, phoneNumber, gender, address }: UpdateEmployeeDto,
   ): Promise<Employee> {
-    const employee = await this.findEmployeeByPk(id);
+    try {
+      const employee = await this.findEmployeeByPk(id);
 
-    if (fullName) employee.fullName = fullName;
-    if (phoneNumber) employee.phoneNumber = phoneNumber;
-    if (gender) employee.gender = gender;
-    if (address) employee.address = address;
+      if (fullName) employee.fullName = fullName;
+      if (phoneNumber) employee.phoneNumber = phoneNumber;
+      if (gender) employee.gender = gender;
+      if (address) employee.address = address;
 
-    return await this.employeeRepo.save(employee);
+      return await this.employeeRepo.save(employee);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   async findEmployeeByPk(id: number): Promise<Employee> {
