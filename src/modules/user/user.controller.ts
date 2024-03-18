@@ -6,29 +6,22 @@ import {
   Post,
   Put,
   Query,
-  Res,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ActivityLog } from 'src/submodules/common/decorators/activity-log.decorator';
+import { GetUser } from 'src/submodules/common/decorators/user.decorator';
+import { ISuccessResponse } from 'src/submodules/common/interfaces';
+import { SendResponse } from 'src/submodules/common/response/send-response';
+import { User } from 'src/submodules/database/entities';
 import {
-  ApiBearerAuth,
-  ApiConflictResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from '@nestjs/swagger';
-import { Response } from 'express';
-import { SendResponse } from 'src/common/response/send-response';
-import { CreateUserDto, ListUserDto, UpdateUserDto } from './dto/user.dto';
-import {
-  ExistedCreateUserResponse,
-  NotFoundDetailUserResponse,
-  SuccessCreateUserResponse,
-  SuccessDetailUserResponse,
-  SuccessListUserResponse,
-  SuccessUpdateUserResponse,
-} from './response';
+  CreateUserDto,
+  ListUserDto,
+  TopActivityDto,
+  UpdateUserDto,
+} from './dto/user.dto';
+
 import { UserService } from './user.service';
 
 @ApiBearerAuth()
@@ -40,40 +33,65 @@ export class UserController {
 
   @Post()
   @ApiOperation({ summary: 'Tạo người dùng' })
-  @ApiOkResponse(SuccessCreateUserResponse)
-  @ApiConflictResponse(ExistedCreateUserResponse)
-  async createUser(@Body() body: CreateUserDto) {
-    const user = await this.userService.create(body);
+  @ActivityLog('API_USER_CREATE')
+  async createUser(
+    @Body() body: CreateUserDto,
+    @GetUser() creator: User,
+  ): Promise<ISuccessResponse<User>> {
+    const user = await this.userService.create(body, creator);
     return SendResponse.success(user.serialize(), 'Create user successful!');
   }
 
   @Get()
   @ApiOperation({ summary: 'Danh sách người dùng' })
-  @ApiOkResponse(SuccessListUserResponse)
-  async getAll(@Query() query: ListUserDto, @Res() response: Response) {
+  @ActivityLog('API_USER_LIST')
+  async getAll(@Query() query: ListUserDto): Promise<ISuccessResponse<User>> {
     const users = await this.userService.getAll(query);
-    if (query.download) {
-      const fileBuffer = await this.userService.exportUsers(users.list);
-      return SendResponse.downloadExcel('users', fileBuffer, response);
-    }
-    return SendResponse.success(users, 'Get all users successful!', response);
+    return SendResponse.success(users, 'Get all users successful!');
+  }
+
+  @Get('select')
+  @ApiOperation({ summary: 'Select danh sách người dùng' })
+  async select(@Query() query: ListUserDto): Promise<ISuccessResponse<User>> {
+    const users = await this.userService.getAll(query);
+    return SendResponse.success(users, 'Select users successful!');
+  }
+
+  @Get('activities/statistics')
+  @ApiOperation({ summary: 'Top người dùng hoạt động tích cực nhất tháng' })
+  async getUserActivities(@Query() query: TopActivityDto) {
+    const users = await this.userService.getUserActivities(query);
+    return SendResponse.success(
+      users,
+      'Get top most active in month successful!',
+    );
+  }
+  @Get('roles/statistics')
+  @ApiOperation({ summary: `Thông kê ODs's Type` })
+  async getUserRoles() {
+    const users = await this.userService.getUserRoles();
+    return SendResponse.success(users, `Get ODs's Type statistics successful!`);
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Chi tiết người dùng' })
-  @ApiOkResponse(SuccessDetailUserResponse)
-  @ApiNotFoundResponse(NotFoundDetailUserResponse)
-  async getOneUser(@Param('id') id: number) {
-    const user = await this.userService.getOne(id);
-    return SendResponse.success(user, 'Get detail user successful!');
+  @ApiOperation({
+    summary: 'Chi tiết người dùng',
+  })
+  @ActivityLog('API_USER_DETAIL')
+  async getOneUser(@Param('id') id: number): Promise<ISuccessResponse<User>> {
+    const users = await this.userService.getOne(id);
+    return SendResponse.success(users, 'Get detail user successful!');
   }
 
   @Put(':id')
   @ApiOperation({ summary: 'Cập nhật người dùng' })
-  @ApiOkResponse(SuccessUpdateUserResponse)
-  @ApiNotFoundResponse(NotFoundDetailUserResponse)
-  async updateUser(@Param('id') id: number, @Body() body: UpdateUserDto) {
-    const user = await this.userService.update(id, body);
-    return SendResponse.success(user.serialize(), 'Update user successful!');
+  @ActivityLog('API_USER_UPDATE')
+  async updateUser(
+    @Param('id') id: number,
+    @Body() body: UpdateUserDto,
+    @GetUser() updater: User,
+  ): Promise<ISuccessResponse<User>> {
+    const user = await this.userService.update(id, body, updater);
+    return SendResponse.success(user, 'Update user successful!');
   }
 }

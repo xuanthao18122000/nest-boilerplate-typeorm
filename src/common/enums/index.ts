@@ -1,1 +1,1 @@
-export * from './query.enum';
+export * from './activity-log.enum';

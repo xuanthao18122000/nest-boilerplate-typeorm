@@ -1,10 +1,10 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { getEnv } from './configs/env.config';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationExceptionFilter } from './common/exceptions/validation.exception';
-import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
+import { ValidationExceptionFilter } from 'src/submodules/common/exceptions/validation.exception';
+import { getEnv } from 'src/submodules/configs/env.config';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -18,8 +18,8 @@ async function bootstrap() {
 
   if (getEnv('APP_NODE_ENV') !== 'production') {
     const config = new DocumentBuilder()
-      .setTitle('NESTJS BOILERPLATE API')
-      .setDescription('NESTJS API description')
+      .setTitle('FICO ADMIN PANEL API')
+      .setDescription('FICO ADMIN PANEL API description')
       .addServer(getEnv('APP_URL'))
       .setVersion('0.1')
       .addBearerAuth()

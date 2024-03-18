@@ -43,3 +43,9 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## SET UP PROJECT
+
+# Create Position
+$ 1. Sales
+$ 2. Sales Head

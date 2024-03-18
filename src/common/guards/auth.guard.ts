@@ -8,10 +8,10 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { getEnv } from 'src/configs/env.config';
-import { User } from 'src/database/entities';
+import { IS_PUBLIC_KEY } from 'src/submodules/common/decorators/public.decorator';
+import { getEnv } from 'src/submodules/configs/env.config';
+import { User } from 'src/submodules/database/entities';
 import { Repository } from 'typeorm';
-import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -48,10 +48,9 @@ export class AuthGuard implements CanActivate {
         .where('user.email = :email', { email: payload.email })
         .getOne();
 
-      if (user) {
-        if (!user.token || token != user.token) {
-          throw new UnauthorizedException();
-        }
+      if (!user) {
+        //  Check user.token
+        throw new UnauthorizedException();
       }
 
       request.user = user;

@@ -1,0 +1,112 @@
+stages:
+  - build
+  - test
+  - deploy
+
+image: docker:19.03.12
+
+before_script:
+  - docker login -u _json_key --password-stdin https://asia.gcr.io < $GCKEY_REGISTRY
+
+.test:
+  image: node:16.19.0-alpine 
+  stage: test
+  script:
+    - npm install
+    - npm run test:unit
+
+.build:
+  stage: build
+  script:
+    - docker build --cache-from asia.gcr.io/registry-334010/${NAME}-${BUILD_ENV}:latest -t asia.gcr.io/registry-334010/${NAME}-${BUILD_ENV}:latest -t asia.gcr.io/registry-334010/${NAME}-${BUILD_ENV}:${CI_COMMIT_SHORT_SHA} .
+    - docker push asia.gcr.io/registry-334010/${NAME}-${BUILD_ENV}:${CI_COMMIT_SHORT_SHA}
+    - docker push asia.gcr.io/registry-334010/${NAME}-${BUILD_ENV}:latest
+
+.deploy:
+  stage: deploy
+  script:
+    - |
+      if [ "$(docker ps -a | grep ${NAME}-${BUILD_ENV})" ]; then
+        docker rm --force ${NAME}-${BUILD_ENV}
+      fi
+    - docker run -d --name ${NAME}-${BUILD_ENV} -p ${H_PORT}:${C_PORT} --restart always asia.gcr.io/registry-334010/${NAME}-${BUILD_ENV}:latest
+
+
+test-dev:
+  extends: .test
+  tags:
+    - lrt-runner-dind2
+  only:
+    - dev
+  before_script:
+    - cp -f ${FILE_ENV_DEV} .env
+    - cp -f ${RUN_CONTAINER_DEV} run-container.sh
+
+build-dev:
+  extends: .build
+  tags:
+    - lrt-runner-dind2
+  only:
+    - dev
+  variables:
+    NAME: boilerplate-crm-api
+    BUILD_ENV: dev
+    GIT_SUBMODULE_STRATEGY: recursive
+  before_script:
+    - docker login -u _json_key --password-stdin https://asia.gcr.io < $GCKEY_REGISTRY
+    - cp -f ${FILE_ENV_DEV} .env
+    - cp -f ${RUN_CONTAINER_DEV} run-container.sh
+
+deploy-dev:
+  extends: .deploy
+  tags:
+    - lrt-runner-dind2
+  only:
+    - dev
+  variables:
+    NAME: boilerplate-crm-api
+    BUILD_ENV: dev
+    C_PORT: 3000
+    H_PORT: 7200
+
+
+build-staging:
+  extends: .build
+  tags:
+    - lrt-runner-dind2
+  only:
+    - staging
+  variables:
+    NAME: boilerplate-crm-api
+    BUILD_ENV: staging
+  before_script:
+    - docker login -u _json_key --password-stdin https://asia.gcr.io < $GCKEY_REGISTRY
+    - cp -f ${FILE_ENV_STAGING} .env
+    - cp -f ${RUN_CONTAINER_STAGING} run-container.sh
+
+test-staging:
+  extends: .test
+  tags:
+    - lrt-runner-dind2
+  only:
+    - staging
+  before_script:
+    - cp -f ${FILE_ENV_STAGING} .env
+    - cp -f ${RUN_CONTAINER_STAGING} run-container.sh
+
+deploy-staging:
+  extends: .deploy
+  tags:
+    - lrt-runner-dind2
+  only:
+    - staging
+  variables:
+    NAME: boilerplate-crm-api
+    BUILD_ENV: staging
+    C_PORT: 3000
+    H_PORT: 6269
+
+
+
+#deploy-pro: ---> ArgoCD
+

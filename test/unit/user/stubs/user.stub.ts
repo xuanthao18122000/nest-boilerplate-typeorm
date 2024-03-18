@@ -1,12 +1,10 @@
-import { User } from 'src/database/entities';
+import { User } from 'src/submodules/database/entities';
 
 export const createUserStub = (): User => {
   const defaultUser: User = {
     id: 1,
     email: 'johndoe@example.com',
     fullName: 'John Doe',
-    password: 'strongestP@ssword',
-    gender: User.GENDER.FEMALE,
     address: '123 Phan Van Tri',
     avatar: 'avatar.png',
     phoneNumber: '0938381732',
@@ -20,7 +18,6 @@ export const createUserStub = (): User => {
         id: defaultUser.id,
         email: defaultUser.email,
         fullName: defaultUser.fullName,
-        gender: defaultUser.gender,
         status: defaultUser.status,
         createdAt: defaultUser.createdAt,
         updatedAt: defaultUser.updatedAt,

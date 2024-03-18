@@ -1,4 +1,4 @@
-export interface actionDefaultType {
-  id: string;
-  key: string;
+export interface IAzureExpressUser extends Express.User {
+  preferred_username: string;
+  oid: string;
 }

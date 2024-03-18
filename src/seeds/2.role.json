@@ -1,0 +1,17 @@
+[
+  {
+    "key": "SUPER_ADMIN",
+    "name": "Super Admin",
+    "permissions": []
+  },
+  {
+    "key": "ADMIN",
+    "name": "Admin",
+    "permissions": []
+  },
+  {
+    "key": "SALE_LEADER",
+    "name": "Sale Leader",
+    "permissions": []
+  }
+]

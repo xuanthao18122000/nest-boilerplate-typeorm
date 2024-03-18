@@ -1,0 +1,4 @@
+[submodule "src/submodules"]
+	path = src/submodules
+	url = ../../backend/boilerplate-submodules.git
+	branch = dev

@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Far EAST",
+    "provinces": [
+      "Tỉnh Tây Ninh",
+      "Tỉnh Lâm Đồng",
+      "Tỉnh Bình Phước",
+      "Tỉnh Đắk Nông"
+    ]
+  },
+  {
+    "name": "Near EAST",
+    "provinces": [
+      "Tỉnh Bình Dương",
+      "Tỉnh Đồng Nai",
+      "Tỉnh Bình Thuận",
+      "Tỉnh Bà Rịa - Vũng Tàu"
+    ]
+  },
+  {
+    "name": "HCM",
+    "provinces": [
+      "Thành phố Hồ Chí Minh",
+      "Tỉnh Long An"
+    ]
+  },
+  {
+    "name": "Mekong",
+    "provinces": [
+      "Tỉnh Bến Tre",
+      "Tỉnh Sóc Trăng",
+      "Tỉnh Cà Mau",
+      "Tỉnh An Giang",
+      "Tỉnh Bạc Liêu",
+      "Tỉnh Đồng Tháp",
+      "Tỉnh Tiền Giang",
+      "Tỉnh Trà Vinh",
+      "Tỉnh Vĩnh Long",
+      "Tỉnh Kiên Giang",
+      "Tỉnh Hậu Giang"
+    ]
+  }
+]

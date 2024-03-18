@@ -1,69 +1,84 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import {
-  IsBoolean,
+  IsArray,
   IsEmail,
   IsEnum,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaginationOptions } from 'src/common/builder/pagination-options.builder';
-import { SuccessSwaggerResponse } from 'src/common/utils';
-import { User } from 'src/database/entities';
+import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
+import { User } from 'src/submodules/database/entities';
 
 export class ListUserDto extends PaginationOptions {
-  @ApiProperty({ required: false, description: 'Full name' })
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  id?: number;
+
+  @ApiProperty({ required: false, description: 'User name' })
   @IsString()
   @IsOptional()
-  fullName: string;
+  fullName?: string;
+
+  @ApiProperty({ required: false, description: 'Email' })
+  @IsString()
+  @IsOptional()
+  email?: string;
 
   @ApiProperty({ required: false, description: 'Phone number' })
   @Type(() => Number)
   @IsInt()
   @IsOptional()
-  phoneNumber: string;
+  phoneNumber?: string;
+
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  roleId?: number;
 
   @ApiProperty({
     required: false,
-    description: 'Gender',
-    enum: User.GENDER,
+    description: 'Status = ' + JSON.stringify(User.STATUS, null, 1),
+    enum: User.STATUS,
   })
   @IsOptional()
   @Type(() => Number)
-  @IsEnum(User.GENDER)
-  gender: number;
+  @IsEnum(User.STATUS)
+  status?: number;
 
   @ApiProperty({
     type: 'string',
     format: 'date',
-    description: 'Created from. Type: YYYY/mm/dd',
+    description: 'Created from (YYYY/mm/dd hh:mm:ss)',
     required: false,
   })
   @Type(() => Date)
   @IsOptional()
-  createdDateFrom: Date;
+  createdDateFrom?: Date;
 
   @ApiProperty({
     type: 'string',
     format: 'date',
-    description: 'Created to.Type: YYYY/mm/dd',
+    description: 'Created to (YYYY/mm/dd hh:mm:ss)',
     required: false,
   })
   @Type(() => Date)
   @IsOptional()
-  createdDateTo: Date;
+  createdDateTo?: Date;
+}
 
-  @ApiProperty({
-    required: false,
-    type: Boolean,
-    description: 'Tải file excel',
-  })
-  @Transform(({ value }) => value === 'true')
-  @IsBoolean()
-  @IsOptional()
-  download?: boolean;
+export class TopActivityDto {
+  @ApiProperty({ example: 5 })
+  @Type(() => Number)
+  @IsNumber()
+  @IsNotEmpty()
+  number: number;
 }
 
 export class CreateUserDto {
@@ -75,82 +90,98 @@ export class CreateUserDto {
   @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
-  password: string;
+  fullName: string;
 
   @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
-  fullName: string;
-
-  @ApiProperty({ example: '' })
-  @Type(() => Number)
-  @IsInt()
-  @IsNotEmpty()
   phoneNumber: string;
 
-  @ApiProperty({ example: User.GENDER.MALE })
+  @ApiProperty({ example: 0 })
   @Type(() => Number)
-  @IsEnum(User.GENDER)
+  @IsNumber()
   @IsNotEmpty()
-  gender: number;
-}
+  roleId: number;
 
-export class UpdateUserDto {
+  @ApiProperty({ example: 0 })
+  @Type(() => Number)
+  @IsNumber()
+  @IsNotEmpty()
+  rouId: number;
+
+  @ApiProperty({ required: false, example: 0 })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  provinceId: number;
+
   @ApiProperty({ example: '', required: false })
   @IsString()
   @IsOptional()
-  fullName: string;
+  avatar: string;
 
-  @ApiProperty({ example: '', required: false })
-  @Type(() => Number)
-  @IsInt()
-  @IsOptional()
-  phoneNumber: string;
-
-  @ApiProperty({ example: '', required: false })
+  @ApiProperty({ example: '' })
   @IsString()
   @IsOptional()
   address: string;
 
-  @ApiProperty({ required: false, example: User.GENDER.MALE })
-  @Type(() => Number)
-  @IsEnum(User.GENDER)
+  @ApiProperty({ example: [] })
+  @IsArray()
   @IsOptional()
-  gender: number;
+  permissions: Array<string> = [];
 }
 
-export const SuccessUserResponse = {
-  status: 200,
-  description: 'Success!',
-  content: {},
-  schema: {
-    example: SuccessSwaggerResponse(
-      {
-        id: 1,
-        email: 'admin@gmail.com',
-        fullName: 'Admin',
-        phoneNumber: '097392738',
-        gender: 1,
-        status: 1,
-        roleId: null,
-        createdAt: '2023-10-08T04:04:04.434Z',
-        updatedAt: '2023-11-11T12:09:35.075Z',
-      },
-      'Get detail user successful!',
-    ),
-  },
-};
+export class UpdateUserDto {
+  @ApiProperty({ example: '' })
+  @IsString()
+  @IsOptional()
+  fullName: string;
 
-export const NotFoundUserResponse = {
-  status: 404,
-  description: 'Not Found User!',
-  content: {},
-  schema: {
-    example: {
-      code: 1001,
-      success: false,
-      type: 'USER_NOT_FOUND',
-      msg: 'User not found!',
-    },
-  },
-};
+  @ApiProperty({ example: '' })
+  @IsString()
+  @IsOptional()
+  phoneNumber: string;
+
+  @ApiProperty({ example: 0 })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  roleId: number;
+
+  @ApiProperty({ example: 0 })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  rouId: number;
+
+  @ApiProperty({ required: false, example: 0 })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  provinceId: number;
+
+  @ApiProperty({ example: '', required: false })
+  @IsString()
+  @IsOptional()
+  avatar: string;
+
+  @ApiProperty({ example: '' })
+  @IsString()
+  @IsOptional()
+  address: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Status = ' + JSON.stringify(User.STATUS, null, 1),
+    enum: User.STATUS,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsEnum(User.STATUS)
+  status: number;
+
+  @ApiProperty({ example: [] })
+  @IsArray()
+  @IsOptional()
+  permissions: Array<string>;
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "name": { "en": "Sale Staff", "vi": "Nhân viên Sale" },
+    "description": "No",
+    "type": 1
+  },
+  {
+    "name": { "en": "Sale Head", "vi": "Trưởng phòng Sale" },
+    "description": "No",
+    "type": 1
+  }
+]

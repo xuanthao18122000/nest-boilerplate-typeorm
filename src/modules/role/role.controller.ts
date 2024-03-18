@@ -1,16 +1,24 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { SendResponse } from 'src/common/response/send-response';
-
-import { Public } from 'src/common/decorators/public.decorator';
-import { CreateRolesDto } from './dto/create-roles.dto';
-import { ListRolesDto } from './dto/list-roles.dto';
-import { UpdateRolesDto } from './dto/update-roles.dto';
+import { Public } from 'src/submodules/common/decorators/public.decorator';
+import { SendResponse } from 'src/submodules/common/response/send-response';
+import { CreateRolesDto, ListRolesDto, UpdateRolesDto } from './dto/role.dto';
 import { RoleService } from './role.service';
 
+@ApiBearerAuth()
 @ApiTags('4. Roles')
 @Controller('roles')
-@ApiBearerAuth()
+@UsePipes(new ValidationPipe({ transform: true }))
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
@@ -22,25 +30,32 @@ export class RoleController {
     return SendResponse.success(role, 'Create roles successful!');
   }
 
-  @Put(':id')
-  @Public()
-  @ApiOperation({ summary: 'Cập nhật Role' })
-  async updateRole(@Body() body: UpdateRolesDto, @Param('id') id: number) {
-    const role = await this.roleService.updateRole(id, body);
-    return SendResponse.success(role, 'Update role successful!');
-  }
-
-  @Get('')
+  @Get()
   @ApiOperation({ summary: 'Danh sách Roles' })
   async listRoles(@Query() query: ListRolesDto) {
     const roles = await this.roleService.getAll(query);
     return SendResponse.success(roles, 'Get list roles successful!');
   }
 
+  @Get('select')
+  @ApiOperation({ summary: 'Select danh sách Roles' })
+  async select(@Query() query: ListRolesDto) {
+    const roles = await this.roleService.getAll(query);
+    return SendResponse.success(roles, 'Select roles successful!');
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Chi tiết Role' })
-  async detailRole(@Param('id') id: number) {
+  async getOne(@Param('id') id: number) {
     const roles = await this.roleService.getOne(id);
-    return SendResponse.success(roles, 'Get details role successful!');
+    return SendResponse.success(roles, 'Get detail role successful!');
+  }
+
+  @Put(':id')
+  @Public()
+  @ApiOperation({ summary: 'Cập nhật Role' })
+  async update(@Body() body: UpdateRolesDto, @Param('id') id: number) {
+    const role = await this.roleService.update(id, body);
+    return SendResponse.success(role, 'Update role successful!');
   }
 }

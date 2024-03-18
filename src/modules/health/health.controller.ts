@@ -6,8 +6,8 @@ import {
   HttpHealthIndicator,
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
-import { Public } from 'src/common/decorators/public.decorator';
-import { getEnv } from 'src/configs/env.config';
+import { Public } from 'src/submodules/common/decorators/public.decorator';
+import { getEnv } from 'src/submodules/configs/env.config';
 
 @ApiTags('1. Health Check')
 @Controller('ping')

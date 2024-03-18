@@ -1,0 +1,84 @@
+{
+  "modules": [
+    {
+      "key": "DASHBOARD",
+      "name": "Dashboard"
+    },
+    {
+      "key": "STAFF",
+      "name": "Nhân viên"
+    },
+    {
+      "key": "USER",
+      "name": "Người dùng"
+    },
+    {
+      "key": "AREA",
+      "name": "Khu vực"
+    },
+    {
+      "key": "VERSION",
+      "name": "Phiên bản"
+    },
+    {
+      "key": "KPI_CONFIGURATION",
+      "name": "Cấu hình KPI"
+    },
+    {
+      "key": "OD",
+      "name": "Nhà cung cấp"
+    },
+    {
+      "key": "RTL",
+      "name": "Nhà bán lẻ"
+    },
+    {
+      "key": "POTENTIAL_CUSTOMER",
+      "name": "Cửa hàng tiềm năng"
+    },
+    {
+      "key": "OTHER_CUSTOMER",
+      "name": "Cửa hàng khác"
+    },
+    {
+      "key": "PROMOTION",
+      "name": "Khuyến mãi"
+    },
+    {
+      "key": "CONFIGURATION_TRACKING",
+      "name": "Theo dõi cấu hình"
+    },
+    {
+      "key": "VISITING_HISTORY",
+      "name": "Lịch sử ghé thăm"
+    },
+    {
+      "key": "LOCATION_LOOKUP",
+      "name": "Tra cứu vị trí"
+    },
+    {
+      "key": "TASK",
+      "name": "Nhiệm vụ"
+    },
+    {
+      "key": "NOTIFICATION",
+      "name": "Thông báo"
+    },
+    {
+      "key": "ACTIVITY_LOG",
+      "name": "Hoạt động"
+    },
+    {
+      "key": "PERMISSION",
+      "name": "Phân quyền"
+    },
+    {
+      "key": "PRODUCT",
+      "name": "Sản phẩm"
+    },
+    {
+      "key": "BRAND",
+      "name": "Thương hiệu"
+    }
+  ]
+}

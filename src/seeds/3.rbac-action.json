@@ -1,0 +1,359 @@
+{
+  "actions": [
+    {
+      "key": "DASHBOARD_VIEW",
+      "name": "Xem Dashboard",
+      "module": "DASHBOARD"
+    },
+    {
+      "key": "USER_VIEW",
+      "name": "Xem danh sách và chi tiết người dùng",
+      "module": "USER"
+    },
+    {
+      "key": "USER_EXPORT",
+      "name": "Xuất báo cáo danh sách người dùng",
+      "module": "USER"
+    },
+    {
+      "key": "USER_CREATE",
+      "name": "Tạo người dùng",
+      "module": "USER"
+    },
+    {
+      "key": "USER_EDIT",
+      "name": "Chỉnh sửa người dùng",
+      "module": "USER"
+    },
+    {
+      "key": "STAFF_VIEW",
+      "name": "Xem danh sách và chi tiết nhân viên",
+      "module": "STAFF"
+    },
+    {
+      "key": "STAFF_EXPORT",
+      "name": "Xuất báo cáo danh sách nhân viên",
+      "module": "STAFF"
+    },
+    {
+      "key": "STAFF_CREATE",
+      "name": "Tạo nhân viên",
+      "module": "STAFF"
+    },
+    {
+      "key": "STAFF_EDIT",
+      "name": "Chỉnh sửa nhân viên",
+      "module": "STAFF"
+    },
+    {
+      "key": "AREA_VIEW",
+      "name": "Xem danh sách và chi tiết khu vục",
+      "module": "AREA"
+    },
+    {
+      "key": "AREA_EXPORT",
+      "name": "Xuất báo cáo danh sách khu vục",
+      "module": "AREA"
+    },
+    {
+      "key": "AREA_CREATE",
+      "name": "Tạo khu vục",
+      "module": "AREA"
+    },
+    {
+      "key": "AREA_EDIT",
+      "name": "Chỉnh sửa khu vục",
+      "module": "AREA"
+    },
+    {
+      "key": "VERSION_VIEW",
+      "name": "Xem thông tin version",
+      "module": "AREA"
+    },
+    {
+      "key": "VERSION_EDIT",
+      "name": "Chỉnh sửa version",
+      "module": "VERSION"
+    },
+    {
+      "key": "KPI_CONFIGURATION_VIEW",
+      "name": "Xem danh sách và chi tiết KPI configuration",
+      "module": "KPI_CONFIGURATION"
+    },
+    {
+      "key": "KPI_VISITING_ROUTE_EDIT",
+      "name": "Chỉnh sửa KPI Visiting Route",
+      "module": "KPI_CONFIGURATION"
+    },
+    {
+      "key": "KPI_VOLUME_CREATE",
+      "name": "Tạo KPI volume",
+      "module": "KPI_CONFIGURATION"
+    },
+    {
+      "key": "KPI_VOLUME_EDIT",
+      "name": "Chỉnh sửa KPI volume",
+      "module": "KPI_CONFIGURATION"
+    },
+    {
+      "key": "KPI_VOLUME_DELETE",
+      "name": "Xóa KPI volume",
+      "module": "KPI_CONFIGURATION"
+    },
+    {
+      "key": "KPI_VOLUME_EXPORT",
+      "name": "Xuất báo cáo danh sách KPI volume",
+      "module": "KPI_CONFIGURATION"
+    },
+    {
+      "key": "OD_VIEW",
+      "name": "Xem danh sách và chi tiết nhà cung cấp",
+      "module": "OD"
+    },
+    {
+      "key": "OD_EXPORT",
+      "name": "Xuất báo cáo danh sách nhà cung cấp",
+      "module": "OD"
+    },
+    {
+      "key": "OD_IMPORT",
+      "name": "Import nhà cung cấp",
+      "module": "OD"
+    },
+    {
+      "key": "OD_CREATE",
+      "name": "Tạo nhà cung cấp",
+      "module": "OD"
+    },
+    {
+      "key": "OD_EDIT",
+      "name": "Chỉnh sửa nhà cung cấp",
+      "module": "OD"
+    },
+    {
+      "key": "RTL_VIEW",
+      "name": "Xem danh sách và chi tiết cửa hàng bán lẻ",
+      "module": "RTL"
+    },
+    {
+      "key": "RTL_EXPORT",
+      "name": "Xuất báo cáo danh sách cửa hàng bán lẻ",
+      "module": "RTL"
+    },
+    {
+      "key": "RTL_IMPORT",
+      "name": "Import cửa hàng bán lẻ",
+      "module": "RTL"
+    },
+    {
+      "key": "RTL_CREATE",
+      "name": "Tạo cửa hàng bán lẻ",
+      "module": "RTL"
+    },
+    {
+      "key": "RLT_EDIT",
+      "name": "Chỉnh sửa cửa hàng bán lẻ",
+      "module": "RTL"
+    },
+    {
+      "key": "POTENTIAL_CUSTOMER_VIEW",
+      "name": "Xem danh sách và chi tiết khách hàng tiềm năng",
+      "module": "POTENTIAL_CUSTOMER"
+    },
+    {
+      "key": "POTENTIAL_CUSTOMER_EXPORT",
+      "name": "Xuất báo cáo danh sách khách hàng tiềm năng",
+      "module": "POTENTIAL_CUSTOMER"
+    },
+    {
+      "key": "POTENTIAL_CUSTOMER_EDIT",
+      "name": "Chỉnh sửa khách hàng tiềm năng",
+      "module": "POTENTIAL_CUSTOMER"
+    },
+    {
+      "key": "OTHER_CUSTOMER_VIEW",
+      "name": "Xem danh sách và chi tiết cửa hàng khác",
+      "module": "OTHER_CUSTOMER"
+    },
+    {
+      "key": "OTHER_CUSTOMER_EXPORT",
+      "name": "Xuất báo cáo danh sách cửa hàng khác",
+      "module": "OTHER_CUSTOMER"
+    },
+    {
+      "key": "OTHER_CUSTOMER_CREATE",
+      "name": "Tạo cửa hàng khác",
+      "module": "OTHER_CUSTOMER"
+    },
+    {
+      "key": "OTHER_CUSTOMER_EDIT",
+      "name": "Chỉnh sửa cửa hàng khác",
+      "module": "OTHER_CUSTOMER"
+    },
+    {
+      "key": "PROMOTION_VIEW",
+      "name": "Xem danh sách và chi tiết chương trình khuyến mãi",
+      "module": "PROMOTION"
+    },
+    {
+      "key": "PROMOTION_EXPORT",
+      "name": "Xuất báo cáo danh sách chương trình khuyến mãi",
+      "module": "PROMOTION"
+    },
+    {
+      "key": "PROMOTION_IMPORT",
+      "name": "Import chương trình khuyến mãi",
+      "module": "PROMOTION"
+    },
+    {
+      "key": "PROMOTION_CREATE",
+      "name": "Tạo chương trình khuyến mãi",
+      "module": "PROMOTION"
+    },
+    {
+      "key": "PROMOTION_EDIT",
+      "name": "Chỉnh sửa chương trình khuyến mãi",
+      "module": "PROMOTION"
+    },
+    {
+      "key": "CONFIGURATION_TRACKING_VIEW",
+      "name": "Xem thông tin theo dõi cấu hình",
+      "module": "CONFIGURATION_TRACKING"
+    },
+    {
+      "key": "CONFIGURATION_TRACKING_EDIT",
+      "name": "Chỉnh sửa theo dõi cấu hình",
+      "module": "CONFIGURATION_TRACKING"
+    },
+    {
+      "key": "VISITING_HISTORY_VIEW",
+      "name": "Xem danh sách và chi tiết lịch sử ghé thăm",
+      "module": "VISITING_HISTORY"
+    },
+    {
+      "key": "VISITING_HISTORY_EXPORT",
+      "name": "Xuất danh sách lịch sử ghé thăm",
+      "module": "VISITING_HISTORY"
+    },
+    {
+      "key": "VISITING_HISTORY_EDIT",
+      "name": "Từ chối lượt ghé thăm",
+      "module": "VISITING_HISTORY"
+    },
+    {
+      "key": "LOCATION_LOOKUP_VIEW",
+      "name": "Xem bản đồ vị trí",
+      "module": "LOCATION_LOOKUP"
+    },
+    {
+      "key": "TASK_VIEW",
+      "name": "Xem danh sách và chi tiết nhiệm vụ",
+      "module": "TASK"
+    },
+    {
+      "key": "TASK_EXPORT",
+      "name": "Xuất báo cáo danh sách nhiệm vụ",
+      "module": "TASK"
+    },
+    {
+      "key": "TASK_CREATE",
+      "name": "Tạo nhiệm vụ",
+      "module": "TASK"
+    },
+    {
+      "key": "TASK_EDIT",
+      "name": "Chỉnh sửa nhiệm vụ",
+      "module": "TASK"
+    },
+    {
+      "key": "NOTIFICATION_VIEW",
+      "name": "Xem danh sách và chi tiết thông báo",
+      "module": "NOTIFICATION"
+    },
+    {
+      "key": "NOTIFICATION_EXPORT",
+      "name": "Xuất báo cáo danh sách thông báo",
+      "module": "NOTIFICATION"
+    },
+    {
+      "key": "NOTIFICATION_IMPORT",
+      "name": "Import thông báo",
+      "module": "NOTIFICATION"
+    },
+    {
+      "key": "NOTIFICATION_CREATE",
+      "name": "Tạo thông báo",
+      "module": "NOTIFICATION"
+    },
+    {
+      "key": "NOTIFICATION_EDIT",
+      "name": "Chỉnh sửa thông báo",
+      "module": "NOTIFICATION"
+    },
+    {
+      "key": "ACTIVITY_LOG_VIEW",
+      "name": "Xem danh sách và chi tiết hoạt động",
+      "module": "ACTIVITY_LOG"
+    },
+    {
+      "key": "ACTIVITY_LOG_EXPORT",
+      "name": "Xuất báo cáo danh sách hoạt động",
+      "module": "ACTIVITY_LOG"
+    },
+    {
+      "key": "PERMISSION_VIEW",
+      "name": "Xem danh sách và chi tiết phân quyền",
+      "module": "PERMISSION"
+    },
+    {
+      "key": "PERMISSION_CREATE",
+      "name": "Tạo phân quyền",
+      "module": "PERMISSION"
+    },
+    {
+      "key": "PERMISSION_EDIT",
+      "name": "Chỉnh sửa phân quyền",
+      "module": "PERMISSION"
+    },
+    {
+      "key": "PRODUCT_VIEW",
+      "name": "Xem danh sách và chi tiết sản phẩm",
+      "module": "PRODUCT"
+    },
+    {
+      "key": "PRODUCT_CREATE",
+      "name": "Tạo sản phẩm",
+      "module": "PRODUCT"
+    },
+    {
+      "key": "PRODUCT_EDIT",
+      "name": "Chỉnh sửa sản phẩm",
+      "module": "PRODUCT"
+    },
+    {
+      "key": "PRODUCT_EXPORT",
+      "name": "Xuất báo cáo danh sách sản phẩm",
+      "module": "PRODUCT"
+    },
+    {
+      "key": "BRAND_VIEW",
+      "name": "Xem danh sách và chi tiết thương hiệu",
+      "module": "BRAND"
+    },
+    {
+      "key": "BRAND_CREATE",
+      "name": "Tạo thương hiệu",
+      "module": "BRAND"
+    },
+    {
+      "key": "BRAND_EDIT",
+      "name": "Chỉnh sửa thương hiệu",
+      "module": "BRAND"
+    },
+    {
+      "key": "BRAND_EXPORT",
+      "name": "Xuất báo cáo danh sách thương hiệu",
+      "module": "BRAND"
+    }
+  ]
+}

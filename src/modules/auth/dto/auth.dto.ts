@@ -2,24 +2,17 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsEmail,
-  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
-import { User } from 'src/database/entities';
 
 export class SignInDto {
-  @ApiProperty({ example: '' })
+  @ApiProperty({ example: 'admin@gmail.com' })
   @IsEmail()
   @IsNotEmpty()
   email: string;
-
-  @ApiProperty({ example: '' })
-  @IsString()
-  @IsNotEmpty()
-  password: string;
 }
 
 export class SignUpDto {
@@ -31,40 +24,40 @@ export class SignUpDto {
   @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
-  password: string;
-
-  @ApiProperty({ example: '' })
-  @IsString()
-  @IsNotEmpty()
   fullName: string;
 
   @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
   phoneNumber: string;
-
-  @ApiProperty({ example: User.GENDER.MALE })
-  @Type(() => Number)
-  @IsEnum(User.GENDER)
-  @IsNotEmpty()
-  gender: number;
 }
 
 export class UpdateProfileDto {
-  @ApiProperty({ example: '' })
+  @ApiProperty({ example: '', required: false })
   @IsString()
   @IsOptional()
   fullName: string;
 
-  @ApiProperty({ example: '' })
+  @ApiProperty({ example: '', required: false })
   @Type(() => Number)
   @IsInt()
   @IsOptional()
   phoneNumber: string;
 
-  @ApiProperty({ example: User.GENDER.MALE })
-  @Type(() => Number)
-  @IsEnum(User.GENDER)
+  @ApiProperty({ example: '', required: false })
+  @IsString()
   @IsOptional()
-  gender: number;
+  address: string;
+
+  @ApiProperty({ example: '', required: false })
+  @IsString()
+  @IsOptional()
+  avatar: string;
+}
+
+export class FireBaseDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  firebaseToken: string;
 }

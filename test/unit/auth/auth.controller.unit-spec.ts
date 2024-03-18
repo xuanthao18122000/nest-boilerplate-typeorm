@@ -1,10 +1,10 @@
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { SendResponse } from 'src/common/response/send-response';
-import { getEnv } from 'src/configs/env.config';
-import { User } from 'src/database/entities';
 import { SignInDto, SignUpDto } from 'src/modules/auth/dto/auth.dto';
+import { SendResponse } from 'src/submodules/common/response/send-response';
+import { getEnv } from 'src/submodules/configs/env.config';
+import { User } from 'src/submodules/database/entities';
 import { Repository } from 'typeorm';
 import { AuthController } from '../../../src/modules/auth/auth.controller';
 import { AuthService } from '../../../src/modules/auth/auth.service';
@@ -43,9 +43,7 @@ describe('AuthController', () => {
       const signUpDto: SignUpDto = {
         fullName: 'John Doe',
         email: 'johndoe@example.com',
-        password: '1232@asdS',
         phoneNumber: '123456',
-        gender: User.GENDER.FEMALE,
       };
       const mockUser: User = createUserStub();
 
@@ -66,12 +64,15 @@ describe('AuthController', () => {
     it('should sign in a user and return user data, token and expires in', async () => {
       const signInDto: SignInDto = {
         email: 'johndoe@example.com',
-        password: '1232@asdS',
       };
 
       const mockUser: User = createUserStub();
+      const permissions: string[] = [];
       const mockResponse = {
-        user: mockUser.serialize(),
+        user: {
+          ...mockUser.serialize(),
+          permissions,
+        },
         token: mockToken,
         expiresIn: getEnv('ATK_DB_HOST'),
       };
