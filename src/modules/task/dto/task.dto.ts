@@ -9,24 +9,24 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
-import { Survey, Task } from 'src/submodules/database/entities';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
+import { Survey, Task } from 'src/submodule/database/entities';
 
 export class StatisticsTasksDto {
   @ApiProperty({ required: false, description: 'Province' })
-  @IsOptional()
+  @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
   provinceId: number;
 
   @ApiProperty({ required: false, description: 'Month' })
-  @IsOptional()
+  @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
   month: number;
 
   @ApiProperty({ required: false, description: 'Year' })
-  @IsOptional()
+  @IsNotEmpty()
   @Type(() => Number)
   @IsNumber()
   year: number;
@@ -37,12 +37,12 @@ export class ListTaskDto extends PaginationOptions {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  id: number;
+  id?: number;
 
   @ApiProperty({ required: false, description: 'ASE' })
   @IsString()
   @IsOptional()
-  name: string;
+  name?: string;
 
   @ApiProperty({
     required: false,
@@ -52,7 +52,18 @@ export class ListTaskDto extends PaginationOptions {
   @IsOptional()
   @Type(() => Number)
   @IsEnum(Task.CATEGORY)
-  category: number;
+  category?: number;
+
+  @ApiProperty({
+    required: false,
+    description:
+      'CUSTOMER_TYPE = ' + JSON.stringify(Task.CUSTOMER_TYPE, null, 1),
+    enum: Task.CUSTOMER_TYPE,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsEnum(Task.CUSTOMER_TYPE)
+  customerType?: number;
 
   @ApiProperty({
     required: false,
@@ -62,19 +73,19 @@ export class ListTaskDto extends PaginationOptions {
   @IsOptional()
   @Type(() => Number)
   @IsEnum(Task.STATUS)
-  status: number;
+  status?: number;
 
   @ApiProperty({ required: false, example: 0 })
   @Type(() => Number)
   @IsNumber()
   @IsOptional()
-  creatorId: number;
+  creatorId?: number;
 
   @ApiProperty({ required: false, example: 0 })
   @Type(() => Number)
   @IsNumber()
   @IsOptional()
-  provinceId: number;
+  provinceId?: number;
 
   @ApiProperty({
     type: 'string',
@@ -84,7 +95,7 @@ export class ListTaskDto extends PaginationOptions {
   })
   @Type(() => Date)
   @IsOptional()
-  createdDateFrom: Date;
+  createdDateFrom?: Date;
 
   @ApiProperty({
     type: 'string',
@@ -94,7 +105,7 @@ export class ListTaskDto extends PaginationOptions {
   })
   @Type(() => Date)
   @IsOptional()
-  createdDateTo: Date;
+  createdDateTo?: Date;
 }
 
 export class CreateSurveyDto {
@@ -168,6 +179,35 @@ export class CreateTaskDto {
 
   @ApiProperty({
     required: false,
+    description:
+      'CUSTOMER_TYPE = ' + JSON.stringify(Task.CUSTOMER_TYPE, null, 1),
+    enum: Task.CUSTOMER_TYPE,
+  })
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsEnum(Task.CUSTOMER_TYPE)
+  customerType: number;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllRous?: boolean = false;
+
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
+  @IsNotEmpty()
+  rouIds?: Array<number> = [];
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllProvinces?: boolean = false;
+
+  @ApiProperty({
+    required: false,
     example: [],
   })
   @IsArray()
@@ -204,6 +244,11 @@ export class CreateTaskDto {
   @IsOptional()
   endDate: Date;
 
+  @ApiProperty({ example: false, required: false })
+  @IsBoolean()
+  @IsOptional()
+  isRequired: boolean;
+
   @ApiProperty({
     required: false,
     example: {
@@ -235,11 +280,45 @@ export class UpdateTaskDto {
 
   @ApiProperty({
     required: false,
+    description:
+      'CUSTOMER_TYPE = ' + JSON.stringify(Task.CUSTOMER_TYPE, null, 1),
+    enum: Task.CUSTOMER_TYPE,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsEnum(Task.CUSTOMER_TYPE)
+  customerType: number;
+
+  @ApiProperty({ example: false, required: false })
+  @IsBoolean()
+  @IsOptional()
+  isRequired: boolean;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllProvinces?: boolean;
+
+  @ApiProperty({
+    required: false,
     example: [],
   })
   @IsArray()
   @IsOptional()
   provinceIds?: Array<number>;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllRous?: boolean;
+
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
+  @IsOptional()
+  rouIds?: Array<number>;
 
   @ApiProperty({
     required: false,

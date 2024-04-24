@@ -1,20 +1,10 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ActivityLog } from 'src/submodules/common/decorators/activity-log.decorator';
-import { GetUser } from 'src/submodules/common/decorators/user.decorator';
-import { ISuccessResponse } from 'src/submodules/common/interfaces';
-import { SendResponse } from 'src/submodules/common/response/send-response';
-import { User } from 'src/submodules/database/entities';
+import { ActivityLog } from 'src/submodule/common/decorators/activity-log.decorator';
+import { GetUser } from 'src/submodule/common/decorators/user.decorator';
+import { ISuccessResponse } from 'src/submodule/common/interfaces';
+import { SendResponse } from 'src/submodule/common/response/send-response';
+import { User } from 'src/submodule/database/entities';
 import {
   CreateUserDto,
   ListUserDto,
@@ -27,13 +17,12 @@ import { UserService } from './user.service';
 @ApiBearerAuth()
 @ApiTags('3. Users')
 @Controller('users')
-@UsePipes(new ValidationPipe({ transform: true }))
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
   @ApiOperation({ summary: 'Tạo người dùng' })
-  @ActivityLog('API_USER_CREATE')
+  @ActivityLog('USER_CREATE')
   async createUser(
     @Body() body: CreateUserDto,
     @GetUser() creator: User,
@@ -44,17 +33,10 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: 'Danh sách người dùng' })
-  @ActivityLog('API_USER_LIST')
-  async getAll(@Query() query: ListUserDto): Promise<ISuccessResponse<User>> {
+  @ActivityLog('USER_LIST')
+  async getAll(@Query() query: ListUserDto) {
     const users = await this.userService.getAll(query);
     return SendResponse.success(users, 'Get all users successful!');
-  }
-
-  @Get('select')
-  @ApiOperation({ summary: 'Select danh sách người dùng' })
-  async select(@Query() query: ListUserDto): Promise<ISuccessResponse<User>> {
-    const users = await this.userService.getAll(query);
-    return SendResponse.success(users, 'Select users successful!');
   }
 
   @Get('activities/statistics')
@@ -66,6 +48,7 @@ export class UserController {
       'Get top most active in month successful!',
     );
   }
+
   @Get('roles/statistics')
   @ApiOperation({ summary: `Thông kê ODs's Type` })
   async getUserRoles() {
@@ -77,7 +60,7 @@ export class UserController {
   @ApiOperation({
     summary: 'Chi tiết người dùng',
   })
-  @ActivityLog('API_USER_DETAIL')
+  @ActivityLog('USER_DETAIL')
   async getOneUser(@Param('id') id: number): Promise<ISuccessResponse<User>> {
     const users = await this.userService.getOne(id);
     return SendResponse.success(users, 'Get detail user successful!');
@@ -85,7 +68,7 @@ export class UserController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Cập nhật người dùng' })
-  @ActivityLog('API_USER_UPDATE')
+  @ActivityLog('USER_UPDATE')
   async updateUser(
     @Param('id') id: number,
     @Body() body: UpdateUserDto,

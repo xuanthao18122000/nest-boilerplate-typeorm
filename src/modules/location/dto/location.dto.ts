@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class GetLocationDto {
   @ApiProperty({ required: false })
@@ -39,4 +45,20 @@ export class GetLocationDto {
   @IsArray()
   @IsOptional()
   areaIds?: Array<number>;
+
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
+  @IsOptional()
+  rouIds?: Array<number>;
+}
+
+export class GetCoordinatesDistrictDto {
+  @ApiProperty({ required: false })
+  @IsNumber()
+  @Type(() => Number)
+  @IsNotEmpty()
+  provinceId: number;
 }

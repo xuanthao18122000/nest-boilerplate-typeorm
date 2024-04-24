@@ -9,8 +9,8 @@ import {
   MaxLength,
 } from 'class-validator';
 
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
-import { Role } from 'src/submodules/database/entities';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
+import { Role } from 'src/submodule/database/entities';
 
 export class ListRolesDto extends PaginationOptions {}
 

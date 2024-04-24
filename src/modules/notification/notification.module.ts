@@ -5,7 +5,7 @@ import {
   Notification,
   NotificationDetail,
   Staff,
-} from 'src/submodules/database/entities';
+} from 'src/submodule/database/entities';
 import { LocationService } from '../location/location.service';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';

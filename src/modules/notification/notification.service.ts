@@ -2,11 +2,11 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import FilterBuilder from 'src/submodules/common/builder/filter.builder';
-import UpdateBuilder from 'src/submodules/common/builder/update.builder';
-import { ErrorHttpException } from 'src/submodules/common/exceptions/throw.exception';
-import { listResponse } from 'src/submodules/common/response/response-list.response';
-import { Notification, Staff, User } from 'src/submodules/database/entities';
+import FilterBuilder from 'src/submodule/common/builder/filter.builder';
+import UpdateBuilder from 'src/submodule/common/builder/update.builder';
+import { ErrorHttpException } from 'src/submodule/common/exceptions/throw.exception';
+import { listResponse } from 'src/submodule/common/response/response-list.response';
+import { Notification, Staff, User } from 'src/submodule/database/entities';
 import { Repository } from 'typeorm';
 import { LocationService } from '../location/location.service';
 import {
@@ -37,9 +37,10 @@ export class NotificationService {
     const notifications = new FilterBuilder(entity, query)
       .addLeftJoinAndSelect(['id', 'fullName', 'email'], 'creator')
       .addUnAccentString('title')
+      .addUnAccentString('shortBody')
       .addNumber('id')
       .addNumber('status')
-      .addNumber('category')
+      .addNumber('category', Notification.CATEGORY.GENERAL)
       .addNumber('sendMode')
       .addNumber('typeSchedule')
       .addNumber('typeReceiver')
@@ -141,6 +142,7 @@ export class NotificationService {
     {
       title,
       body,
+      shortBody,
       category,
       typeReceiver,
       provinceIds,
@@ -173,9 +175,14 @@ export class NotificationService {
       receiversNumber = receivers.length;
     }
 
+    if (status === Notification.STATUS.ACCEPT) {
+      status = Notification.STATUS.SENDING;
+    }
+
     const notification = this.notificationRepo.create({
       title,
       body,
+      shortBody,
       status,
       category,
       receiversNumber,
@@ -245,6 +252,7 @@ export class NotificationService {
         .updateColumns([
           'title',
           'body',
+          'shortBody',
           'category',
           'provinceIds',
           'attachments',
@@ -274,6 +282,7 @@ export class NotificationService {
           rejectedById: updater.id,
           rejectedBy: updater.fullName,
           rejectReason,
+          rejectAt: moment().toDate(),
         };
       }
 

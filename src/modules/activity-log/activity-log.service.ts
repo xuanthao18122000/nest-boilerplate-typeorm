@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import FilterBuilder from 'src/submodules/common/builder/filter.builder';
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
-import { listResponse } from 'src/submodules/common/response/response-list.response';
+import FilterBuilder from 'src/submodule/common/builder/filter.builder';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
+import { listResponse } from 'src/submodule/common/response/response-list.response';
 import {
   ActivityLog,
   ActivityLogDetail,
-} from 'src/submodules/database/entities';
+} from 'src/submodule/database/entities';
 import { Repository } from 'typeorm';
 import { ListActivityLogsDto } from './dto/activity-log.dto';
 
@@ -102,7 +102,9 @@ export class ActivityLogService {
   }
 
   async saveActivityLogDetail(detailActivityLogs: ActivityLogDetail[]) {
-    await this.activityLogDetailRepo.save(detailActivityLogs);
+    if (detailActivityLogs) {
+      await this.activityLogDetailRepo.save(detailActivityLogs);
+    }
   }
   async createActivityLogDetail<T extends Record<string, any>>(
     action: string,
@@ -110,28 +112,32 @@ export class ActivityLogService {
     body: Record<string, any>,
     creatorId: number,
     moduleId: number,
-  ): Promise<ActivityLogDetail[]> {
+  ): Promise<ActivityLogDetail[]> | null {
     const activityLog = await this.activityLogRepo.findOneBy({
       action,
       creatorId,
     });
 
-    const detailActivityLogs: ActivityLogDetail[] = [];
+    if (activityLog) {
+      const detailActivityLogs: ActivityLogDetail[] = [];
 
-    for (const [key, value] of Object.entries(body)) {
-      const detailLog = this.activityLogDetailRepo.create({
-        activityLogId: activityLog.id,
-        column: key,
-        newData: value,
-        oldData: table[key],
-        creatorId: creatorId,
-        action: ActivityLogDetail.ACTION.CREATE,
-        moduleId,
-      });
+      for (const [key, value] of Object.entries(body)) {
+        const detailLog = this.activityLogDetailRepo.create({
+          activityLogId: activityLog.id,
+          column: key,
+          newData: value,
+          oldData: table[key],
+          creatorId: creatorId,
+          action: ActivityLogDetail.ACTION.CREATE,
+          moduleId,
+        });
 
-      detailActivityLogs.push(detailLog);
+        detailActivityLogs.push(detailLog);
+      }
+
+      return detailActivityLogs;
     }
 
-    return detailActivityLogs;
+    return null;
   }
 }

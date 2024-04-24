@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional, IsString } from 'class-validator';
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
 
 export class ListActivityLogsDto extends PaginationOptions {
   @ApiProperty({ required: false, description: 'Activity ID' })

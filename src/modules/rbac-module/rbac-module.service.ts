@@ -1,15 +1,15 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
-import FilterBuilder from 'src/submodules/common/builder/filter.builder';
-import { SORT_ENUM } from 'src/submodules/common/enums';
-import { ErrorHttpException } from 'src/submodules/common/exceptions/throw.exception';
-import { listResponse } from 'src/submodules/common/response/response-list.response';
+import FilterBuilder from 'src/submodule/common/builder/filter.builder';
+import { SORT_ENUM } from 'src/submodule/common/enums';
+import { ErrorHttpException } from 'src/submodule/common/exceptions/throw.exception';
+import { listResponse } from 'src/submodule/common/response/response-list.response';
 import {
   RbacAction,
   RbacModule,
   RoleAction,
-} from 'src/submodules/database/entities';
+} from 'src/submodule/database/entities';
 import { In, Repository } from 'typeorm';
 import {
   CreateMultipleRbacModules,
@@ -46,8 +46,6 @@ export class RbacModuleService {
 
     if (roleId) {
       const keys = await this.getKeysFromRoleAction(roleId);
-      console.log(keys);
-
       filterBuilder.addWhereInString('key', 'roleId', keys, 'actions');
     }
 

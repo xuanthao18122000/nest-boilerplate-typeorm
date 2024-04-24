@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsArray,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
-import { PaginationOptions } from 'src/submodules/common/builder';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { PaginationOptions } from 'src/submodule/common/builder';
 
 export class ListRbacActionsDto extends PaginationOptions {}
 
@@ -38,7 +32,6 @@ export class CreateMultipleRbacActions {
       },
     ],
   })
-  @ValidateNested()
   @IsArray()
   @IsOptional()
   actions: CreateRbacActions[];

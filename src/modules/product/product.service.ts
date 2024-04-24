@@ -1,10 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import FilterBuilder from 'src/submodules/common/builder/filter.builder';
-import UpdateBuilder from 'src/submodules/common/builder/update.builder';
-import { ErrorHttpException } from 'src/submodules/common/exceptions/throw.exception';
-import { listResponse } from 'src/submodules/common/response/response-list.response';
-import { Product, User } from 'src/submodules/database/entities';
+import FilterBuilder from 'src/submodule/common/builder/filter.builder';
+import UpdateBuilder from 'src/submodule/common/builder/update.builder';
+import { ErrorHttpException } from 'src/submodule/common/exceptions/throw.exception';
+import { listResponse } from 'src/submodule/common/response/response-list.response';
+import { Product, User } from 'src/submodule/database/entities';
 import { Repository } from 'typeorm';
 import { BrandService } from '../brand/brand.service';
 import {
@@ -25,15 +25,16 @@ export class ProductService {
   private buildEntity(alias: string = 'product') {
     return {
       entityRepo: this.productRepo,
-      alias: alias,
+      alias,
     };
   }
 
   async getAll(query: ListProductDto) {
+    const { brandCategory } = query;
     const entity = this.buildEntity();
 
-    const products = new FilterBuilder(entity, query)
-      .addLeftJoinAndSelect(['id', 'name'], 'brand')
+    const filterBuilder = new FilterBuilder(entity, query)
+      .addLeftJoinAndSelect(['id', 'name', 'category'], 'brand')
       .addLeftJoinAndSelect(['id', 'fullName'], 'creator')
       .addUnAccentString('name')
       .addNumber('creatorId')
@@ -44,11 +45,22 @@ export class ProductService {
       .addPagination()
       .sortBy('id');
 
-    const [list, total] = await products.getManyAndCount();
+    if (brandCategory) {
+      filterBuilder.addNumber('category', brandCategory, 'brand');
+    }
+
+    const [list, total] = await filterBuilder.getManyAndCount();
     return listResponse(list, total, query);
   }
 
   async create(body: CreateProductDto, creator: User) {
+    const { name } = body;
+    const isExistedName = await this.productRepo.findOneBy({ name });
+
+    if (isExistedName) {
+      throw ErrorHttpException(HttpStatus.CONFLICT, 'PRODUCT_NAME_EXISTED');
+    }
+
     await this.brandService.findBrandByPk(body.brandId);
 
     const newProduct = this.productRepo.create({
@@ -65,10 +77,19 @@ export class ProductService {
   }
 
   async update(id: number, body: UpdateProductDto) {
+    const { name } = body;
     const product = await this.findProductByPk(id);
 
     if (body.brandId) {
       await this.brandService.findBrandByPk(body.brandId);
+    }
+
+    if (name) {
+      const isExistedName = await this.productRepo.findOneBy({ name });
+
+      if (isExistedName) {
+        throw ErrorHttpException(HttpStatus.CONFLICT, 'PRODUCT_NAME_EXISTED');
+      }
     }
 
     const dataUpdate = new UpdateBuilder(product, body)
@@ -91,5 +112,34 @@ export class ProductService {
     }
 
     return product;
+  }
+
+  async checkProductIdsExistence(productIds: number[]): Promise<void> {
+    if (productIds.length !== 0) {
+      const existingProducts = await this.productRepo
+        .createQueryBuilder('product')
+        .where('product.id IN (:...productIds)', { productIds })
+        .getMany();
+
+      if (existingProducts.length !== productIds.length) {
+        throw ErrorHttpException(HttpStatus.NOT_FOUND, 'PRODUCT_NOT_FOUND');
+      }
+    }
+  }
+
+  async getProductsByIds(productIds: number[]): Promise<Product[]> {
+    const queryBuilder = this.productRepo.createQueryBuilder('product');
+
+    if (productIds) {
+      queryBuilder.where('product.id IN (:...productIds)', { productIds });
+    }
+
+    const products = await queryBuilder.getMany();
+
+    if (products.length === 0) {
+      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'PRODUCT_NOT_FOUND');
+    }
+
+    return products;
   }
 }

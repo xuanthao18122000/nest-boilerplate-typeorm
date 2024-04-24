@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { AuthGuard, PassportStrategy } from '@nestjs/passport';
 import { BearerStrategy } from 'passport-azure-ad';
-import { getEnv } from 'src/submodules/configs/env.config';
+import { getEnv } from 'src/submodule/configs/env.config';
 
 const config = {
   credentials: {
@@ -42,7 +42,6 @@ export class AzureAdStrategy extends PassportStrategy(
   }
 
   async validate(profile: any): Promise<any> {
-    console.log('profile', profile);
     return profile;
   }
 }

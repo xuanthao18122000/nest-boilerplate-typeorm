@@ -5,14 +5,15 @@ import {
   RbacModule,
   Role,
   RoleAction,
-} from 'src/submodules/database/entities';
+  User,
+} from 'src/submodule/database/entities';
 import { RbacModuleService } from '../rbac-module/rbac-module.service';
 import { RoleController } from './role.controller';
 import { RoleService } from './role.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Role, RoleAction, RbacModule, RbacAction]),
+    TypeOrmModule.forFeature([Role, RoleAction, RbacModule, RbacAction, User]),
   ],
   controllers: [RoleController],
   providers: [RoleService, RbacModuleService],

@@ -1,45 +1,23 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ActivityLog } from 'src/submodules/common/decorators/activity-log.decorator';
-import { GetUser } from 'src/submodules/common/decorators/user.decorator';
-import { ISuccessResponse } from 'src/submodules/common/interfaces';
-import { SendResponse } from 'src/submodules/common/response/send-response';
-import { Task, User } from 'src/submodules/database/entities';
-import {
-  CreateTaskDto,
-  ListTaskDto,
-  StatisticsTasksDto,
-  UpdateTaskDto,
-} from './dto/task.dto';
+import { PaginationOptions } from 'src/submodule/common/builder';
+import { ActivityLog } from 'src/submodule/common/decorators/activity-log.decorator';
+import { GetUser } from 'src/submodule/common/decorators/user.decorator';
+import { ISuccessResponse } from 'src/submodule/common/interfaces';
+import { SendResponse } from 'src/submodule/common/response/send-response';
+import { Task, User } from 'src/submodule/database/entities';
+import { CreateTaskDto, ListTaskDto, UpdateTaskDto } from './dto/task.dto';
 import { TaskService } from './task.service';
 
 @ApiBearerAuth()
 @ApiTags('14. Tasks')
 @Controller('tasks')
-@UsePipes(new ValidationPipe({ transform: true }))
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
-  @Get('statistics')
-  @ApiOperation({ summary: 'Thống kê tác vụ theo tỉnh' })
-  async statistics(@Query() query: StatisticsTasksDto) {
-    const statistics = await this.taskService.statisticsTasks(query);
-    return SendResponse.success(statistics, 'Get statistics tasks successful!');
-  }
-
   @Post()
   @ApiOperation({ summary: 'Tạo tác vụ' })
-  @ActivityLog('API_TASK_CREATE')
+  @ActivityLog('TASK_CREATE')
   async create(
     @Body() body: CreateTaskDto,
     @GetUser() user: User,
@@ -50,7 +28,7 @@ export class TaskController {
 
   @Get()
   @ApiOperation({ summary: 'Danh sách tác vụ' })
-  @ActivityLog('API_TASK_LIST')
+  @ActivityLog('TASK_LIST')
   async getAll(@Query() query: ListTaskDto) {
     const tasks = await this.taskService.getAll(query);
     return SendResponse.success(tasks, 'Get all tasks successful!');
@@ -58,7 +36,7 @@ export class TaskController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Chi tiết tác vụ' })
-  @ActivityLog('API_TASK_DETAIL')
+  @ActivityLog('TASK_DETAIL')
   async getOne(@Param('id') id: number) {
     const task = await this.taskService.getOne(id);
     return SendResponse.success(task, 'Get detail task successful!');
@@ -66,7 +44,7 @@ export class TaskController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Cập nhật tác vụ' })
-  @ActivityLog('API_TASK_UPDATE')
+  @ActivityLog('TASK_UPDATE')
   async update(
     @Param('id') id: number,
     @Body() body: UpdateTaskDto,
@@ -74,5 +52,16 @@ export class TaskController {
   ) {
     const task = await this.taskService.update(id, body, user);
     return SendResponse.success(task, 'Update task successful!');
+  }
+
+  @Get('survey-results/:taskId')
+  @ApiOperation({ summary: 'Chi tiết tác vụ' })
+  @ActivityLog('TASK_SURVEY_VIEW')
+  async surveyResults(
+    @Param('taskId') taskId: number,
+    @Query() query: PaginationOptions,
+  ) {
+    const task = await this.taskService.surveyResults(taskId, query);
+    return SendResponse.success(task, 'Get detail task successful!');
   }
 }

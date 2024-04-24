@@ -4,7 +4,7 @@ import {
   RbacAction,
   RbacModule,
   RoleAction,
-} from 'src/submodules/database/entities';
+} from 'src/submodule/database/entities';
 import { RbacModuleController } from './rbac-module.controller';
 import { RbacModuleService } from './rbac-module.service';
 

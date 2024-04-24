@@ -8,9 +8,9 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { IS_PUBLIC_KEY } from 'src/submodules/common/decorators/public.decorator';
-import { getEnv } from 'src/submodules/configs/env.config';
-import { User } from 'src/submodules/database/entities';
+import { IS_PUBLIC_KEY } from 'src/submodule/common/decorators/public.decorator';
+import { getEnv } from 'src/submodule/configs/env.config';
+import { User } from 'src/submodule/database/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()

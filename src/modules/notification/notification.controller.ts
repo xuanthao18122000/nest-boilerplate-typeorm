@@ -1,18 +1,9 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/submodules/common/decorators/user.decorator';
-import { SendResponse } from 'src/submodules/common/response/send-response';
-import { User } from 'src/submodules/database/entities';
+import { ActivityLog } from 'src/submodule/common/decorators/activity-log.decorator';
+import { GetUser } from 'src/submodule/common/decorators/user.decorator';
+import { SendResponse } from 'src/submodule/common/response/send-response';
+import { User } from 'src/submodule/database/entities';
 import {
   CreateNotificationDto,
   ListNotificationDto,
@@ -22,9 +13,8 @@ import {
 import { NotificationService } from './notification.service';
 
 @ApiBearerAuth()
-@ApiTags('Notifications')
+@ApiTags('22. Notifications')
 @Controller('notifications')
-@UsePipes(new ValidationPipe({ transform: true }))
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
@@ -39,6 +29,7 @@ export class NotificationController {
   }
 
   @Get()
+  @ActivityLog('NOTIFICATION_LIST')
   @ApiOperation({ summary: 'Danh sách thông báo' })
   async getAll(@Query() query: ListNotificationDto) {
     const notificationCards = await this.notificationService.getAll(query);
@@ -50,6 +41,7 @@ export class NotificationController {
   }
 
   @Get(':id')
+  @ActivityLog('NOTIFICATION_DETAIL')
   @ApiOperation({ summary: 'Chi tiết thông báo' })
   async getOneNotification(@Param('id') id: number) {
     const notification = await this.notificationService.getOne(id);
@@ -60,6 +52,7 @@ export class NotificationController {
   }
 
   @Post()
+  @ActivityLog('NOTIFICATION_CREATE')
   @ApiOperation({ summary: 'Tạo thông báo' })
   async createNotification(
     @Body() body: CreateNotificationDto,
@@ -73,6 +66,7 @@ export class NotificationController {
   }
 
   @Put(':id')
+  @ActivityLog('NOTIFICATION_UPDATE')
   @ApiOperation({ summary: 'Cập nhật thông báo' })
   async updateNotification(
     @Param('id') id: number,

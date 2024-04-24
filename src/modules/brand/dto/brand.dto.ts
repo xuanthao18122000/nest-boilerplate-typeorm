@@ -7,8 +7,8 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
-import { Brand } from 'src/submodules/database/entities';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
+import { Brand } from 'src/submodule/database/entities';
 
 export class CreateBrandDto {
   @ApiProperty({ required: false, description: 'Title' })

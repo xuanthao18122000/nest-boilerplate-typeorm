@@ -10,8 +10,8 @@ import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActivityLogService } from 'src/modules/activity-log/activity-log.service';
-import { ACTIVITY_LOG_METADATA_KEY } from 'src/submodules/common/decorators/activity-log.decorator';
-import { ActivityLog } from 'src/submodules/database/entities';
+import { ACTIVITY_LOG_METADATA_KEY } from 'src/submodule/common/decorators/activity-log.decorator';
+import { ActivityLog } from 'src/submodule/database/entities';
 import { ActivityLogEnum } from '../enums';
 
 @Injectable()

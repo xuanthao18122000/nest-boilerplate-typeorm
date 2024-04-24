@@ -1,4 +1,4 @@
-import { User } from 'src/submodules/database/entities';
+import { User } from 'src/submodule/database/entities';
 
 describe('User Entity', () => {
   let user: User;

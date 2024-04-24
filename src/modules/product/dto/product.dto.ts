@@ -8,8 +8,8 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
-import { Product } from 'src/submodules/database/entities';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
+import { Brand, Product } from 'src/submodule/database/entities';
 
 export class CreateProductDto {
   @ApiProperty({ required: false, description: 'Title' })
@@ -65,6 +65,16 @@ export class ListProductDto extends PaginationOptions {
   @Type(() => Number)
   @IsNumber()
   brandId: number;
+
+  @ApiProperty({
+    required: false,
+    description: 'Category = ' + JSON.stringify(Brand.CATEGORY, null, 1),
+    enum: Brand.CATEGORY,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsEnum(Brand.CATEGORY)
+  brandCategory: number;
 
   @ApiProperty({
     required: false,

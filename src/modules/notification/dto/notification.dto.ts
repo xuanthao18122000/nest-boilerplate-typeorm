@@ -9,8 +9,8 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
-import { Notification } from 'src/submodules/database/entities';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
+import { Notification } from 'src/submodule/database/entities';
 
 export class StatisticsNotificationDto {
   @ApiProperty({ required: false, default: 2024 })
@@ -36,6 +36,11 @@ export class ListNotificationDto extends PaginationOptions {
   @IsString()
   @IsOptional()
   title: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  shortBody: string;
 
   @ApiProperty({
     required: false,
@@ -142,6 +147,11 @@ export class CreateNotificationDto {
   @IsString()
   @IsNotEmpty()
   title: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  shortBody: string;
 
   @ApiProperty({ required: false })
   @IsString()
@@ -308,6 +318,11 @@ export class UpdateNotificationDto {
   @IsString()
   @IsOptional()
   title: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  shortBody: string;
 
   @ApiProperty({ required: false })
   @IsString()

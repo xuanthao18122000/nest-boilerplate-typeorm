@@ -9,50 +9,67 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
-import { Staff } from 'src/submodules/database/entities';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
+import { Staff } from 'src/submodule/database/entities';
 
+export class StatisticsStaffDto {
+  @ApiProperty({ description: 'ROU' })
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  rouId: number;
+
+  @ApiProperty({ description: 'Month' })
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  month: number;
+
+  @ApiProperty({ description: 'Year' })
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  year: number;
+}
 export class ListStaffDto extends PaginationOptions {
   @ApiProperty({ required: false, description: 'ID' })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  id: number;
+  id?: number;
 
   @ApiProperty({ required: false, description: 'Volume Archived' })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  volumeArchived: number;
+  volumeArchived?: number;
 
   @ApiProperty({ required: false, description: 'ASE ID' })
+  @IsString()
+  @IsOptional()
+  aseId?: string;
+
+  @ApiProperty({ required: false, description: 'Position ID' })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  aseId: number;
+  positionId?: number;
 
   @ApiProperty({ required: false, description: 'ASE' })
   @IsString()
   @IsOptional()
-  fullName: string;
+  fullName?: string;
 
-  @ApiProperty({ required: false, description: 'ID' })
+  @ApiProperty({ example: '', required: false })
+  @IsString()
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  salesHeadId: number;
-
-  @ApiProperty({ required: false, description: '' })
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  positionId: number;
+  salesHead?: string;
 
   @ApiProperty({ required: false, description: '' })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  provinceId: number;
+  provinceId?: number;
 
   @ApiProperty({
     required: false,
@@ -60,19 +77,47 @@ export class ListStaffDto extends PaginationOptions {
     type: [Number],
     example: [],
   })
-  provinceIds: number[];
+  @Type(() => Number)
+  @IsNumber({}, { each: true })
+  @IsOptional()
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+  rouIds?: number[];
+
+  @ApiProperty({
+    required: false,
+    description: 'Array of numbers',
+    type: [Number],
+    example: [],
+  })
+  @Type(() => Number)
+  @IsNumber({}, { each: true })
+  @IsOptional()
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+  provinceIds?: number[];
+
+  @ApiProperty({
+    required: false,
+    description: 'Array of numbers',
+    type: [Number],
+    example: [],
+  })
+  @Type(() => Number)
+  @IsNumber({}, { each: true })
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+  @IsOptional()
+  areaIds?: number[];
 
   @ApiProperty({ required: false, description: 'Micro' })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  areaId: number;
+  areaId?: number;
 
   @ApiProperty({ required: false, description: 'ROU' })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  rouId: number;
+  rouId?: number;
 
   @ApiProperty({
     required: false,
@@ -81,13 +126,7 @@ export class ListStaffDto extends PaginationOptions {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  status: number;
-
-  @ApiProperty({ required: false, description: 'Get all records' })
-  @IsBoolean()
-  @Transform(({ value }) => value === 'true')
-  @IsOptional()
-  isSalesHead?: boolean = false;
+  status?: number;
 
   @ApiProperty({
     type: 'string',
@@ -97,7 +136,7 @@ export class ListStaffDto extends PaginationOptions {
   })
   @Type(() => Date)
   @IsOptional()
-  createdDateFrom: Date;
+  createdDateFrom?: Date;
 
   @ApiProperty({
     type: 'string',
@@ -107,7 +146,7 @@ export class ListStaffDto extends PaginationOptions {
   })
   @Type(() => Date)
   @IsOptional()
-  createdDateTo: Date;
+  createdDateTo?: Date;
 }
 
 export class CreateStaffDto {
@@ -123,27 +162,41 @@ export class CreateStaffDto {
   volumeArchived: number;
 
   @ApiProperty({ required: false, description: 'ASE ID' })
+  @IsString()
+  @IsOptional()
+  aseId: string;
+
+  @ApiProperty({ required: false, description: 'Position ID' })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  aseId: number;
+  positionId: number;
+
+  @ApiProperty({ required: false, description: 'Rou ID' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  rouId: number;
 
   @ApiProperty({ example: '' })
   @IsString()
   @IsNotEmpty()
   fullName: string;
 
-  @ApiProperty({ required: false, example: 0 })
-  @Type(() => Number)
-  @IsNumber()
-  @IsNotEmpty()
-  positionId: number;
-
-  @ApiProperty({ required: false, example: 0 })
-  @Type(() => Number)
-  @IsNumber()
+  @ApiProperty({ example: '' })
+  @IsString()
   @IsOptional()
-  salesHeadId: number;
+  salesHead: string;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllProvinces?: boolean = false;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllAreas?: boolean = false;
 
   @ApiProperty({
     required: false,
@@ -153,17 +206,13 @@ export class CreateStaffDto {
   @IsOptional()
   provinceIds?: Array<number> = [];
 
-  @ApiProperty({ required: false, example: 0 })
-  @Type(() => Number)
-  @IsNumber()
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
   @IsOptional()
-  areaId: number;
-
-  @ApiProperty({ required: false, example: 0 })
-  @Type(() => Number)
-  @IsNumber()
-  @IsNotEmpty()
-  rouId: number;
+  areaIds?: Array<number> = [];
 
   @ApiProperty({ example: '' })
   @IsString()
@@ -187,6 +236,27 @@ export class UpdateStaffDto {
   @IsOptional()
   email: string;
 
+  @ApiProperty({ required: false, description: 'ASE ID' })
+  @IsString()
+  @IsOptional()
+  aseId: string;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllProvinces?: boolean;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllAreas?: boolean;
+
+  @ApiProperty({ required: false, description: 'Position ID' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  positionId: number;
+
   @ApiProperty({ example: '' })
   @IsString()
   @IsOptional()
@@ -198,17 +268,16 @@ export class UpdateStaffDto {
   @IsNumber()
   volumeArchived: number;
 
-  @ApiProperty({ required: false, example: 0 })
+  @ApiProperty({ required: false, description: 'Volume Archived' })
+  @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  @IsOptional()
-  positionId: number;
+  rouId: number;
 
-  @ApiProperty({ required: false, example: 0 })
-  @Type(() => Number)
-  @IsNumber()
+  @ApiProperty({ example: '', required: false })
+  @IsString()
   @IsOptional()
-  salesHeadId: number;
+  salesHead: string;
 
   @ApiProperty({
     required: false,
@@ -218,17 +287,13 @@ export class UpdateStaffDto {
   @IsOptional()
   provinceIds?: Array<number>;
 
-  @ApiProperty({ required: false, example: 0 })
-  @Type(() => Number)
-  @IsNumber()
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
   @IsOptional()
-  areaId: number;
-
-  @ApiProperty({ required: false, example: 0 })
-  @Type(() => Number)
-  @IsNumber()
-  @IsOptional()
-  rouId: number;
+  areaIds?: Array<number>;
 
   @ApiProperty({ example: '' })
   @IsString()

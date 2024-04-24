@@ -7,10 +7,9 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  ValidateNested,
 } from 'class-validator';
-import { PaginationOptions } from 'src/submodules/common/builder';
-import { Role } from 'src/submodules/database/entities';
+import { PaginationOptions } from 'src/submodule/common/builder';
+import { Role } from 'src/submodule/database/entities';
 
 export class ListRbacModulesDto extends PaginationOptions {
   @ApiProperty({
@@ -52,7 +51,6 @@ export class CreateMultipleRbacModules {
       },
     ],
   })
-  @ValidateNested()
   @IsArray()
   @IsOptional()
   modules: CreateRbacModules[];

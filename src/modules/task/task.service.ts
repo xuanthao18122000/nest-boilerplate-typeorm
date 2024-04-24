@@ -1,18 +1,23 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import FilterBuilder from 'src/submodules/common/builder/filter.builder';
-import UpdateBuilder from 'src/submodules/common/builder/update.builder';
-import { ErrorHttpException } from 'src/submodules/common/exceptions/throw.exception';
-import { listResponse } from 'src/submodules/common/response/response-list.response';
-import { Survey, Task, User } from 'src/submodules/database/entities';
+import { PaginationOptions } from 'src/submodule/common/builder';
+import FilterBuilder from 'src/submodule/common/builder/filter.builder';
+import UpdateBuilder from 'src/submodule/common/builder/update.builder';
+import { ErrorHttpException } from 'src/submodule/common/exceptions/throw.exception';
+import { listResponse } from 'src/submodule/common/response/response-list.response';
+import { Survey, Task, Ticket, User } from 'src/submodule/database/entities';
 import { Repository } from 'typeorm';
+import { AreaService } from '../area/area.service';
+import { LocationService } from '../location/location.service';
+import { ROUService } from '../rou/rou.service';
+import { StaffService } from '../staff/staff.service';
 import {
   CreateQuestionsDto,
   CreateTaskDto,
   ListTaskDto,
-  StatisticsTasksDto,
   UpdateTaskDto,
 } from './dto/task.dto';
+
 @Injectable()
 export class TaskService {
   constructor(
@@ -21,6 +26,17 @@ export class TaskService {
 
     @InjectRepository(Survey)
     private surveyRepo: Repository<Survey>,
+
+    @InjectRepository(Ticket)
+    private ticketRepo: Repository<Ticket>,
+
+    private readonly rouService: ROUService,
+
+    private readonly areaService: AreaService,
+
+    private readonly staffService: StaffService,
+
+    private readonly locationService: LocationService,
   ) {}
 
   async getAll(query: ListTaskDto) {
@@ -36,17 +52,28 @@ export class TaskService {
       .addNumber('status')
       .addNumber('category')
       .addNumber('creatorId')
-      .addNumber('provinceId')
+      .addNumber('customerType')
       .addDate('createdAt', 'createdDateFrom', 'createdDateTo')
       .addPagination()
       .sortBy('id');
 
-    const [list, total] = await filterBuilder.getManyAndCount();
-    return listResponse(list, total, query);
-  }
+    const [tasks, total] = await filterBuilder.getManyAndCount();
+    const list = [];
 
-  async statisticsTasks({ provinceId, month, year }: StatisticsTasksDto) {
-    console.log({ provinceId, month, year });
+    for (const task of tasks) {
+      const [provinces, rous] = await Promise.all([
+        this.locationService.getProvincesByIds(task.provinceIds),
+        this.rouService.getRousByIds(task.rouIds),
+      ]);
+
+      list.push({
+        ...task,
+        provinces,
+        rous,
+      });
+    }
+
+    return listResponse(list, total, query);
   }
 
   async getOne(id: number): Promise<Partial<Task>> {
@@ -54,13 +81,46 @@ export class TaskService {
     return task;
   }
 
+  async surveyResults(taskId: number, query: PaginationOptions) {
+    const entity = {
+      entityRepo: this.ticketRepo,
+      alias: 'ticket',
+    };
+
+    const filterBuilder = new FilterBuilder(entity, query)
+      .addNumber('taskId', taskId)
+      .addPagination()
+      .sortBy('id');
+
+    const [list, total] = await filterBuilder.getManyAndCount();
+    return listResponse(list, total, query);
+  }
+
   async create(body: CreateTaskDto, creator: User): Promise<Task> {
-    const { category, name, endDate, startDate, survey, provinceIds } = body;
+    const {
+      category,
+      name,
+      customerType,
+      isRequired,
+      endDate,
+      startDate,
+      survey,
+      isAllRous,
+      rouIds,
+      isAllProvinces,
+      provinceIds,
+    } = body;
+
     let task = await this.createAndSaveTask({
       name,
       endDate,
       startDate,
       category,
+      customerType,
+      isRequired,
+      isAllRous,
+      rouIds,
+      isAllProvinces,
       provinceIds,
       creatorId: creator.id,
     });
@@ -120,9 +180,14 @@ export class TaskService {
       .updateColumns([
         'name',
         'category',
+        'customerType',
+        'isRequired',
         'status',
         'startDate',
         'endDate',
+        'isAllRous',
+        'rouIds',
+        'isAllProvinces',
         'provinceIds',
       ])
       .getNewData();

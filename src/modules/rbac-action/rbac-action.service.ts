@@ -1,8 +1,13 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { ErrorHttpException } from 'src/submodules/common/exceptions/throw.exception';
-import { RbacAction, RbacModule } from 'src/submodules/database/entities';
+import { ErrorHttpException } from 'src/submodule/common/exceptions/throw.exception';
+import {
+  RbacAction,
+  RbacModule,
+  Role,
+  RoleAction,
+} from 'src/submodule/database/entities';
 import { In, Repository } from 'typeorm';
 import {
   CreateMultipleRbacActions,
@@ -17,14 +22,21 @@ export class RbacActionService {
 
     @InjectRepository(RbacAction)
     private readonly rbacActionRepo: Repository<RbacAction>,
+
+    @InjectRepository(Role)
+    private readonly roleRepo: Repository<Role>,
+
+    @InjectRepository(RoleAction)
+    private readonly roleActionRepo: Repository<RoleAction>,
   ) {}
 
   async create(body: CreateRbacActions) {
     const { key, name, module } = body;
 
-    const [rbacModule, rbacAction] = await Promise.all([
+    const [rbacModule, rbacAction, adminRole] = await Promise.all([
       this.rbacModuleRepo.findOneBy({ key: module }),
       this.rbacActionRepo.findOneBy({ key }),
+      this.roleRepo.findOneBy({ key: Role.KEY.ADMIN }),
     ]);
 
     if (!rbacModule) {
@@ -35,11 +47,19 @@ export class RbacActionService {
       throw ErrorHttpException(HttpStatus.CONFLICT, 'RBAC_ACTION_EXISTED');
     }
 
-    return await this.rbacActionRepo.save({
+    const newAction = await this.rbacActionRepo.save({
       key,
       name,
       moduleId: rbacModule.id,
     });
+
+    // Add new action for Role Admin
+    await this.roleActionRepo.save({
+      roleId: adminRole.id,
+      action: newAction.key,
+    });
+
+    return newAction;
   }
 
   async createMultiple({ actions }: CreateMultipleRbacActions) {
@@ -60,6 +80,7 @@ export class RbacActionService {
       const rbacModule = await this.rbacModuleRepo.findOneBy({
         key: module,
       });
+      console.log(module);
 
       if (!rbacModule) {
         throw ErrorHttpException(HttpStatus.CONFLICT, 'RBAC_MODULE_NOT_FOUND');

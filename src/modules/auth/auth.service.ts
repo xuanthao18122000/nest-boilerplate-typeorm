@@ -3,10 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
 import { IAzureExpressUser } from 'src/common/interfaces';
-import { ErrorHttpException } from 'src/submodules/common/exceptions/throw.exception';
-import { getEnv } from 'src/submodules/configs/env.config';
-import { User } from 'src/submodules/database/entities';
+import { ErrorHttpException } from 'src/submodule/common/exceptions/throw.exception';
+import { getEnv } from 'src/submodule/configs/env.config';
+import { User } from 'src/submodule/database/entities';
 import { Repository } from 'typeorm';
+import { ROUService } from '../rou/rou.service';
 import {
   FireBaseDto,
   SignInDto,
@@ -20,7 +21,9 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
 
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
+
+    private readonly rouService: ROUService,
   ) {}
 
   async signIn(body: SignInDto) {
@@ -127,7 +130,7 @@ export class AuthService {
     return await this.userRepo.save(user);
   }
 
-  async findUserRelation(id: number): Promise<User> {
+  async findUserRelation(id: number) {
     const select = [
       'user.id',
       'user.email',
@@ -137,23 +140,26 @@ export class AuthService {
       'user.roleId',
       'user.lang',
       'user.avatar',
+      'user.rouIds',
+      'user.isAllRous',
       'user.address',
       'user.provinceId',
       'user.status',
       'user.updatedAt',
       'user.createdAt',
-      'rou.id',
-      'rou.name',
       'role.id',
       'role.name',
+      'role.key',
     ];
-    return await this.userRepo
+    const user = await this.userRepo
       .createQueryBuilder('user')
       .select(select)
-      .leftJoin('user.rou', 'rou')
       .leftJoin('user.role', 'role')
       .where('user.id = :id', { id })
       .getOne();
+
+    const rous = await this.rouService.getRousByIds(user.rouIds);
+    return { ...user, rous };
   }
 
   async signToken(

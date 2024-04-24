@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
+  Area,
   Location,
-  ROU,
   RbacAction,
   RbacModule,
   Role,
   RoleAction,
   User,
   UserAction,
-} from 'src/submodules/database/entities';
+} from 'src/submodule/database/entities';
 import { LocationService } from '../location/location.service';
 import { RbacModuleService } from '../rbac-module/rbac-module.service';
+import { ROUModule } from '../rou/rou.module';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
@@ -21,12 +22,13 @@ import { UserService } from './user.service';
       User,
       Role,
       UserAction,
-      ROU,
+      Area,
       Location,
       RoleAction,
       RbacModule,
       RbacAction,
     ]),
+    ROUModule,
   ],
   controllers: [UserController],
   providers: [UserService, LocationService, RbacModuleService],

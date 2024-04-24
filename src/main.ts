@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
-import { ValidationExceptionFilter } from 'src/submodules/common/exceptions/validation.exception';
-import { getEnv } from 'src/submodules/configs/env.config';
+import { ValidationExceptionFilter } from 'src/submodule/common/exceptions/validation.exception';
+import { getEnv } from 'src/submodule/configs/env.config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {

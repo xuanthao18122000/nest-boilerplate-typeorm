@@ -1,9 +1,9 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
-import { ErrorHttpException } from 'src/submodules/common/exceptions/throw.exception';
-import { listResponse } from 'src/submodules/common/response/response-list.response';
-import { Role, RoleAction } from 'src/submodules/database/entities';
+import { ErrorHttpException } from 'src/submodule/common/exceptions/throw.exception';
+import { listResponse } from 'src/submodule/common/response/response-list.response';
+import { Role, RoleAction, User } from 'src/submodule/database/entities';
 import { Repository } from 'typeorm';
 import { RbacModuleService } from '../rbac-module/rbac-module.service';
 import { CreateRolesDto, ListRolesDto, UpdateRolesDto } from './dto/role.dto';
@@ -11,6 +11,9 @@ import { CreateRolesDto, ListRolesDto, UpdateRolesDto } from './dto/role.dto';
 @Injectable()
 export class RoleService {
   constructor(
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
+
     @InjectRepository(Role)
     private readonly roleRepo: Repository<Role>,
 
@@ -75,8 +78,24 @@ export class RoleService {
       await this.roleActionRepo.delete({ roleId: role.id });
       await this.insertRoleAction(role.id, permissions);
     }
-
+    await this.logoutUsersByRoleId(role.id);
     return await this.roleRepo.save(role);
+  }
+
+  async logoutUsersByRoleId(roleId: number) {
+    const users = await this.userRepo
+      .createQueryBuilder('user')
+      .where('user.roleId = :roleId', { roleId })
+      .getMany();
+
+    const userIds = users.map((user) => user.id);
+
+    await this.userRepo
+      .createQueryBuilder()
+      .update(User)
+      .set({ token: null })
+      .whereInIds(userIds)
+      .execute();
   }
 
   async getAll(query: ListRolesDto) {

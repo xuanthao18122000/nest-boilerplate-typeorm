@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   ActivityLog,
   ActivityLogDetail,
-} from 'src/submodules/database/entities';
+} from 'src/submodule/database/entities';
 import { ActivityLogController } from './activity-log.controller';
 import { ActivityLogService } from './activity-log.service';
 

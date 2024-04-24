@@ -6,17 +6,15 @@ import {
   Put,
   Req,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { IAzureExpressUser } from 'src/common/interfaces';
-import { Public } from 'src/submodules/common/decorators/public.decorator';
-import { GetUser } from 'src/submodules/common/decorators/user.decorator';
-import { ISuccessResponse } from 'src/submodules/common/interfaces';
-import { SendResponse } from 'src/submodules/common/response/send-response';
-import { User } from 'src/submodules/database/entities';
+import { Public } from 'src/submodule/common/decorators/public.decorator';
+import { GetUser } from 'src/submodule/common/decorators/user.decorator';
+import { ISuccessResponse } from 'src/submodule/common/interfaces';
+import { SendResponse } from 'src/submodule/common/response/send-response';
+import { User } from 'src/submodule/database/entities';
 import { AuthService } from './auth.service';
 import {
   FireBaseDto,
@@ -28,7 +26,6 @@ import { AzureADGuard } from './strategies/azure-ad.strategy';
 
 @ApiTags('2. Auth')
 @Controller('auth')
-@UsePipes(new ValidationPipe({ transform: true }))
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

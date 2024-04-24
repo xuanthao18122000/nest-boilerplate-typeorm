@@ -2,23 +2,23 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import FilterBuilder from 'src/submodules/common/builder/filter.builder';
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
-import UpdateBuilder from 'src/submodules/common/builder/update.builder';
-import { ErrorHttpException } from 'src/submodules/common/exceptions/throw.exception';
-import { IListResponse } from 'src/submodules/common/interfaces';
-import { listResponse } from 'src/submodules/common/response/response-list.response';
+import FilterBuilder from 'src/submodule/common/builder/filter.builder';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
+import UpdateBuilder from 'src/submodule/common/builder/update.builder';
+import { ErrorHttpException } from 'src/submodule/common/exceptions/throw.exception';
+import { listResponse } from 'src/submodule/common/response/response-list.response';
 import {
   ActivityLogDetail,
-  ROU,
+  Area,
   Role,
   User,
   UserAction,
-} from 'src/submodules/database/entities';
+} from 'src/submodule/database/entities';
 import { Repository } from 'typeorm';
 import { ActivityLogService } from '../activity-log/activity-log.service';
 import { LocationService } from '../location/location.service';
 import { RbacModuleService } from '../rbac-module/rbac-module.service';
+import { ROUService } from '../rou/rou.service';
 import {
   CreateUserDto,
   ListUserDto,
@@ -37,8 +37,10 @@ export class UserService {
     @InjectRepository(UserAction)
     private readonly userActionRepo: Repository<UserAction>,
 
-    @InjectRepository(ROU)
-    private readonly rouRepo: Repository<ROU>,
+    @InjectRepository(Area)
+    private readonly areaRepo: Repository<Area>,
+
+    private readonly rouService: ROUService,
 
     private readonly locationService: LocationService,
 
@@ -47,7 +49,7 @@ export class UserService {
     private readonly activityLogService: ActivityLogService,
   ) {}
 
-  async getAll(query: ListUserDto): Promise<IListResponse<User>> {
+  async getAll(query: ListUserDto) {
     const entity = {
       entityRepo: this.userRepo,
       alias: 'user',
@@ -61,10 +63,18 @@ export class UserService {
         'phoneNumber',
         'avatar',
         'status',
+        'provinceIds',
+        'areaIds',
+        'isAllProvinces',
+        'isAllAreas',
+        'rouIds',
         'createdAt',
         'updatedAt',
       ])
       .addLeftJoinAndSelect(['id', 'name'], 'role')
+      .addWhereInArray('rouIds', 'rouId')
+      .addWhereInArray('provinceIds', 'provinceId')
+      .addWhereInArray('areaIds', 'areaId')
       .addUnAccentString('fullName')
       .addString('phoneNumber')
       .addString('email')
@@ -75,8 +85,8 @@ export class UserService {
       .addPagination()
       .sortBy('id');
 
-    const [list, total] = await filterBuilder.getManyAndCount();
-    return listResponse(list, total, query);
+    const [users, total] = await filterBuilder.getManyAndCount();
+    return listResponse(users, total, query);
   }
 
   async getUserActivities({ number }: TopActivityDto) {
@@ -135,13 +145,14 @@ export class UserService {
   }
 
   async create(body: CreateUserDto, creator: User): Promise<User> {
-    const { email, provinceId, roleId, rouId, permissions } = body;
+    const { email, provinceIds, areaIds, roleId, rouId, permissions } = body;
 
     await Promise.all([
       this.checkEmailNoneExistence(email),
       this.checkRoleExistence(roleId),
-      this.checkROUExistence(rouId),
-      this.checkProvinceExistence(provinceId),
+      this.rouService.checkRouExistence(rouId),
+      this.getAndCheckAreasByIds(areaIds),
+      this.locationService.getAndCheckProvincesByIds(provinceIds),
       this.rbacModuleService.checkPermissionExisted(permissions),
     ]);
 
@@ -163,9 +174,10 @@ export class UserService {
     const { status, roleId } = body;
 
     const user = await this.findUserByPk(id);
+
     const activityDetails =
       await this.activityLogService.createActivityLogDetail(
-        'API_USER_UPDATE',
+        'USER_UPDATE',
         user,
         body,
         updater.id,
@@ -181,15 +193,13 @@ export class UserService {
         'fullName',
         'phoneNumber',
         'roleId',
-        'rouId',
-        'provinceId',
         'status',
         'address',
         'avatar',
       ])
       .getNewData();
 
-    if (status || roleId) {
+    if (status || roleId || user.actions.length !== permissions?.length) {
       dataUpdate.token = null;
     }
 
@@ -241,18 +251,6 @@ export class UserService {
     }
   }
 
-  async checkROUExistence(id: number): Promise<void> {
-    const rou = await this.rouRepo.findOneBy({ id });
-
-    if (!rou) {
-      throw ErrorHttpException(HttpStatus.NOT_FOUND, 'ROU_NOT_FOUND');
-    }
-  }
-
-  async checkProvinceExistence(id: number): Promise<void> {
-    await this.locationService.getProvince(id);
-  }
-
   async insertUserAction(userId: number, permissions: string[]): Promise<void> {
     const userActions: UserAction[] = [];
 
@@ -266,5 +264,22 @@ export class UserService {
     }
 
     await this.userActionRepo.save(userActions);
+  }
+
+  async getAndCheckAreasByIds(areaIds: number[]) {
+    if (areaIds.length !== 0) {
+      const existingAreas = await this.areaRepo
+        .createQueryBuilder('area')
+        .andWhere('area.id IN (:...areaIds)', { areaIds })
+        .getMany();
+
+      if (existingAreas.length !== areaIds.length) {
+        throw ErrorHttpException(HttpStatus.NOT_FOUND, 'AREA_NOT_FOUND');
+      }
+
+      return existingAreas;
+    }
+
+    return [];
   }
 }

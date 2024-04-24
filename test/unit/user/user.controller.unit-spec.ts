@@ -3,23 +3,25 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { ActivityLogService } from 'src/modules/activity-log/activity-log.service';
 import { LocationService } from 'src/modules/location/location.service';
 import { RbacModuleService } from 'src/modules/rbac-module/rbac-module.service';
+import { ROUService } from 'src/modules/rou/rou.service';
 import { UserController } from 'src/modules/user/user.controller';
 import { UserService } from 'src/modules/user/user.service';
 import {
+  Area,
   Location,
-  ROU,
   RbacAction,
   RbacModule,
   Role,
   User,
   UserAction,
-} from 'src/submodules/database/entities';
+} from 'src/submodule/database/entities';
 import { Repository } from 'typeorm';
 
 describe('UserController', () => {
   let userController: UserController;
   const mockActivityLogService = {};
   const mockLocationService = {};
+  const mockRouService = {};
   const mockRbacModuleService = {};
 
   beforeEach(async () => {
@@ -40,11 +42,11 @@ describe('UserController', () => {
           useClass: Repository,
         },
         {
-          provide: getRepositoryToken(ROU),
+          provide: getRepositoryToken(RbacModule),
           useClass: Repository,
         },
         {
-          provide: getRepositoryToken(RbacModule),
+          provide: getRepositoryToken(Area),
           useClass: Repository,
         },
         {
@@ -62,6 +64,10 @@ describe('UserController', () => {
         {
           provide: LocationService,
           useValue: mockLocationService,
+        },
+        {
+          provide: ROUService,
+          useValue: mockRouService,
         },
         {
           provide: RbacModuleService,

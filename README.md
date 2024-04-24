@@ -46,6 +46,6 @@ $ npm run test:cov
 
 ## SET UP PROJECT
 
-# Create Position
-$ 1. Sales
-$ 2. Sales Head
+# Create Database
+$ 1. npm run migration:generate --name=migrations
+$ 2. npm run migration:generate --name=run

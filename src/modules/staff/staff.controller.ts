@@ -1,34 +1,35 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { PaginationOptions } from 'src/submodules/common/builder';
-import { ActivityLog } from 'src/submodules/common/decorators/activity-log.decorator';
-import { GetUser } from 'src/submodules/common/decorators/user.decorator';
-import { ISuccessResponse } from 'src/submodules/common/interfaces';
-import { SendResponse } from 'src/submodules/common/response/send-response';
-import { Staff, User } from 'src/submodules/database/entities';
-import { CreateStaffDto, ListStaffDto, UpdateStaffDto } from './dto/staff.dto';
+import { PaginationOptions } from 'src/submodule/common/builder';
+import { ActivityLog } from 'src/submodule/common/decorators/activity-log.decorator';
+import { GetUser } from 'src/submodule/common/decorators/user.decorator';
+import { ISuccessResponse } from 'src/submodule/common/interfaces';
+import { SendResponse } from 'src/submodule/common/response/send-response';
+import { Staff, User } from 'src/submodule/database/entities';
+import {
+  CreateStaffDto,
+  ListStaffDto,
+  StatisticsStaffDto,
+  UpdateStaffDto,
+} from './dto/staff.dto';
 import { StaffService } from './staff.service';
 
 @ApiBearerAuth()
 @ApiTags('5. Staffs')
 @Controller('staffs')
-@UsePipes(new ValidationPipe({ transform: true }))
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
+  @Get('statistics')
+  @ApiOperation({ summary: 'Biểu đồ thống kê nhân viên' })
+  async getUserActivities(@Query() query: StatisticsStaffDto) {
+    const statistic = await this.staffService.getStatistics(query);
+    return SendResponse.success(statistic, 'Get statistics staffs successful!');
+  }
+
   @Post()
   @ApiOperation({ summary: 'Tạo nhân viên' })
-  @ActivityLog('API_STAFF_CREATE')
+  @ActivityLog('STAFF_CREATE')
   async create(
     @Body() body: CreateStaffDto,
     @GetUser() user: User,
@@ -39,22 +40,15 @@ export class StaffController {
 
   @Get()
   @ApiOperation({ summary: 'Danh sách nhân viên' })
-  @ActivityLog('API_STAFF_LIST')
+  @ActivityLog('STAFF_LIST')
   async getAll(@Query() query: ListStaffDto) {
     const staffs = await this.staffService.getAll(query);
     return SendResponse.success(staffs, 'Get all staffs successful!');
   }
 
-  @Get('select')
-  @ApiOperation({ summary: 'Select danh sách nhân viên' })
-  async select(@Query() query: ListStaffDto) {
-    const staffs = await this.staffService.getAll(query);
-    return SendResponse.success(staffs, 'Select staffs successful!');
-  }
-
   @Get(':id')
   @ApiOperation({ summary: 'Chi tiết nhân viên' })
-  @ActivityLog('API_STAFF_DETAIL')
+  @ActivityLog('STAFF_DETAIL')
   async getOneStaff(@Param('id') id: number) {
     const staff = await this.staffService.getOne(id);
     return SendResponse.success(staff, 'Get detail staff successful!');
@@ -62,7 +56,7 @@ export class StaffController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Cập nhật nhân viên' })
-  @ActivityLog('API_STAFF_UPDATE')
+  @ActivityLog('STAFF_UPDATE')
   async updateStaff(
     @Param('id') id: number,
     @Body() body: UpdateStaffDto,
@@ -74,7 +68,7 @@ export class StaffController {
 
   @Put('logout/:id')
   @ApiOperation({ summary: 'Đăng xuất nhân viên' })
-  @ActivityLog('API_STAFF_UPDATE')
+  @ActivityLog('STAFF_LOGOUT')
   async logOutStaff(@Param('id') id: number, @GetUser() updater: User) {
     const staff = await this.staffService.logOutStaff(id, updater);
     return SendResponse.success(staff, 'Logout staff successful!');
@@ -82,7 +76,6 @@ export class StaffController {
 
   @Get('activities/:staffId')
   @ApiOperation({ summary: 'Danh sách nhân viên' })
-  @ActivityLog('API_STAFF_LIST')
   async getActivitiesLogin(
     @Param('staffId') staffId: number,
     @Query() query: PaginationOptions,

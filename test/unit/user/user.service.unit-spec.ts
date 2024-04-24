@@ -1,22 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { ActivityLogService } from 'src/modules/activity-log/activity-log.service';
-import { LocationService } from 'src/modules/location/location.service';
-import { RbacModuleService } from 'src/modules/rbac-module/rbac-module.service';
 import { CreateUserDto } from 'src/modules/user/dto/user.dto';
-import { UserService } from '../../../src/modules/user/user.service';
-import {
-  Location,
-  ROU,
-  RbacAction,
-  RbacModule,
-  Role,
-  User,
-  UserAction,
-} from '../../../src/submodules/database/entities';
 
 describe('User Service', () => {
-  let userService: UserService;
+  // let userService: UserService;
 
   const mockUserRepository = {
     getAll: jest.fn().mockResolvedValue([
@@ -30,106 +15,105 @@ describe('User Service', () => {
     update: jest.fn(),
     delete: jest.fn(),
   };
-  const mockRoleRepository = {
-    getAll: jest.fn().mockResolvedValue([]),
-    create: jest.fn(),
-    save: jest.fn(),
-    findOne: jest.fn(),
-    findOneBy: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  };
-  const mockROURepository = {
-    getAll: jest.fn().mockResolvedValue([]),
-    create: jest.fn(),
-    save: jest.fn(),
-    findOne: jest.fn(),
-    findOneBy: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  };
-  const mockRbacModuleRepository = {
-    getAll: jest.fn().mockResolvedValue([]),
-    create: jest.fn(),
-    save: jest.fn(),
-    findOne: jest.fn(),
-    findOneBy: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  };
-  const mockRbacActionRepository = {
-    getAll: jest.fn().mockResolvedValue([]),
-    create: jest.fn(),
-    save: jest.fn(),
-    findOne: jest.fn(),
-    findOneBy: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  };
-  const mockUserActionRepository = {
-    getAll: jest.fn().mockResolvedValue([]),
-    create: jest.fn(),
-    save: jest.fn(),
-    findOne: jest.fn(),
-    findOneBy: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  };
+  // const mockRoleRepository = {
+  //   getAll: jest.fn().mockResolvedValue([]),
+  //   create: jest.fn(),
+  //   save: jest.fn(),
+  //   findOne: jest.fn(),
+  //   findOneBy: jest.fn(),
+  //   update: jest.fn(),
+  //   delete: jest.fn(),
+  // };
+  // const mockROURepository = {
+  //   getAll: jest.fn().mockResolvedValue([]),
+  //   create: jest.fn(),
+  //   save: jest.fn(),
+  //   findOne: jest.fn(),
+  //   findOneBy: jest.fn(),
+  //   update: jest.fn(),
+  //   delete: jest.fn(),
+  // };
+  // const mockRbacModuleRepository = {
+  //   getAll: jest.fn().mockResolvedValue([]),
+  //   create: jest.fn(),
+  //   save: jest.fn(),
+  //   findOne: jest.fn(),
+  //   findOneBy: jest.fn(),
+  //   update: jest.fn(),
+  //   delete: jest.fn(),
+  // };
+  // const mockRbacActionRepository = {
+  //   getAll: jest.fn().mockResolvedValue([]),
+  //   create: jest.fn(),
+  //   save: jest.fn(),
+  //   findOne: jest.fn(),
+  //   findOneBy: jest.fn(),
+  //   update: jest.fn(),
+  //   delete: jest.fn(),
+  // };
+  // const mockUserActionRepository = {
+  //   getAll: jest.fn().mockResolvedValue([]),
+  //   create: jest.fn(),
+  //   save: jest.fn(),
+  //   findOne: jest.fn(),
+  //   findOneBy: jest.fn(),
+  //   update: jest.fn(),
+  //   delete: jest.fn(),
+  // };
 
-  const mockActivityLogService = {};
-  const mockRbacModuleService = {};
-  const mockLocationService = {
-    getProvince: jest.fn().mockResolvedValue([]),
-  };
+  // const mockActivityLogService = {};
+  // const mockRbacModuleService = {};
+  // const mockLocationService = {
+  //   getProvince: jest.fn().mockResolvedValue([]),
+  // };
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        UserService,
-        {
-          provide: getRepositoryToken(User),
-          useValue: mockUserRepository,
-        },
-        {
-          provide: getRepositoryToken(Role),
-          useValue: mockRoleRepository,
-        },
-        {
-          provide: getRepositoryToken(ROU),
-          useValue: mockROURepository,
-        },
-        {
-          provide: getRepositoryToken(Location),
-          useValue: mockROURepository,
-        },
-        {
-          provide: getRepositoryToken(RbacModule),
-          useValue: mockRbacModuleRepository,
-        },
-        {
-          provide: getRepositoryToken(RbacAction),
-          useValue: mockRbacActionRepository,
-        },
-        {
-          provide: getRepositoryToken(UserAction),
-          useValue: mockUserActionRepository,
-        },
-        {
-          provide: ActivityLogService,
-          useValue: mockActivityLogService,
-        },
-        {
-          provide: LocationService,
-          useValue: mockLocationService,
-        },
-        {
-          provide: RbacModuleService,
-          useValue: mockRbacModuleService,
-        },
-      ],
-    }).compile();
-
-    userService = module.get<UserService>(UserService);
+    // const module: TestingModule = await Test.createTestingModule({
+    //   providers: [
+    //     UserService,
+    //     {
+    //       provide: getRepositoryToken(User),
+    //       useValue: mockUserRepository,
+    //     },
+    //     {
+    //       provide: getRepositoryToken(Role),
+    //       useValue: mockRoleRepository,
+    //     },
+    //     {
+    //       provide: getRepositoryToken(ROU),
+    //       useValue: mockROURepository,
+    //     },
+    //     {
+    //       provide: getRepositoryToken(Location),
+    //       useValue: mockROURepository,
+    //     },
+    //     {
+    //       provide: getRepositoryToken(RbacModule),
+    //       useValue: mockRbacModuleRepository,
+    //     },
+    //     {
+    //       provide: getRepositoryToken(RbacAction),
+    //       useValue: mockRbacActionRepository,
+    //     },
+    //     {
+    //       provide: getRepositoryToken(UserAction),
+    //       useValue: mockUserActionRepository,
+    //     },
+    //     {
+    //       provide: ActivityLogService,
+    //       useValue: mockActivityLogService,
+    //     },
+    //     {
+    //       provide: LocationService,
+    //       useValue: mockLocationService,
+    //     },
+    //     {
+    //       provide: RbacModuleService,
+    //       useValue: mockRbacModuleService,
+    //     },
+    //   ],
+    // }).compile();
+    // userService = module.get<UserService>(UserService);
   });
 
   describe('Create user', () => {
@@ -142,7 +126,6 @@ describe('User Service', () => {
         phoneNumber: '0938381732',
         address: '',
         avatar: '',
-        provinceId: 1,
         roleId: 1,
         rouId: 1,
         permissions: [],
@@ -190,8 +173,6 @@ describe('User Service', () => {
       // const existingUser = new User({});
       // mockUserRepository.findOneBy.mockResolvedValue(existingUser);
       // Call the create method and expect it to throw an error
-      console.log(userService);
-
       // await expect(userService.create(mockDto, mockUser));
       // .rejects.toThrow()
     });

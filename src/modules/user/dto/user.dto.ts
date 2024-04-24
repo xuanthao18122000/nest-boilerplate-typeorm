@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsEmail,
   IsEnum,
   IsInt,
@@ -10,8 +11,8 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
-import { User } from 'src/submodules/database/entities';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
+import { User } from 'src/submodule/database/entities';
 
 export class ListUserDto extends PaginationOptions {
   @ApiProperty({ required: false })
@@ -19,6 +20,24 @@ export class ListUserDto extends PaginationOptions {
   @IsNumber()
   @IsOptional()
   id?: number;
+
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  rouId: number;
+
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  provinceId?: number;
+
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  @IsNumber()
+  @IsOptional()
+  areaId?: number;
 
   @ApiProperty({ required: false, description: 'User name' })
   @IsString()
@@ -106,14 +125,32 @@ export class CreateUserDto {
   @ApiProperty({ example: 0 })
   @Type(() => Number)
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   rouId: number;
 
-  @ApiProperty({ required: false, example: 0 })
-  @Type(() => Number)
-  @IsNumber()
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
   @IsOptional()
-  provinceId: number;
+  rouIds?: Array<number> = [];
+
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
+  @IsOptional()
+  provinceIds?: Array<number> = [];
+
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
+  @IsOptional()
+  areaIds?: Array<number> = [];
 
   @ApiProperty({ example: '', required: false })
   @IsString()
@@ -124,6 +161,21 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   address: string;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllRous?: boolean = false;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllProvinces?: boolean = false;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllAreas?: boolean = false;
 
   @ApiProperty({ example: [] })
   @IsArray()
@@ -154,11 +206,44 @@ export class UpdateUserDto {
   @IsOptional()
   rouId: number;
 
-  @ApiProperty({ required: false, example: 0 })
-  @Type(() => Number)
-  @IsNumber()
+  @ApiProperty({ required: false })
+  @IsBoolean()
   @IsOptional()
-  provinceId: number;
+  isAllProvinces?: boolean;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllRous?: boolean;
+
+  @ApiProperty({ required: false })
+  @IsBoolean()
+  @IsOptional()
+  isAllAreas?: boolean;
+
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
+  @IsOptional()
+  rouIds?: Array<number>;
+
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
+  @IsOptional()
+  provinceIds?: Array<number>;
+
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
+  @IsOptional()
+  areaIds?: Array<number>;
 
   @ApiProperty({ example: '', required: false })
   @IsString()

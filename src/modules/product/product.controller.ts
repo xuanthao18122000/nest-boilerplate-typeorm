@@ -1,18 +1,9 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GetUser } from 'src/submodules/common/decorators/user.decorator';
-import { SendResponse } from 'src/submodules/common/response/send-response';
-import { User } from 'src/submodules/database/entities';
+import { ActivityLog } from 'src/submodule/common/decorators/activity-log.decorator';
+import { GetUser } from 'src/submodule/common/decorators/user.decorator';
+import { SendResponse } from 'src/submodule/common/response/send-response';
+import { User } from 'src/submodule/database/entities';
 import {
   CreateProductDto,
   ListProductDto,
@@ -21,13 +12,13 @@ import {
 import { ProductService } from './product.service';
 
 @ApiBearerAuth()
-@ApiTags('Products')
+@ApiTags('20. Products')
 @Controller('products')
-@UsePipes(new ValidationPipe({ transform: true }))
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
+  @ActivityLog('PRODUCT_CREATE')
   @ApiOperation({ summary: 'Tạo sản phẩm' })
   async create(@Body() body: CreateProductDto, @GetUser() creator: User) {
     const product = await this.productService.create(body, creator);
@@ -35,20 +26,15 @@ export class ProductController {
   }
 
   @Get()
+  @ActivityLog('PRODUCT_LIST')
   @ApiOperation({ summary: 'Danh sách sản phẩm' })
   async getAll(@Query() query: ListProductDto) {
     const products = await this.productService.getAll(query);
     return SendResponse.success(products, 'Get list products successful!');
   }
 
-  @Get('select')
-  @ApiOperation({ summary: 'Select danh sách sản phẩm' })
-  async select(@Query() query: ListProductDto) {
-    const products = await this.productService.getAll(query);
-    return SendResponse.success(products, 'Select products successful!');
-  }
-
   @Get(':id')
+  @ActivityLog('PRODUCT_DETAIL')
   @ApiOperation({ summary: 'Chi tiết sản phẩm' })
   async getOne(@Param('id') id: number) {
     const product = await this.productService.getOne(id);
@@ -56,6 +42,7 @@ export class ProductController {
   }
 
   @Put(':id')
+  @ActivityLog('PRODUCT_UPDATE')
   @ApiOperation({ summary: 'Cập nhật sản phẩm' })
   async update(@Param('id') id: number, @Body() body: UpdateProductDto) {
     const product = await this.productService.update(id, body);

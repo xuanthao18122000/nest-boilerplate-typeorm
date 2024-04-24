@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsNotEmpty,
@@ -7,8 +7,28 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { PaginationOptions } from 'src/submodules/common/builder/pagination-options.builder';
-import { Area } from 'src/submodules/database/entities';
+import { PaginationOptions } from 'src/submodule/common/builder/pagination-options.builder';
+import { Area } from 'src/submodule/database/entities';
+
+export class StatisticsAreaDto {
+  @ApiProperty({ description: 'ROU ID' })
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  rouId: number;
+
+  @ApiProperty({ description: 'Province ID' })
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  provinceId: number;
+
+  @ApiProperty({ required: false, description: 'Area ID' })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  areaId: number;
+}
 
 export class ListAreaDto extends PaginationOptions {
   @ApiProperty({ required: false, description: 'ID' })
@@ -29,6 +49,10 @@ export class ListAreaDto extends PaginationOptions {
     type: [Number],
     example: [],
   })
+  @Type(() => Number)
+  @IsNumber({}, { each: true })
+  @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
+  @IsOptional()
   provinceIds: number[];
 
   @ApiProperty({ required: false, description: 'Name' })
@@ -86,6 +110,16 @@ export class CreateAreaDto {
   @IsArray()
   @IsOptional()
   districtIds?: Array<number> = [];
+}
+
+export class CreateAreaDistrictDto {
+  @ApiProperty({
+    required: false,
+    example: [],
+  })
+  @IsArray()
+  @IsOptional()
+  provinceIds?: Array<number> = [];
 }
 
 export class UpdateAreaDto {
